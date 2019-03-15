@@ -8,8 +8,8 @@ Inject the `[rezfusion-component]` shortcode with a `channel` attribute anywhere
 
 ##### Provide a Search UI:
 
-`[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI"]`
+`[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI" guid="MY_GUID"]`
 
 ##### Provide a Details Page UI:
 
-`[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI" source="details.js"]`
+`[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI" guid="MY_GUID"]`
