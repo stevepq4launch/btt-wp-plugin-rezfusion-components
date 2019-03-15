@@ -6,10 +6,10 @@ Provides a shortcode for injecting Rezfusion Components on your WordPress websit
 
 Inject the `[rezfusion-component]` shortcode with a `channel` attribute anywhere shortcodes are permitted.
 
-### Provide a Search UI:
+##### Provide a Search UI:
 
 `[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI"]`
 
-### Provide a Details Page UI:
+##### Provide a Details Page UI:
 
 `[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI" source="details.js"]`
