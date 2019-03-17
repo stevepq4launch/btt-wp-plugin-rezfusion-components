@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package rezfusion_components
  * @version 0.1
@@ -14,6 +15,7 @@ Author URI: https://bluetent.com
 
 require_once "includes/gql.php";
 require_once "includes/post_type.php";
+require_once "includes/taxonomies.php";
 
 /**
  * Provide a rewrite tag for us in generating
@@ -158,6 +160,14 @@ function rezfusion_components_create_menu() {
     'administrator',
     'rezfusion_components_items',
     'rezfusion_components_plugin_items_page'
+  );
+  add_submenu_page(
+    'rezfusion_components_config',
+    'Categories',
+    'Categories',
+    'administrator',
+    'rezfusion_components_categories',
+    'rezfusion_components_plugin_categories_page'
   );
 
   add_action( 'admin_init', 'rezfusion_components_register_settings' );
@@ -352,6 +362,49 @@ function rezfusion_components_plugin_items_page() {
           </td>
           <td>
             <?php print $item->item->id; ?>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+    </table>
+  <?php endif; ?>
+  <?php
+}
+
+/**
+ * Output a list of categories that the system
+ * currently has cached.
+ */
+function rezfusion_components_plugin_categories_page() {
+  $categories = get_transient('rezfusion_hub_category_data');
+  if(!$categories) {
+    rezfusion_components_cache_category_data();
+    $categories = get_transient('rezfusion_hub_category_data');
+  }
+  ?>
+  <h1>Categories</h1>
+  <?php if(isset($categories->data->categoryInfo->categories) && !empty($categories->data->categoryInfo->categories)) : ?>
+    <table class="form-table">
+      <tr>
+        <th>Name</th>
+        <th>Values</th>
+        <th>Remote ID</th>
+      </tr>
+      <?php foreach($categories->data->categoryInfo->categories as $item) :  ?>
+        <tr>
+          <td>
+            <?php print $item->name; ?>
+          </td>
+          <td>
+            <?php if(!empty($item->values)) : ?>
+              <?php foreach($item->values as $value) : ?>
+                <ul>
+                  <li><?php print $value->name; ?> (id: <?php print $value->id; ?>)</li>
+                </ul>
+              <?php endforeach; ?>
+            <?php endif; ?>
+          </td>
+          <td>
+            <?php print $item->id; ?>
           </td>
         </tr>
       <?php endforeach; ?>
