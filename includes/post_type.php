@@ -66,9 +66,6 @@ function rezfusion_components_register_post_types() {
     'exclude_from_search' => FALSE,
     'publicly_queryable' => TRUE,
     'capability_type' => 'page',
-    'capabilities' => array(
-      'create_posts' => false,
-    ),
   ];
   register_post_type('vr_listing', $args);
 
