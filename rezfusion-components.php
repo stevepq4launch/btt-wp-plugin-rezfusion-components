@@ -13,6 +13,7 @@ Version: 0.1
 Author URI: https://bluetent.com
 */
 
+require_once "includes/helpers.php";
 require_once "includes/gql.php";
 require_once "includes/post_type.php";
 require_once "includes/taxonomies.php";

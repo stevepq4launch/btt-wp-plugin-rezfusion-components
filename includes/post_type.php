@@ -66,9 +66,67 @@ function rezfusion_components_register_post_types() {
     'exclude_from_search' => FALSE,
     'publicly_queryable' => TRUE,
     'capability_type' => 'page',
+    'capabilities' => array(
+      'create_posts' => false,
+    ),
   ];
   register_post_type('vr_listing', $args);
 
 }
 
 add_action('init', 'rezfusion_components_register_post_types', 0);
+
+/**
+ * Add custom columns to our custom content type.
+ *
+ * @param $columns
+ *
+ * @return mixed
+ */
+function rezfusion_components_vr_listing_columns( $columns ) {
+
+  $new_columns = [
+    'cb' => '<input type="checkbox" />',
+    'title' => __('Title'),
+    'beds' => __('Beds'),
+    'baths' => __('Baths'),
+  ];
+
+  foreach($columns as $key => $value) {
+    if(strpos($key, 'taxonomy-') === 0) {
+      $new_columns[$key] = $value;
+    }
+  }
+
+  $new_columns['item_id'] = __('Item ID');
+  $new_columns['date'] = __('Date');
+
+  return $new_columns;
+}
+
+add_filter('manage_vr_listing_posts_columns', 'rezfusion_components_vr_listing_columns');
+
+
+/**
+ * Add content to custom columns on the vr_listing list screen.
+ *
+ * @param $column
+ * @param $post_id
+ */
+function rezfusion_components_vr_listing_column( $column, $post_id ) {
+  $meta = get_post_meta($post_id);
+  switch($column) {
+    case 'beds':
+      print $meta['rezfusion_hub_beds'][0];
+      break;
+    case 'baths':
+      print $meta['rezfusion_hub_baths'][0];
+      break;
+    case 'item_id':
+      print $meta['rezfusion_hub_item_id'][0];
+      break;
+  }
+}
+
+add_action( 'manage_vr_listing_posts_custom_column', 'rezfusion_components_vr_listing_column', 10, 2);
+

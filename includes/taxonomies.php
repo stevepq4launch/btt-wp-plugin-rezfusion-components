@@ -34,6 +34,7 @@ function rezfusion_components_register_taxonomy() {
         'hierarchical' => TRUE,
         'labels' => $labels,
         'show_ui' => TRUE,
+        'show_admin_column' => TRUE,
       ];
 
       register_taxonomy(str_replace('-', '_', sanitize_title($category->name)), [$post_type], $args);
