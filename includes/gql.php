@@ -299,6 +299,7 @@ function rezfusion_components_update_category_data($channel = NULL) {
       $taxonomies[] = $name;
       if(!empty($category->values)) {
         foreach($category->values as $value) {
+          $value->category_id = $category->id;
           $value->wp_taxonomy_name = $name;
           $category_values[$value->id] = $value;
         }
@@ -341,6 +342,11 @@ function rezfusion_components_update_category_data($channel = NULL) {
       $value->id,
       true
     );
+    add_term_meta(
+      $term['term_id'],
+      'rezfusion_hub_category_id',
+      $value->category_id,
+      false
+    );
   }
-
 }

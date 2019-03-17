@@ -82,12 +82,48 @@ function rezfusion_component( $atts ) {
   if($a['element'] === 'details-page' && $post = get_post()) {
     $meta = get_post_meta($post->ID);
     if($meta['rezfusion_hub_item_id']) {
-      wp_add_inline_script(
+      wp_localize_script(
         $handle,
-        'window.REZFUSION_COMPONENTS_CONF = { settings: { components: { DetailsPage: { id: "'. $meta['rezfusion_hub_item_id'][0] .'" } } } }',
-        'before'
+        'REZFUSION_COMPONENTS_CONF',
+        [
+          'settings' => [
+            'components' => [
+              'DetailsPage' => [
+                'id' => $meta['rezfusion_hub_item_id'][0],
+              ],
+            ],
+          ],
+        ]
       );
     }
+  }
+
+  if(is_tax()) {
+    $object = get_queried_object();
+    $meta = get_term_meta($object->term_id);
+    wp_localize_script(
+      $handle,
+      'REZFUSION_COMPONENTS_CONF',
+      [
+        'settings' => [
+          'components' => [
+            'SearchProvider' => [
+              'filters' => [
+                'categoryFilter' => [
+                  'categories' => [
+                    [
+                      'cat_id' => $meta['rezfusion_hub_category_id'][0],
+                      'values' => $meta['rezfusion_hub_category_value_id'],
+                      'operator' => 'AND',
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ]
+    );
   }
 
   return "<div id={$a['element']}></div>";
