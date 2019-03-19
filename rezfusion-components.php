@@ -69,11 +69,6 @@ function rezfusion_component( $atts ) {
   $bucket = rezfusion_components_get_bucket(rezfusions_component_env());
   $folder = preg_replace('/[^0-9a-zA-Z_\s]/', '', "{$a['channel']}") .'-' . $a['guid'];
 
-  wp_enqueue_style(
-    $handle,
-    $bucket . "/$folder/app.css"
-  );
-
   wp_enqueue_script(
     $handle,
     $bucket . "/$folder/bundle.js"

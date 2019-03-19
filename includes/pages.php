@@ -133,6 +133,7 @@ function rezfusion_components_save_settings_form($values) {
   if(!empty($values['rezfusion_hub_fetch_data'])) {
     try {
       rezfusion_components_update_item_data();
+      flush_rewrite_rules();
       show_message('Data updated.');
     }
     catch(Exception $e) {
