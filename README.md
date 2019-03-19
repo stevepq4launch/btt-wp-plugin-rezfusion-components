@@ -19,3 +19,7 @@ Inject the `[rezfusion-component]` shortcode with a `channel` attribute anywhere
 ##### Provide a Details Page UI:
 
 `[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI" guid="MY_GUID"]`
+
+#### Render a component directly in a WordPress template file.
+
+`<?php echo do_shortcode('[rezfusion-component element="details-page"]'); ?>`
