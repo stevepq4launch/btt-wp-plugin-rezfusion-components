@@ -187,6 +187,7 @@ function rezfusion_components_update_item_data($channel = NULL) {
   }, []);
 
   if (isset($items->data->lodgingProducts->results) && !empty($items->data->lodgingProducts->results)) {
+    $urls = [];
     foreach($items->data->lodgingProducts->results as $result) {
       $id = $result->item->id;
       $data = [
@@ -214,7 +215,13 @@ function rezfusion_components_update_item_data($channel = NULL) {
 
       // Add tags to items.
       rezfusion_components_process_item_categories($result->item, $post_id);
+
+      // Add item to the URL map.
+      $urls[$result->item->id] = get_permalink($post_id);
     }
+
+    // Cache the URL map.
+    set_transient('rezfusion_hub_url_map', $urls);
 
     // These are missing from Blueprint.
     // So unpublish them.

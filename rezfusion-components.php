@@ -45,6 +45,17 @@ function rezfusion_components_redirect() {
 
 add_action( 'template_redirect', 'rezfusion_components_redirect' );
 
+/**
+ * Provide a map of URLs.
+ */
+function rezfusion_components_add_url_map() {
+  echo '<script type="application/javascript">';
+  echo "window.REZFUSION_COMPONENTS_ITEM_URL_MAP = " . json_encode(get_transient('rezfusion_hub_url_map'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+  echo '</script>';
+}
+
+add_action( 'wp_head', 'rezfusion_components_add_url_map' );
+
 
 /**
  * Add a shortcode wrapper to download rezfusion components.
@@ -67,7 +78,8 @@ function rezfusion_component( $atts ) {
 
   $handle = "{$a['channel']}-{$a['guid']}-{$a['element']}";
   $bucket = rezfusion_components_get_bucket(rezfusions_component_env());
-  $folder = preg_replace('/[^0-9a-zA-Z_\s]/', '', "{$a['channel']}") .'-' . $a['guid'];
+  $channel = preg_replace('/[^0-9a-zA-Z_\s]/', '', $a['channel']);
+  $folder = "{$a['guid']}/channels/$channel";
 
   wp_enqueue_script(
     $handle,

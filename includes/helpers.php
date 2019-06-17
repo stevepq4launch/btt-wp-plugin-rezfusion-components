@@ -43,13 +43,10 @@ function rezfusions_component_env() {
  * @return string
  */
 function rezfusion_components_get_bucket($env = "prd") {
-  $subdomain = "";
-  $suffix = "";
-  if($env !== "prd") {
-    $suffix = "-dev";
-    $subdomain = "-us-west-2";
+  if($env == "prd") {
+    return "https://assets.rezfusion.com";
   }
-  return "https://s3$subdomain.amazonaws.com/rezfusion-components-storage$suffix";
+  return "https://rezfusion-components-storage-dev.s3-us-west-2.amazonaws.com";
 }
 
 /**
