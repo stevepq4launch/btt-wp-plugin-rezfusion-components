@@ -67,23 +67,21 @@ add_action( 'wp_head', 'rezfusion_components_add_url_map' );
 function rezfusion_component( $atts ) {
 
   $a = shortcode_atts([
-    'element' => 'app',
+    'element' => 'search',
+    'id' => 'app',
     'channel' => get_option('rezfusion_hub_channel'),
-    'guid' => get_option('rezfusion_hub_guid'),
+    'url' => get_option('rezfusion_hub_folder'),
   ], $atts );
 
-  if(!$a['channel'] || !$a['guid']) {
-    return "Rezfusion Component: A 'channel' and a 'guid' attribute are both required";
+  if(!$a['channel'] || !$a['url']) {
+    return "Rezfusion Component: A 'channel' and a 'URL' attribute are both required";
   }
 
-  $handle = "{$a['channel']}-{$a['guid']}-{$a['element']}";
-  $bucket = rezfusion_components_get_bucket(rezfusions_component_env());
-  $channel = preg_replace('/[^0-9a-zA-Z_\s]/', '', $a['channel']);
-  $folder = "{$a['guid']}/channels/$channel";
+  $handle = "{$a['channel']}-{$a['element']}";
 
   wp_enqueue_script(
     $handle,
-    $bucket . "/$folder/bundle.js"
+    $a['url']
   );
 
   if($a['element'] === 'details-page' && $post = get_post()) {
@@ -133,7 +131,7 @@ function rezfusion_component( $atts ) {
     );
   }
 
-  return "<div id={$a['element']}></div>";
+  return "<div id={$a['id']}></div>";
 }
 
 add_shortcode( 'rezfusion-component', 'rezfusion_component' );
@@ -176,7 +174,7 @@ add_action('admin_menu', 'rezfusion_components_create_menu');
  */
 function rezfusion_components_register_settings() {
   register_setting( 'rezfusion-components', 'rezfusion_hub_channel');
-  register_setting( 'rezfusion-components', 'rezfusion_hub_guid');
+  register_setting( 'rezfusion-components', 'rezfusion_hub_folder');
   register_setting( 'rezfusion-components', 'rezfusion_hub_redirect_urls');
   register_setting( 'rezfusion-components', 'rezfusion_hub_env');
   register_setting( 'rezfusion-components', 'rezfusion_hub_sync_items');

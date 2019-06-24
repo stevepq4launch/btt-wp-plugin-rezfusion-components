@@ -15,19 +15,25 @@ function rezfusion_components_plugin_settings_page() {
       <?php do_settings_sections('rezfusion-components'); ?>
       <table class="form-table">
         <tr valign="top">
-          <th scope="row">Channel</th>
+          <th scope="row">Channel Domain/URL</th>
           <td><input
               type="text"
               name="rezfusion_hub_channel"
-              value="<?php echo esc_attr(get_option('rezfusion_hub_channel')); ?>"/>
+              value="<?php echo esc_attr(get_option('rezfusion_hub_channel')); ?>"/><br />
+            <label for="rezfusion_hub_channel">You can find the value for this field in the
+              <a href="https://hub.rezfusion.com/">Rezfusion Hub</a> UI by visiting
+              your company dashboard and selecting the proper channel.</label>
           </td>
         </tr>
         <tr valign="top">
-          <th scope="row">GUID</th>
+          <th scope="row">Components URL</th>
           <td><input
               type="text"
-              name="rezfusion_hub_guid"
-              value="<?php echo esc_attr(get_option('rezfusion_hub_guid')); ?>"/>
+              name="rezfusion_hub_folder"
+              value="<?php echo esc_attr(get_option('rezfusion_hub_folder')); ?>"/>
+            <br />
+            <label for="rezfusion_hub_folder">Provide the full URL to the components script bundle.
+            </label>
           </td>
         </tr>
         <tr valign="top">
@@ -35,11 +41,11 @@ function rezfusion_components_plugin_settings_page() {
           <td>
             <select name="rezfusion_hub_env">
               <option value="dev"
-                <?php print (get_option('rezfusion_hub_env') === 'dev' ? 'selected' : ''); ?>>
+                <?php print (get_option('rezfusion_hub_env', 'prd') === 'dev' ? 'selected' : ''); ?>>
                 Development
               </option>
               <option value="prd"
-                <?php print (get_option('rezfusion_hub_env') === 'prd' ? 'selected' : ''); ?>>
+                <?php print (get_option('rezfusion_hub_env', 'prd') === 'prd' ? 'selected' : ''); ?>>
                 Production
               </option>
             </select>
@@ -119,7 +125,7 @@ function rezfusion_components_plugin_settings_page() {
 function rezfusion_components_save_settings_form($values) {
   $keys = [
     'rezfusion_hub_channel',
-    'rezfusion_hub_guid',
+    'rezfusion_hub_folder',
     'rezfusion_hub_env',
     'rezfusion_hub_redirect_urls',
     'rezfusion_hub_sync_items',

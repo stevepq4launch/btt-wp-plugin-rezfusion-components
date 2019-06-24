@@ -27,26 +27,12 @@ function _array_insert_after( array $array, $key, array $new ) {
  *
  */
 function rezfusions_component_env() {
-  $env = get_option('rezfusion_hub_env');
+  $env = get_option('rezfusion_hub_env', 'prd');
   if(empty($env)) {
     return 'prd';
   }
 
   return $env;
-}
-
-/**
- * Get the bucket name to use.
- *
- * @param $env
- *
- * @return string
- */
-function rezfusion_components_get_bucket($env = "prd") {
-  if($env == "prd") {
-    return "https://assets.rezfusion.com";
-  }
-  return "https://rezfusion-components-storage-dev.s3-us-west-2.amazonaws.com";
 }
 
 /**

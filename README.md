@@ -4,6 +4,10 @@ Provides a shortcode for injecting Rezfusion Components on your WordPress websit
 
 Visit: https://www.bluetent.com/rezfusion-hub/ for more information or to schedule a demo.
 
+## Rezfusion Hub Components Wiki and Documentation
+
+For documentation on Rezfusion Components you can visit the Wiki [here](https://github.com/bluetent/rezfusion-demo-components/wiki).
+
 ## Support
 
 Bluetent can not offer free or paid support for individual application installations of the plugin. Bluetent offers support on the JavaScript components only. Usage of this plugin assumes that you've tested the JavaScript components in your own website first, and are ready to add advanced marketing features to your website.
