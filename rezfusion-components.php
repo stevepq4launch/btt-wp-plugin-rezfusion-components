@@ -49,9 +49,11 @@ add_action( 'template_redirect', 'rezfusion_components_redirect' );
  * Provide a map of URLs.
  */
 function rezfusion_components_add_url_map() {
-  echo '<script type="application/javascript">';
-  echo "window.REZFUSION_COMPONENTS_ITEM_URL_MAP = " . json_encode(get_transient('rezfusion_hub_url_map'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-  echo '</script>';
+  if(get_option('rezfusion_hub_sync_items') && get_option('rezfusion_hub_redirect_urls')) {
+    echo '<script type="application/javascript">';
+    echo "window.REZFUSION_COMPONENTS_ITEM_URL_MAP = " . json_encode(get_transient('rezfusion_hub_url_map'), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    echo '</script>';
+  }
 }
 
 add_action( 'wp_head', 'rezfusion_components_add_url_map' );
