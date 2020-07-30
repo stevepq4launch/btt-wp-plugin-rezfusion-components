@@ -161,6 +161,7 @@ function rezfusion_components_cache_category_data($channel = NULL) {
 function rezfusion_components_update_item_data($channel = NULL) {
   // Update category data first. Ensures we have all the
   // latest taxonomy terms.
+  delete_transient('rezfusion_hub_item_data');
   rezfusion_components_update_category_data();
   // Warm the cache, and get the items from there.
   rezfusion_components_cache_item_data($channel);
@@ -296,7 +297,8 @@ function rezfusion_components_process_item_categories($api_item, $post) {
  */
 function rezfusion_components_update_category_data($channel = NULL) {
   // Warm the cache, and get the items from there.
-  rezfusion_components_cache_item_data($channel);
+  delete_transient('rezfusion_hub_category_data');
+  rezfusion_components_cache_category_data($channel);
   $categories = get_transient('rezfusion_hub_category_data');
   $taxonomies = [];
   $category_values = [];
