@@ -39,3 +39,5 @@ to find one in the active theme.
 
 You can clone this directory down and use `docker-compose up` from the root to start a quick dev/test environment. Uses
 all public images, you only need a Docker account to use it.
+
+After running the `up` command you should be able to visit `localhost:8080` and see a WordPress install (or site).
