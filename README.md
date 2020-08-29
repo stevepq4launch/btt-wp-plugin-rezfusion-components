@@ -35,4 +35,7 @@ to find one in the active theme.
 
 `<?php echo do_shortcode('[rezfusion-component element="details-page"]'); ?>`
 
+#### Local Development
 
+You can clone this directory down and use `docker-compose up` from the root to start a quick dev/test environment. Uses
+all public images, you only need a Docker account to use it.
