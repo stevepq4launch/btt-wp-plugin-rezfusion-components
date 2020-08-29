@@ -137,6 +137,43 @@ function rezfusion_component( $atts ) {
 add_shortcode( 'rezfusion-component', 'rezfusion_component' );
 
 /**
+ * Provide a shortcode for server rendering an API item.
+ *
+ * @param $atts
+ *
+ * @return string
+ */
+function rezfusion_lodging_item( $atts ) {
+  $a = shortcode_atts([
+    'channel' => get_option('rezfusion_hub_channel'),
+    'itemid' => $atts['itemid']
+  ], $atts );
+
+  if(!$a['itemid'] || !$a['channel']) {
+    return "Rezfusion Lodging Item: A 'channel' and an 'itemId' attribute are both required";
+  }
+
+  $result = rezfusion_components_get_item_details($a['channel'], $a['itemid']);
+
+  // These are used in the template.
+  $categoryInfo = $result->data->categoryInfo;
+  $lodgingItem = $result->data->lodgingProducts->results[0];
+
+  unset($result);
+  ob_start();
+
+  if($located = locate_template('vr-details-page.php')) {
+    require_once ($located);
+  }
+  else {
+    require_once (__DIR__ . "/templates/vr-details-page.php");
+  }
+  return ob_get_clean();
+}
+
+add_shortcode( 'rezfusion-lodging-item', 'rezfusion_lodging_item' );
+
+/**
  * Add a page to configure the components.
  */
 function rezfusion_components_create_menu() {

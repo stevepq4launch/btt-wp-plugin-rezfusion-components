@@ -20,10 +20,19 @@ Inject the `[rezfusion-component]` shortcode with a `channel` attribute anywhere
 
 `[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI" guid="MY_GUID"]`
 
-##### Provide a Details Page UI:
+#### Provide a Details Page UI:
 
 `[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI" guid="MY_GUID"]`
+
+You may also choose to render an individual item on the server:
+
+`[rezfusion-lodging-item itemid="TG9kZ2luZ0l0ZW06MTY4NQ=="]`
+
+This will render the template: `vr-details-page.php` found in either the base plugin or by using `locate_template`
+to find one in the active theme.
 
 #### Render a component directly in a WordPress template file.
 
 `<?php echo do_shortcode('[rezfusion-component element="details-page"]'); ?>`
+
+

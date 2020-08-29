@@ -4,16 +4,156 @@
  */
 
 /**
- * Make an HTTP request to get item data.
+ * Get a list of item(s) by their ID.
  *
- * @todo: This needs to be able to pass a param for "updated_ts"
- * @todo: ^^ Blueprint needs to support that, too.
+ * @param $channel
+ * @param $itemId
+ *
+ * @return array|mixed|object
+ */
+function rezfusion_components_get_item_details($channel, $itemId) {
+  $query = <<<'JSON'
+query($channels:ChannelFilter!, $itemIds:[String]) {
+  categoryInfo(channels:$channels){
+    categories{
+      id,
+      name,
+      description,
+      values {
+        id,
+        name,
+        description,
+        options { 
+          show_details,
+        }
+      },
+      options{
+        show_details,
+        listing_display,
+      }
+    }
+  },
+  lodgingProducts(channels:$channels,itemIds:$itemIds){
+    results {
+      id,
+      beds,
+      baths,
+      occ_total,
+      item { 
+        hasStays,
+        availability{ 
+          begin,
+          end,
+          available,
+          quantity,
+          status
+        }
+        restrictions {
+          begin,
+          end,
+          minStay,
+          maxStay,
+          turnDay,
+          increment
+        }
+        turnover {
+          begin,
+          end,
+          status
+        }
+        prices {
+          begin,
+          end,
+          minStay,
+          maxStay,
+          type,
+          price,
+          currency
+        }
+        images {
+          url,
+          derivatives,
+          description,
+          title
+        }
+        location {
+          latitude,
+          longitude,
+          city,
+          province
+        }
+        tour {
+          url
+        },
+        reviews {
+          rating,
+          headline,
+          arrival,
+          departure,
+          review_date,
+          response,
+          guest_name,
+          comment,
+          id
+        }
+        reviewSummary {
+          average,
+          count
+        }
+        id,
+        type,
+        name,
+        remote_id,
+        description,
+        category_values { 
+          value { 
+            id,
+            category {
+              id,
+            }
+          }
+        }
+        engine {
+          plain_text_descriptions
+        }
+      }
+    }
+  }
+}
+JSON;
+
+  $variables = [
+    'channels' => [
+      'url' => $channel,
+    ],
+    'itemIds' => [$itemId]
+  ];
+
+  $json = json_encode(['query' => $query, 'variables' => $variables]);
+
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, rezfusion_components_get_blueprint_url());
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      'Content-Type: application/json;charset=utf-8',
+    ]
+  );
+
+  $response = curl_exec($ch);
+  return json_decode($response);
+
+}
+
+/**
+ * Make an HTTP request to get item data.
  *
  * @param $channel
  *
  * @return array|mixed|object
  */
-function rezfusion_components_get_items($channel) {
+function rezfusion_components_get_channel_items($channel) {
   $query = <<<'JSON'
 query($channels:ChannelFilter!) {
   lodgingProducts(channels:$channels) {
@@ -117,7 +257,7 @@ function rezfusion_components_cache_item_data($channel = NULL) {
     $channel = get_option('rezfusion_hub_channel');
   }
 
-  $data = rezfusion_components_get_items($channel);
+  $data = rezfusion_components_get_channel_items($channel);
 
   if(!empty($data)) {
     set_transient('rezfusion_hub_item_data', $data);

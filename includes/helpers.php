@@ -45,7 +45,7 @@ function rezfusion_components_get_blueprint_url() {
   if($env === 'prd') {
     return "https://blueprint.rezfusion.com/graphql";
   }
-  return "https://dev.blueprint.rescmshost.com/graphql";
+  return "https://blueprint.hub-stg.rezfusion.com/graphql";
 
 }
 
