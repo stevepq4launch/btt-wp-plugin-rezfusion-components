@@ -1,0 +1,19 @@
+version: 2.1
+jobs:
+  test:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run:
+          name: Build Environment
+          command: |
+            sh $(pwd)/bin/build.sh
+      - run:
+          name: Test
+          command: |
+            sh $(pwd)/bin/test.sh
+workflows:
+  test:
+    jobs:
+      - test
