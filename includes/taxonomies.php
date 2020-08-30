@@ -11,6 +11,8 @@ function rezfusion_components_register_taxonomy() {
     return;
   }
 
+  // Warm the cache before registering taxonomies.
+  rezfusion_components_cache_category_data();
   $categories = get_transient('rezfusion_hub_category_data');
   if(isset($categories->data->categoryInfo->categories) && !empty($categories->data->categoryInfo->categories)) {
     foreach ($categories->data->categoryInfo->categories as $category) {

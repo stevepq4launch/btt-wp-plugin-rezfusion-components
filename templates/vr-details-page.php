@@ -1,5 +1,10 @@
 <?php
 /**
+ * This template is used by the [rezfusion-lodging-item] shortcode. It can be
+ * overridden by coping this file into the active theme. The shortcode uses
+ * `locate_template` to load the file. So it must be in one of the
+ * standard WordPress locations.
+ *
  * These shapes are defined at the URL below as `categoryInfo` and `LodgingItem`
  * respectively:
  *
