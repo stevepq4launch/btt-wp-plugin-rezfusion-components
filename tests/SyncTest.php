@@ -38,6 +38,46 @@ class SyncTest extends \PHPUnit\Framework\TestCase {
     ));
     $ct = count($query->get_posts());
     $this->assertEquals(count($data->data->lodgingProducts->results), $ct);
+    // Load each item by its Hub ID and check its metadata.
+    foreach($data->data->lodgingProducts->results as $result) {
+
+      // Verify the presence of a local post.
+      $local_data = rezfusion_components_get_local_item($result->item->id);
+      $post = get_post($local_data[0]['post_id']);
+      $this->assertNotEmpty($post);
+
+      // Verify beds/baths is set appropriately.
+      $meta = get_post_meta($post->ID);
+      $this->assertEquals(intval($meta['rezfusion_hub_beds'][0]), intval($result->beds));
+      $this->assertEquals(intval($meta['rezfusion_hub_baths'][0]), intval($result->baths));
+
+      // Verify that the terms are set correctly.
+      $categories = get_transient('rezfusion_hub_category_data');
+      if(isset($categories->data->categoryInfo->categories) && !empty($categories->data->categoryInfo->categories)) {
+        foreach ($categories->data->categoryInfo->categories as $category) {
+
+          // Build up an array of hub ids keyed by category name.
+          $name = str_replace('-', '_', sanitize_title($category->name));
+          $taxonomies[$name] = [];
+          foreach($category->values as $value) {
+            $taxonomies[$name][] = intval($value->id);
+          }
+          $terms = wp_get_post_terms($post->ID, $name);
+
+          if (empty($result->item->category_values)) {
+            // This item has no values. Assert there none tagged.
+            $this->assertEmpty($terms);
+          }
+          else {
+            $values = array_map(function($value) {
+              return intval($value->value->id);
+            }, $result->item->category_values);
+            // Assert that this item has the right number of items tagged locally.
+            $this->assertEquals(count(array_intersect($values, $taxonomies[$name])), count($terms));
+          }
+        }
+      }
+    }
   }
 
 	public function tearDown(): void {
