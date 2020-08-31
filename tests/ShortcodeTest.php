@@ -1,9 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: ethan
- * Date: 8/30/20
- * Time: 11:04 PM
+ * @file - Shortcode render tests.
  */
 
 namespace Rezfusion\Tests;
