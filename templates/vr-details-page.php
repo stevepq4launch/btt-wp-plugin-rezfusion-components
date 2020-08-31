@@ -17,23 +17,24 @@
  * @var $lodgingItem
  */
 ?>
+<div class="lodging-item">
+  <h1>
+    <?php print $lodgingItem->item->name; ?>
+  </h1>
 
-<h1>
-  <?php print $lodgingItem->item->name; ?>
-</h1>
+  <div class="lodging-item-details__beds">
+    Beds: <?php print $lodgingItem->beds; ?>
+  </div>
 
-<div>
-  Beds: <?php print $lodgingItem->beds; ?>
-</div>
+  <div class="lodging-item-details__baths">
+    Baths: <?php print $lodgingItem->baths; ?>
+  </div>
 
-<div>
-  Baths: <?php print $lodgingItem->baths; ?>
-</div>
+  <div class="lodging-item-details__occ">
+    Max Occupancy: <?php print $lodgingItem->occ_total; ?>
+  </div>
 
-<div>
-  Max Occupancy: <?php print $lodgingItem->occ_total; ?>
-</div>
-
-<div>
-  <?php print $lodgingItem->item->description; ?>
+  <div class="lodging-item-details__description">
+    <?php print $lodgingItem->item->description; ?>
+  </div>
 </div>
