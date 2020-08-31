@@ -12,7 +12,7 @@ namespace Rezfusion\Tests;
  * Test that we can still retrieve the various pieces of API data needed for the
  * plugin.
  */
-class SyncTest extends \PHPUnit\Framework\TestCase {
+class SyncTest extends BaseTestCase {
 
 	/**
 	 * Fetch the item data and verify it matches.
