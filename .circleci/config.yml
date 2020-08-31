@@ -6,13 +6,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Build Environment
+          name: Build and Test
           command: |
             sh $(pwd)/bin/build.sh
-      - run:
-          name: Test
-          command: |
             sh $(pwd)/bin/test.sh
+
 workflows:
   test:
     jobs:
