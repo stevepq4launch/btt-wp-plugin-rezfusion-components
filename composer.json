@@ -1,0 +1,13 @@
+{
+    "name": "propertybrands/wp-plugin-rezfusion-components",
+    "description": "Provides a WordPress integration with Rezfusion Hub",
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    },
+    "require": {},
+    "autoload-dev": {
+        "psr-4": {
+            "Rezfusion\\Tests\\": "tests/"
+        }
+    }
+}

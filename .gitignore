@@ -1,0 +1,7 @@
+.phpunit.*
+.idea
+.DS_Store
+vendor
+build
+report
+node_modules

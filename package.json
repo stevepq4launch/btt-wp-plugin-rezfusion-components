@@ -1,0 +1,32 @@
+{
+  "name": "rezfusion-components",
+  "version": "1.0.0",
+  "description": "Provides integration points with Rezfusion Hub",
+  "main": "src/js/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest",
+    "build": "node_modules/.bin/browserify assets/js/flags.js -t babelify --outfile dist/bundle.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluetent/wp-plugin-rezfusion-components.git"
+  },
+  "author": "developers@bluetent.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bluetent/wp-plugin-rezfusion-components/issues"
+  },
+  "homepage": "https://github.com/bluetent/wp-plugin-rezfusion-components#readme",
+  "devDependencies": {
+    "@babel/core": "^7.11.5",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-transform-classes": "^7.10.4",
+    "@babel/preset-env": "^7.11.5",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.2",
+    "jest": "^26.4.2"
+  }
+}

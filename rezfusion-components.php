@@ -18,6 +18,7 @@ require_once "includes/pages.php";
 require_once "includes/gql.php";
 require_once "includes/post_type.php";
 require_once "includes/taxonomies.php";
+require_once "includes/shortcodes.php";
 
 /**
  * Provide a rewrite tag for us in generating
@@ -55,86 +56,6 @@ function rezfusion_components_add_url_map() {
 }
 
 add_action( 'wp_head', 'rezfusion_components_add_url_map' );
-
-
-/**
- * Add a shortcode wrapper to download rezfusion components.
- *
- * @param $atts
- *
- * @return string
- */
-function rezfusion_component( $atts ) {
-
-  $a = shortcode_atts([
-    'element' => 'search',
-    'id' => 'app',
-    'channel' => get_option('rezfusion_hub_channel'),
-    'url' => get_option('rezfusion_hub_folder'),
-  ], $atts );
-
-  if(!$a['channel'] || !$a['url']) {
-    return "Rezfusion Component: A 'channel' and a 'URL' attribute are both required";
-  }
-
-  $handle = "{$a['channel']}-{$a['element']}";
-
-  wp_enqueue_script(
-    $handle,
-    $a['url']
-  );
-
-  if($a['element'] === 'details-page' && $post = get_post()) {
-    $meta = get_post_meta($post->ID);
-    if($meta['rezfusion_hub_item_id']) {
-      wp_localize_script(
-        $handle,
-        'REZFUSION_COMPONENTS_CONF',
-        [
-          'settings' => [
-            'components' => [
-              'DetailsPage' => [
-                'id' => $meta['rezfusion_hub_item_id'][0],
-              ],
-            ],
-          ],
-        ]
-      );
-    }
-  }
-
-  if(is_tax()) {
-    $object = get_queried_object();
-    $meta = get_term_meta($object->term_id);
-    wp_localize_script(
-      $handle,
-      'REZFUSION_COMPONENTS_CONF',
-      [
-        'settings' => [
-          'components' => [
-            'SearchProvider' => [
-              'filters' => [
-                'categoryFilter' => [
-                  'categories' => [
-                    [
-                      'cat_id' => $meta['rezfusion_hub_category_id'][0],
-                      'values' => $meta['rezfusion_hub_category_value_id'],
-                      'operator' => 'AND',
-                    ],
-                  ],
-                ],
-              ],
-            ],
-          ],
-        ],
-      ]
-    );
-  }
-
-  return "<div id={$a['id']}></div>";
-}
-
-add_shortcode( 'rezfusion-component', 'rezfusion_component' );
 
 /**
  * Add a page to configure the components.

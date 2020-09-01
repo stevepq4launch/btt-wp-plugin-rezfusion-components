@@ -4,23 +4,6 @@
  */
 
 /**
- * Insert a value or key/value pair after a specific key in an array.  If key doesn't exist, value is appended
- * to the end of the array.
- *
- * @param array $array
- * @param string $key
- * @param array $new
- *
- * @return array
- */
-function _array_insert_after( array $array, $key, array $new ) {
-  $keys = array_keys( $array );
-  $index = array_search( $key, $keys );
-  $pos = false === $index ? count( $array ) : $index + 1;
-  return array_merge( array_slice( $array, 0, $pos ), $new, array_slice( $array, $pos ) );
-}
-
-/**
  * Provide a helper function to describe the environement.
  *
  * @return string
@@ -45,7 +28,7 @@ function rezfusion_components_get_blueprint_url() {
   if($env === 'prd') {
     return "https://blueprint.rezfusion.com/graphql";
   }
-  return "https://dev.blueprint.rescmshost.com/graphql";
+  return "https://blueprint.hub-stg.rezfusion.com/graphql";
 
 }
 
@@ -59,4 +42,28 @@ function rezfusion_components_get_blueprint_url() {
 function rezfusion_components_get_local_item($id) {
   global $wpdb;
   return $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = 'rezfusion_hub_item_id' AND  meta_value = '$id' LIMIT 1", ARRAY_A);
+}
+
+/**
+ * Render a template by buffering its output.
+ *
+ * @param $file
+ * @param $default
+ * @param array $variables
+ *
+ * @return string
+ */
+function rezfusion_components_render_template($file, $default, $variables =[]) {
+  // These are used in the template
+  extract($variables);
+
+  ob_start();
+
+  if($located = locate_template($file)) {
+    require_once ($located);
+  }
+  else {
+    require_once ("$default/$file");
+  }
+  return ob_get_clean();
 }
