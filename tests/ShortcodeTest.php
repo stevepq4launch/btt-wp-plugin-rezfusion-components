@@ -21,7 +21,7 @@ class ShortcodeTest extends BaseTestCase {
     $doc->loadXML($out);
     $xpath = new \DOMXPath($doc);
     $wrappers = $xpath->query('//div[contains(@class,"lodging-item")]');
-    $this->assertEquals(5, $wrappers->length);
+    $this->assertEquals(6, $wrappers->length);
     $beds = $xpath->query('//div[contains(@class, "lodging-item-details__beds")]');
     $this->assertEquals(1, $beds->length);
     $baths = $xpath->query('//div[contains(@class, "lodging-item-details__baths")]');
