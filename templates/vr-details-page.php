@@ -19,6 +19,7 @@
 ?>
 <div class="lodging-item">
   <h1>
+    <?php print do_shortcode("[rezfusion-item-flag namespace=\"rezfusion-favorites\" itemid=\"{$lodgingItem->item->id}\"]"); ?>
     <?php print $lodgingItem->item->name; ?>
   </h1>
 

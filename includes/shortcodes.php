@@ -1,6 +1,7 @@
 <?php
-
-
+/**
+ * @file - Provide shortcodes for rendering pieces of the UI.
+ */
 
 /**
  * Add a shortcode wrapper to download rezfusion components.
@@ -100,20 +101,47 @@ function rezfusion_lodging_item( $atts ) {
 
   $result = rezfusion_components_get_item_details($a['channel'], $a['itemid']);
 
-  // These are used in the template.
-  $categoryInfo = $result->data->categoryInfo;
-  $lodgingItem = $result->data->lodgingProducts->results[0];
-
-  unset($result);
-  ob_start();
-
-  if($located = locate_template('vr-details-page.php')) {
-    require_once ($located);
-  }
-  else {
-    require_once (__DIR__ . "/../templates/vr-details-page.php");
-  }
-  return ob_get_clean();
+  return rezfusion_components_render_template(
+    'vr-details-page.php',
+    __DIR__ . "/../templates",
+    [
+      'categoryInfo' => $result->data->categoryInfo,
+      'lodgingItem' => $result->data->lodgingProducts->results[0]
+    ]
+  );
 }
 
 add_shortcode( 'rezfusion-lodging-item', 'rezfusion_lodging_item' );
+
+/**
+ * Provide a shortcode for rendering the favorites flag.
+ *
+ * @param $atts
+ *
+ * @return string
+ */
+function rezfusion_favorites_item( $atts ) {
+  $a = shortcode_atts([
+    'namespace' => get_option('rezfusion_hub_favorites_namespace', 'rezfusion-favorites'),
+    'itemid' => $atts['itemid']
+  ], $atts );
+
+  wp_enqueue_script(
+    'rezfusion_components_flag',
+    plugins_url('rezfusion-components/js/flags.js')
+  );
+
+  wp_enqueue_style(
+    'rezfusion_components_flag',
+    plugins_url('rezfusion-components/css/favorites.css')
+  );
+
+  return rezfusion_components_render_template(
+    'vr-item-flag.php',
+    __DIR__ . "/../templates",
+    $a
+  );
+}
+
+add_shortcode( 'rezfusion-item-flag', 'rezfusion_favorites_item' );
+

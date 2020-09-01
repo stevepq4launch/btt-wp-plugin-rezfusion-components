@@ -43,3 +43,27 @@ function rezfusion_components_get_local_item($id) {
   global $wpdb;
   return $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = 'rezfusion_hub_item_id' AND  meta_value = '$id' LIMIT 1", ARRAY_A);
 }
+
+/**
+ * Render a template by buffering its output.
+ *
+ * @param $file
+ * @param $default
+ * @param array $variables
+ *
+ * @return string
+ */
+function rezfusion_components_render_template($file, $default, $variables =[]) {
+  // These are used in the template
+  extract($variables);
+
+  ob_start();
+
+  if($located = locate_template($file)) {
+    require_once ($located);
+  }
+  else {
+    require_once ("$default/$file");
+  }
+  return ob_get_clean();
+}

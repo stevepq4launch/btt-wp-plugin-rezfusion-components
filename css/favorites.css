@@ -1,0 +1,17 @@
+.lodging-item-flag--rezfusion-favorites button {
+    display: block;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lodging-item-flag--unflagged svg path {
+    fill: none;
+    stroke: #aaaaaa;
+}
+
+.lodging-item-flag--flagged svg path {
+    fill: black;
+    stroke: none;
+}
