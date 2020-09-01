@@ -128,12 +128,12 @@ function rezfusion_favorites_item( $atts ) {
 
   wp_enqueue_script(
     'rezfusion_components_flag',
-    plugins_url('rezfusion-components/js/flags.js')
+    plugins_url('rezfusion-components/dist/bundle.js')
   );
 
   wp_enqueue_style(
     'rezfusion_components_flag',
-    plugins_url('rezfusion-components/css/favorites.css')
+    plugins_url('rezfusion-components/assets/css/favorites.css')
   );
 
   return rezfusion_components_render_template(
