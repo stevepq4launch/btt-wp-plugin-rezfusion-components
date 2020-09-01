@@ -24,13 +24,14 @@ const rezfusionToggleFlag = (namespace, itemId) => {
   }
   const index = items.indexOf(itemId);
   if(index === -1) {
-    items.push(itemId);
-    localStorage.setItem(namespace, JSON.stringify(items));
+    localStorage.setItem(namespace, JSON.stringify([
+      ...items,
+      itemId,
+    ]));
     return REZFUSION_FLAG_ITEM_ADDED;
   }
 
-  items.splice(index, 1);
-  localStorage.setItem(namespace, JSON.stringify(items));
+  localStorage.setItem(namespace, JSON.stringify(items.filter(i => i !== itemId)));
   return REZFUSION_FLAG_ITEM_REMOVED;
 };
 
