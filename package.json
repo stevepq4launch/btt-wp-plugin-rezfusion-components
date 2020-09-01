@@ -7,7 +7,7 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "npm test",
+    "test": "jest",
     "build": "node_modules/.bin/browserify assets/js/flags.js -t babelify --outfile dist/bundle.js"
   },
   "repository": {
@@ -26,6 +26,7 @@
     "@babel/plugin-transform-classes": "^7.10.4",
     "@babel/preset-env": "^7.11.5",
     "babelify": "^10.0.0",
-    "browserify": "^16.5.2"
+    "browserify": "^16.5.2",
+    "jest": "^26.4.2"
   }
 }
