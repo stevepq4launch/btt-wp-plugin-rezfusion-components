@@ -33,6 +33,9 @@ class ShortcodeTest extends BaseTestCase {
     file_put_contents($activeTheme . '/vr-details-page.php', file_get_contents($activeTheme . '/vr-details-page.php') . "\nTHEME TEMPLATE");
     $out2 = do_shortcode("[rezfusion-lodging-item itemid=\"{$meta['rezfusion_hub_item_id'][0]}\"]");
     $this->assertTrue(!!stristr($out2, 'THEME TEMPLATE'));
+
+    $this->assertTrue(wp_script_is('rezfusion_components_flag'));
+    $this->assertTrue(wp_style_is('rezfusion_components_flag'));
   }
 
   public function tearDown(): void {
