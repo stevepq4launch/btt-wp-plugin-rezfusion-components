@@ -41,7 +41,7 @@ const rezfusionToggleFlag = (namespace, itemId) => {
  * @returns {boolean}
  */
 export const rezfusionItemIsFlagged = (namespace, itemId) =>
-  rezfusionGetFlags(namespace) && rezfusionGetFlags(namespace).indexOf(itemId);
+  rezfusionGetFlags(namespace) && rezfusionGetFlags(namespace).indexOf(itemId) !== -1;
 
 /**
  * Get the full list of favorites stored in the browser.
