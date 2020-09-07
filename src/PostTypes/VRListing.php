@@ -104,7 +104,7 @@ class VRListing extends PostType {
       'label' => __('Listing', 'rezfusion_components'),
       'description' => __('Listing Description', 'rezfusion_components'),
       'labels' => $this->getLabels(),
-      'supports' => ['custom-fields'],
+      'supports' => false,
       'taxonomies' => $rzf,
       'hierarchical' => FALSE,
       'public' => TRUE,

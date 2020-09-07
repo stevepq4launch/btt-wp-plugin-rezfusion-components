@@ -49,16 +49,16 @@ class Metabox {
   private $title;
 
   /**
-   * Constructor.
+   * Metabox constructor.
    *
-   * @param string $id
-   * @param \Rezfusion\Template $template
-   * @param string $title
+   * @param $id
+   * @param $template
+   * @param $title
+   * @param array $screens
    * @param string $context
    * @param string $priority
-   * @param string[] $screens
    */
-  public function __construct($id, $template, $title, $context = 'advanced', $priority = 'default', $screens = []) {
+  public function __construct($id, $template, $title, $screens = [], $priority = 'default', $context = 'advanced') {
     if (is_string($screens)) {
       $screens = (array) $screens;
     }
@@ -69,16 +69,15 @@ class Metabox {
     $this->screens = $screens;
     $this->template = $template;
     $this->title = $title;
+    add_action('add_meta_boxes', [$this, 'register']);
   }
 
   /**
    * @param \WP_Post $post
-   *
-   * @return string
    */
-  public function getCallback(\WP_Post $post) {
-    $variables = ['post' => $post, 'instance' => $this];
-    return function() use($variables) { $this->render($this->template, $variables); };
+  public function render(\WP_Post $post) {
+    $variables = ['post' => $post, 'instance' => $this, 'meta' => get_post_meta($post->ID)];
+    print $this->template->render($variables);
   }
 
   /**
@@ -124,5 +123,12 @@ class Metabox {
    */
   public function getTitle() {
     return $this->title;
+  }
+
+  /**
+   * Register the metabox with WordPress.
+   */
+  public function register() {
+    add_meta_box($this->getId(), $this->getTitle(), [$this, 'render'], $this->getScreens(), $this->getContext(), $this->getPriority());
   }
 }

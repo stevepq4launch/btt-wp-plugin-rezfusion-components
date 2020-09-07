@@ -7,6 +7,7 @@ namespace Rezfusion;
 
 use Rezfusion\Client\CurlClient;
 use Rezfusion\Client\TransientCache;
+use Rezfusion\Metaboxes\Metabox;
 use Rezfusion\Pages\Admin\ConfigurationPage;
 use Rezfusion\Pages\Admin\CategoryInfoPage;
 use Rezfusion\Pages\Admin\ItemInfoPage;
@@ -41,6 +42,7 @@ class Plugin {
    */
   private function __construct() {
     $this->registerPostTypes();
+    $this->registerMetaboxes();
     add_action('init', [$this, 'registerShortcodes']);
     add_action('init', [$this, 'registerRewriteTags']);
     add_action('admin_menu', [$this, 'registerPages']);
@@ -74,7 +76,12 @@ class Plugin {
    * Add metaboxes as needed.
    */
   public function registerMetaboxes() {
-
+    new Metabox(
+      'lodging-item-info',
+      new Template('lodging-item-info.php', REZFUSION_PLUGIN_TEMPLATES_PATH . '/admin/metaboxes'),
+      __('Property Information'),
+      [self::VR_LISTING_NAME]
+    );
   }
 
   /**
