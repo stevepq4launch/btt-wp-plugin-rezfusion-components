@@ -139,4 +139,34 @@ abstract class Client implements ClientInterface {
     }
     return $this->queries[$path];
   }
+
+  /**
+   * @param $query
+   * @param array $variables
+   *
+   * @return mixed
+   */
+  public function call($query, $variables = []) {
+    $key = md5($query) . ":" . md5(serialize($variables));
+
+    if($this->cache && ($this->cache->getMode() & $this->cache::MODE_READ) && $this->cache->has($key)) {
+      return $this->cache->get($key);
+    }
+
+    $response = $this->request($query, $variables);
+
+    if($this->cache && ($this->cache->getMode() & $this->cache::MODE_WRITE)) {
+      $this->cache->set($key, $response);
+    }
+
+    return $response;
+  }
+
+  /**
+   * @param $query
+   * @param array $variables
+   *
+   * @return mixed
+   */
+  abstract protected function request($query, $variables = []);
 }

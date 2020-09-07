@@ -5,6 +5,7 @@
 
 namespace Rezfusion;
 
+use Rezfusion\Client\Cache;
 use Rezfusion\Client\CurlClient;
 use Rezfusion\Client\TransientCache;
 use Rezfusion\Metaboxes\Metabox;
@@ -219,12 +220,21 @@ class Plugin {
    */
   public static function refreshData() {
     $client = Plugin::apiClient();
-    $client->setCache(null);
+    // During a refresh cycle, we want to skip the read on cache hits.
+    // But still write during the end of the cycle.
+    $cache = $client->getCache();
+    $mode = $cache->getMode();
+    $cache->setMode(Cache::MODE_WRITE);
     $channel = get_option('rezfusion_hub_channel');
     $repository = new ItemRepository($client);
     $categoryRepository = new CategoryRepository($client);
+    // Prioritize category updates so that taxonomy IDs/information is
+    // available during item updates.
     $categoryRepository->updateCategories($channel);
     $repository->updateItems($channel);
+    // Restore the cache mode to the previous setting just incase processing
+    // will continue after this step.
+    $cache->setMode($mode);
   }
 
 }
