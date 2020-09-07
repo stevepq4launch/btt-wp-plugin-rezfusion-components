@@ -1,0 +1,107 @@
+query($channels:ChannelFilter!, $itemIds:[String]) {
+    categoryInfo(channels:$channels){
+        categories{
+            id,
+            name,
+            description,
+            values {
+                id,
+                name,
+                description,
+                options {
+                    show_details,
+                }
+            },
+            options{
+                show_details,
+                listing_display,
+            }
+        }
+    },
+    lodgingProducts(channels:$channels,itemIds:$itemIds){
+        results {
+            id,
+            beds,
+            baths,
+            occ_total,
+            item {
+                hasStays,
+                availability{
+                    begin,
+                    end,
+                    available,
+                    quantity,
+                    status
+                }
+                restrictions {
+                    begin,
+                    end,
+                    minStay,
+                    maxStay,
+                    turnDay,
+                    increment
+                }
+                turnover {
+                    begin,
+                    end,
+                    status
+                }
+                prices {
+                    begin,
+                    end,
+                    minStay,
+                    maxStay,
+                    type,
+                    price,
+                    currency
+                }
+                images {
+                    url,
+                    derivatives,
+                    description,
+                    title
+                }
+                location {
+                    latitude,
+                    longitude,
+                    city,
+                    province
+                }
+                tour {
+                    url
+                },
+                reviews {
+                    rating,
+                    headline,
+                    arrival,
+                    departure,
+                    review_date,
+                    response,
+                    guest_name,
+                    comment,
+                    id
+                }
+                reviewSummary {
+                    average,
+                    count
+                }
+                id,
+                type,
+                name,
+                remote_id,
+                description,
+                category_values {
+                    value {
+                        id,
+                        category {
+                            id,
+                        }
+                    }
+                }
+                engine {
+                    plain_text_descriptions
+                }
+            }
+        }
+    }
+}

@@ -8,6 +8,7 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./includes</directory>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
 </phpunit>

@@ -1,0 +1,18 @@
+query($channels:ChannelFilter!) {
+    lodgingProducts(channels:$channels) {
+        results {
+            beds
+            baths
+            item {
+                id
+                name
+                category_values {
+                    value {
+                        name
+                        id
+                    }
+                }
+            }
+        }
+    }
+}

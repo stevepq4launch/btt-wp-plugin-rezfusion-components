@@ -6,6 +6,8 @@
 namespace Rezfusion\Tests;
 
 
+use Rezfusion\Plugin;
+
 class ShortcodeTest extends BaseTestCase {
 
   /**
@@ -13,7 +15,7 @@ class ShortcodeTest extends BaseTestCase {
    * developer overrides the template in their active theme.
    */
   public function testLodgingItem() {
-    rezfusion_components_update_item_data();
+    Plugin::refreshData();
     $posts = get_posts(['post_type' => 'vr_listing']);
     $meta = get_post_meta($posts[0]->ID);
     $out = do_shortcode("[rezfusion-lodging-item itemid=\"{$meta['rezfusion_hub_item_id'][0]}\"]");
