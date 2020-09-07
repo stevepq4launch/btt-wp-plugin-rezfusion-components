@@ -1,0 +1,12 @@
+query($channels:ChannelFilter!) {
+    categoryInfo(channels:$channels) {
+        categories {
+            name
+            id
+            values {
+                name
+                id
+            }
+        }
+    }
+}
