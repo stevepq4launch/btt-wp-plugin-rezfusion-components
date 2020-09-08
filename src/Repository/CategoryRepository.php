@@ -75,8 +75,8 @@ class CategoryRepository {
       $terms = array_reduce($query->terms, function ($carry, $item) {
         if (!empty($item->term_id)) {
           $meta = get_term_meta($item->term_id);
-          if (isset($meta['rezfusion_hub_category_value_id'])) {
-            $carry[$meta['rezfusion_hub_category_value_id']] = $item;
+          if (isset($meta['rezfusion_hub_category_value_id'][0])) {
+            $carry[$meta['rezfusion_hub_category_value_id'][0]] = $item;
           }
         }
         return $carry;

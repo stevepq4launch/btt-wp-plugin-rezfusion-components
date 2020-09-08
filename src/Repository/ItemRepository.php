@@ -44,8 +44,8 @@ class ItemRepository {
     $local_items = array_reduce($query->posts, function($carry, $item) {
       if(!empty($item->ID)) {
         $meta = get_post_meta($item->ID);
-        if(isset($meta['rezfusion_hub_item_id'])) {
-          $carry[$meta['rezfusion_hub_item_id']] = $item;
+        if(isset($meta['rezfusion_hub_item_id'][0])) {
+          $carry[$meta['rezfusion_hub_item_id'][0]] = $item;
         }
       }
       return $carry;
@@ -61,8 +61,8 @@ class ItemRepository {
           'post_title' => $result->item->name,
           'meta_input' => [
             'rezfusion_hub_item_id' => $result->item->id,
-            'rezfusion_hub_beds' => floatval($result->beds),
-            'rezfusion_hub_baths' => floatval($result->baths),
+            'rezfusion_hub_beds' => $result->beds,
+            'rezfusion_hub_baths' => $result->baths,
           ],
         ];
         if(!empty($local_items[$id])) {
