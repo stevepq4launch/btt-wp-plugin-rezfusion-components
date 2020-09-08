@@ -14,9 +14,9 @@ Author URI: https://bluetent.com
 */
 
 define( 'REZFUSION_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-define( 'REZFUSION_PLUGIN_ADMIN_BUILD_PATH', plugin_dir_path( __FILE__ ) . "dist/admin" );
-define( 'REZFUSION_PLUGIN_TEMPLATES_PATH', plugin_dir_path( __FILE__ ) . "templates" );
-define( 'REZFUSION_PLUGIN_QUERIES_PATH', plugin_dir_path( __FILE__ ) . "queries" );
+define( 'REZFUSION_PLUGIN_ADMIN_BUILD_PATH', REZFUSION_PLUGIN_PATH . "dist/admin" );
+define( 'REZFUSION_PLUGIN_TEMPLATES_PATH', REZFUSION_PLUGIN_PATH . "templates" );
+define( 'REZFUSION_PLUGIN_QUERIES_PATH', REZFUSION_PLUGIN_PATH . "queries" );
 
 require_once "includes/autoloader.php";
 
