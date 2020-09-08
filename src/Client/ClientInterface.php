@@ -14,10 +14,10 @@ interface ClientInterface {
    * ClientInterface constructor.
    *
    * @param $queriesBasePath
-   * @param string $env
+   * @param string $url
    * @param \Rezfusion\Client\Cache|NULL $cache
    */
-  public function __construct($queriesBasePath, $env = 'prd', Cache $cache = null);
+  public function __construct($queriesBasePath, $url, Cache $cache = null);
 
   /**
    * @param $channel

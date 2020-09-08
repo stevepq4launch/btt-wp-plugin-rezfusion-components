@@ -33,16 +33,16 @@ abstract class Shortcode implements Renderable {
     $this->template = $template;
     if(!$this->shortcode) {
       $class = __CLASS__;
-      throw new \Exception("Invalid shortcode in {$class}");
+      throw new \Exception("Invalid/missing shortcode in {$class}");
     }
     add_shortcode($this->shortcode, [$this, 'render']);
   }
 
   /**
-   * @param array $shortcodeAtts
+   * @param array $atts
    *
    * @return string
    */
-  abstract public function render($shortcodeAtts = []): string;
+  abstract public function render($atts = []): string;
 
 }

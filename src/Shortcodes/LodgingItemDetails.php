@@ -12,16 +12,16 @@ class LodgingItemDetails extends Shortcode {
   protected $shortcode = 'rezfusion-lodging-item';
 
   /**
-   * @param array $shortcodeAtts
+   * @param array $atts
    *
    * @return string
    * @throws \Exception
    */
-  public function render($shortcodeAtts = []): string {
+  public function render($atts = []): string {
     $a = shortcode_atts([
       'channel' => get_option('rezfusion_hub_channel'),
-      'itemid' => $shortcodeAtts['itemid']
-    ], $shortcodeAtts );
+      'itemid' => $atts['itemid']
+    ], $atts );
 
     if(!$a['itemid'] || !$a['channel']) {
       return "Rezfusion Lodging Item: A 'channel' and an 'itemId' attribute are both required";

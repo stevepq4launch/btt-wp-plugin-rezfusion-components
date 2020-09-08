@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "node_modules/.bin/browserify assets/js/flags.js -t babelify --outfile dist/bundle.js"
+    "build": "node_modules/.bin/browserify assets/js/flags.js -t babelify --outfile dist/bundle.js",
+    "build:admin": "node_modules/.bin/wp-scripts build assets/admin/js/index.js --output-path=dist/admin"
   },
   "repository": {
     "type": "git",
@@ -25,8 +26,22 @@
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-transform-classes": "^7.10.4",
     "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
+    "@wordpress/scripts": "12.2.0",
     "babelify": "^10.0.0",
     "browserify": "^16.5.2",
     "jest": "^26.4.2"
+  },
+  "dependencies": {
+    "@wordpress/blocks": "^6.21.0",
+    "@wordpress/components": "^10.1.0",
+    "@wordpress/core-data": "^2.21.0",
+    "@wordpress/data": "^4.23.0",
+    "@wordpress/edit-post": "^3.22.0",
+    "@wordpress/plugins": "^2.21.0",
+    "react": "^16.13.1"
+  },
+  "browserify": {
+    "transform": [["babelify", { "presets": ["@babel/preset-env"] }]]
   }
 }

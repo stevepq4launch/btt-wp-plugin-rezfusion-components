@@ -141,6 +141,8 @@ abstract class Client implements ClientInterface {
   }
 
   /**
+   * Public API which wraps the HTTP request method.
+   *
    * @param $query
    * @param array $variables
    *
@@ -163,6 +165,9 @@ abstract class Client implements ClientInterface {
   }
 
   /**
+   * This is the internal API provided to clients for initiating a request
+   * to the Blueprint service.
+   *
    * @param $query
    * @param array $variables
    *

@@ -104,7 +104,7 @@ class VRListing extends PostType {
       'label' => __('Listing', 'rezfusion_components'),
       'description' => __('Listing Description', 'rezfusion_components'),
       'labels' => $this->getLabels(),
-      'supports' => false,
+      'supports' => ['custom-fields', 'editor'],
       'taxonomies' => $rzf,
       'hierarchical' => FALSE,
       'public' => TRUE,
@@ -118,6 +118,7 @@ class VRListing extends PostType {
       'exclude_from_search' => FALSE,
       'publicly_queryable' => TRUE,
       'capability_type' => 'page',
+      'show_in_rest' => true,
     ];
   }
 
@@ -165,6 +166,30 @@ class VRListing extends PostType {
         print $meta['rezfusion_hub_item_id'][0];
         break;
     }
+  }
+
+  /**
+   * Register post meta.
+   */
+  public function registerMetaFields() {
+    register_meta('post', 'rezfusion_hub_item_id', [
+      'show_in_rest' => true,
+      'single' => true,
+      'type' => 'string',
+      'object_subtype' => Plugin::VR_LISTING_NAME
+    ]);
+    register_meta('post', 'rezfusion_hub_beds', [
+      'show_in_rest' => true,
+      'single' => true,
+      'type' => 'string',
+      'object_subtype' => Plugin::VR_LISTING_NAME
+    ]);
+    register_meta('post', 'rezfusion_hub_baths', [
+      'show_in_rest' => true,
+      'single' => true,
+      'type' => 'string',
+      'object_subtype' => Plugin::VR_LISTING_NAME
+    ]);
   }
 
 }

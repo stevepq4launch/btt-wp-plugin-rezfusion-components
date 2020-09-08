@@ -61,7 +61,7 @@ class TransientCache implements Cache {
   /**
    * @param $key
    *
-   * @return mixed
+   * @return boolean
    */
   public function has($key) {
     return !!get_transient($this->key($key));
