@@ -59,9 +59,14 @@ abstract class PostType {
   abstract public function getColumnContents($column, $postId);
 
   /**
-   * @return mixed
+   * @return void
    */
   abstract public function registerTaxonomies();
+
+  /**
+   * @return void
+   */
+  abstract public function registerMetaFields();
 
   /**
    * Register the post type
@@ -71,5 +76,6 @@ abstract class PostType {
   public function register() {
     $this->registerTaxonomies();
     register_post_type($this->getPostTypeName(), $this->getPostTypeDefinition());
+    $this->registerMetaFields();
   }
 }

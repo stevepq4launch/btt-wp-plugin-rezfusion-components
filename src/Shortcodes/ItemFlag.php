@@ -9,11 +9,11 @@ class ItemFlag extends Shortcode {
 
   protected $shortcode = 'rezfusion-item-flag';
 
-  public function render($shortcodeAtts = []): string {
+  public function render($atts = []): string {
     $a = shortcode_atts([
       'namespace' => get_option('rezfusion_hub_favorites_namespace', 'rezfusion-favorites'),
-      'itemid' => $shortcodeAtts['itemid']
-    ], $shortcodeAtts );
+      'itemid' => $atts['itemid']
+    ], $atts );
 
     wp_enqueue_script(
       'rezfusion_components_flag',

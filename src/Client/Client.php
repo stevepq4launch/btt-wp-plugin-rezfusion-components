@@ -139,4 +139,39 @@ abstract class Client implements ClientInterface {
     }
     return $this->queries[$path];
   }
+
+  /**
+   * Public API which wraps the HTTP request method.
+   *
+   * @param $query
+   * @param array $variables
+   *
+   * @return mixed
+   */
+  public function call($query, $variables = []) {
+    $key = md5($query) . ":" . md5(serialize($variables));
+
+    if($this->cache && ($this->cache->getMode() & $this->cache::MODE_READ) && $this->cache->has($key)) {
+      return $this->cache->get($key);
+    }
+
+    $response = $this->request($query, $variables);
+
+    if($this->cache && ($this->cache->getMode() & $this->cache::MODE_WRITE)) {
+      $this->cache->set($key, $response);
+    }
+
+    return $response;
+  }
+
+  /**
+   * This is the internal API provided to clients for initiating a request
+   * to the Blueprint service.
+   *
+   * @param $query
+   * @param array $variables
+   *
+   * @return mixed
+   */
+  abstract protected function request($query, $variables = []);
 }

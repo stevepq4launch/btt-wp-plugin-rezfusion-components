@@ -15,14 +15,8 @@ class CurlClient extends Client {
    * @return array|mixed|object
    * @throws \Exception
    */
-  public function call($query, $variables = []) {
+  public function request($query, $variables = []) {
     $json = json_encode(['query' => $query, 'variables' => $variables]);
-
-    $key = md5($query) . ":" . md5(serialize($variables));
-
-    if($this->cache && $this->cache->has($key)) {
-      return $this->cache->get($key);
-    }
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $this->url);
@@ -38,10 +32,6 @@ class CurlClient extends Client {
 
     if($err = curl_errno($ch)) {
       throw new \Exception("Rezfusion Blueprint connection exception. Curl err: $err");
-    }
-
-    if($this->cache) {
-      $this->cache->set($key, $response);
     }
 
     return json_decode($response);

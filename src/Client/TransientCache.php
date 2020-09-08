@@ -10,6 +10,27 @@ use Rezfusion\Plugin;
 class TransientCache implements Cache {
 
   /**
+   * By default the transient cache reads and writes.
+   *
+   * @var int
+   */
+  protected $mode = Cache::MODE_READ & Cache::MODE_WRITE;
+
+  /**
+   * @return int
+   */
+  public function getMode(): int {
+    return $this->mode;
+  }
+
+  /**
+   * @param int $mode
+   */
+  public function setMode(int $mode): void {
+    $this->mode = $mode;
+  }
+
+  /**
    * @param $key
    *
    * @return string
@@ -40,7 +61,7 @@ class TransientCache implements Cache {
   /**
    * @param $key
    *
-   * @return mixed
+   * @return boolean
    */
   public function has($key) {
     return !!get_transient($this->key($key));

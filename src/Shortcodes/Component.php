@@ -10,13 +10,13 @@ class Component extends Shortcode {
 
   protected $shortcode = 'rezfusion-component';
 
-  public function render($shortcodeAtts = []): string {
+  public function render($atts = []): string {
     $a = shortcode_atts([
       'element' => 'search',
       'id' => 'app',
       'channel' => get_option('rezfusion_hub_channel'),
       'url' => get_option('rezfusion_hub_folder'),
-    ], $shortcodeAtts );
+    ], $atts );
 
     if(!$a['channel'] || !$a['url']) {
       return "Rezfusion Component: A 'channel' and a 'URL' attribute are both required";

@@ -5,6 +5,7 @@
 
 namespace Rezfusion;
 
+use Rezfusion\Client\Cache;
 use Rezfusion\Client\CurlClient;
 use Rezfusion\Client\TransientCache;
 use Rezfusion\Pages\Admin\ConfigurationPage;
@@ -19,8 +20,15 @@ use Rezfusion\Shortcodes\LodgingItemDetails;
 
 class Plugin {
 
+  /**
+   * Prefix used for namespace various pieces of data in transients and
+   * other options.
+   */
   const PREFIX = "rzf";
 
+  /**
+   * The base `vr_listing` post type name.
+   */
   const VR_LISTING_NAME = "vr_listing";
 
   /**
@@ -41,6 +49,7 @@ class Plugin {
    */
   private function __construct() {
     $this->registerPostTypes();
+    add_action( 'enqueue_block_assets', [$this, 'registerBlocks'] );
     add_action('init', [$this, 'registerShortcodes']);
     add_action('init', [$this, 'registerRewriteTags']);
     add_action('admin_menu', [$this, 'registerPages']);
@@ -63,18 +72,28 @@ class Plugin {
   }
 
   /**
+   * Register blocks.
+   */
+  public function registerBlocks() {
+    if(!is_admin()) {
+      return;
+    }
+    $build = require REZFUSION_PLUGIN_ADMIN_BUILD_PATH . '/index.asset.php';
+     wp_enqueue_script(
+      'rezfusion-blocks',
+       plugins_url('rezfusion-components/dist/admin/index.js'),
+      $build['dependencies'],
+      $build['version']
+    );
+    register_block_type('myguten/meta-block');
+  }
+
+  /**
    * Add a rewrite tag for the query parameter that components uses to identify
    * items in the API.
    */
   public function registerRewriteTags() {
     add_rewrite_tag('%pms_id%', '([^&]+)');
-  }
-
-  /**
-   * Add metaboxes as needed.
-   */
-  public function registerMetaboxes() {
-
   }
 
   /**
@@ -151,12 +170,12 @@ class Plugin {
   /**
    * Redirect users to the property details page.
    *
-   * @todo: Propbably deprecate this. As I suspect there is a more "wordpress-y"
+   * @todo: Probably deprecate this. As I suspect there is a more "wordpress-y"
    * @todo: way to do this.
    */
   public function templateRedirect() {
     $redirect = get_option('rezfusion_hub_redirect_urls');
-    $repository = new \Rezfusion\Repository\ItemRepository(self::apiClient());
+    $repository = new ItemRepository(self::apiClient());
     if ( $redirect && isset($_GET['pms_id']) ) {
       $id = sanitize_text_field($_GET['pms_id']);
       $posts = $repository->getItemById($id);
@@ -208,16 +227,25 @@ class Plugin {
   }
 
   /**
-   * Refresh API data.
+   * Perform a refresh cycle of locally stored lodging/category data.
    */
   public static function refreshData() {
     $client = Plugin::apiClient();
-    $client->setCache(null);
+    // During a refresh cycle, we want to skip the read on cache hits.
+    // But still write during the end of the cycle.
+    $cache = $client->getCache();
+    $mode = $cache->getMode();
+    $cache->setMode(Cache::MODE_WRITE);
     $channel = get_option('rezfusion_hub_channel');
     $repository = new ItemRepository($client);
     $categoryRepository = new CategoryRepository($client);
+    // Prioritize category updates so that taxonomy IDs/information is
+    // available during item updates.
     $categoryRepository->updateCategories($channel);
     $repository->updateItems($channel);
+    // Restore the cache mode to the previous setting just in case processing
+    // will continue after this step.
+    $cache->setMode($mode);
   }
 
 }
