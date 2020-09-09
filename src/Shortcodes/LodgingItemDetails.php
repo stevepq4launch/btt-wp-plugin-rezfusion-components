@@ -28,7 +28,7 @@ class LodgingItemDetails extends Shortcode {
     }
 
     $client = Plugin::apiClient();
-    $result = $client->getItem($a['channel'], $a['itemid']);
+    $result = $client->getItem($a['itemid'], $a['channel']);
 
     return $this->template->render([
       'categoryInfo' => $result->data->categoryInfo,

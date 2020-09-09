@@ -30,6 +30,9 @@ jobs:
                 name: Verify `npm build`
                 command: npm run build
             - run:
+                name: Verify `npm build:admin`
+                command: npm run build:admin
+            - run:
                 name: Execute Tests
                 command: npm test
 workflows:

@@ -10,41 +10,6 @@ const REZFUSION_FLAG_ITEM_REMOVED = 0;
 const REZFUSION_FLAG_ITEM_ADDED = 1;
 
 /**
- * Toggle a given item's presence in a list of flags.
- *
- * @param namespace
- * @param itemId
- * @returns {*}
- */
-const rezfusionToggleFlag = (namespace, itemId) => {
-  const items = rezfusionGetFlags(namespace);
-  if(!items) {
-    localStorage.setItem(namespace, JSON.stringify([itemId]));
-    return REZFUSION_FLAG_ITEM_ADDED;
-  }
-  const index = items.indexOf(itemId);
-  if(index === -1) {
-    localStorage.setItem(namespace, JSON.stringify([
-      ...items,
-      itemId,
-    ]));
-    return REZFUSION_FLAG_ITEM_ADDED;
-  }
-
-  localStorage.setItem(namespace, JSON.stringify(items.filter(i => i !== itemId)));
-  return REZFUSION_FLAG_ITEM_REMOVED;
-};
-
-/**
- * Determine whether an item is currently flagged or not.
- * @param namespace
- * @param itemId
- * @returns {boolean}
- */
-export const rezfusionItemIsFlagged = (namespace, itemId) =>
-  rezfusionGetFlags(namespace) && rezfusionGetFlags(namespace).indexOf(itemId) !== -1;
-
-/**
  * Get the full list of favorites stored in the browser.
  * @param namespace
  * @returns {*}
@@ -61,6 +26,41 @@ export const rezfusionGetFlags = (namespace) => {
     return false;
   }
 };
+
+/**
+ * Toggle a given item's presence in a list of flags.
+ *
+ * @param namespace
+ * @param itemId
+ * @returns {*}
+ */
+const rezfusionToggleFlag = (namespace, itemId) => {
+  const items = rezfusionGetFlags(namespace);
+  if (!items) {
+    localStorage.setItem(namespace, JSON.stringify([itemId]));
+    return REZFUSION_FLAG_ITEM_ADDED;
+  }
+  const index = items.indexOf(itemId);
+  if (index === -1) {
+    localStorage.setItem(namespace, JSON.stringify([
+      ...items,
+      itemId,
+    ]));
+    return REZFUSION_FLAG_ITEM_ADDED;
+  }
+
+  localStorage.setItem(namespace, JSON.stringify(items.filter((i) => i !== itemId)));
+  return REZFUSION_FLAG_ITEM_REMOVED;
+};
+
+/**
+ * Determine whether an item is currently flagged or not.
+ * @param namespace
+ * @param itemId
+ * @returns {boolean}
+ */
+export const rezfusionItemIsFlagged = (namespace, itemId) => rezfusionGetFlags(namespace)
+  && rezfusionGetFlags(namespace).indexOf(itemId) !== -1;
 
 /**
  * Provide a simple javascript "component" for providing
@@ -85,8 +85,7 @@ export class RezfusionItemFlag {
    * Use a callback to determine when to set the flag state/classes.
    * @param callback
    */
-  handle = (callback) =>
-    (callback(this.namespace, this.itemId) ? this.flag() : this.unflag());
+  handle = (callback) => (callback(this.namespace, this.itemId) ? this.flag() : this.unflag());
 
   /**
    * Set flagged classes.

@@ -15,6 +15,17 @@ use Rezfusion\Plugin;
  */
 class VRListing extends PostType {
 
+  public function register(){
+    parent::register();
+    $taxonomies = get_object_taxonomies('vr_listing', 'names');
+    foreach($taxonomies as $taxonomy) {
+      add_action("{$taxonomy}_add_form_fields" , [$this, 'addIconPicker'], 10, 2);
+      add_action("created_{$taxonomy}" , [$this, 'saveIconPicker'], 10, 2);
+      add_action("{$taxonomy}_edit_form_fields" , [$this, 'editIconPicker'], 10, 2);
+      add_action("edited_{$taxonomy}" , [$this, 'updateIconPicker'], 10, 2);
+    }
+  }
+
   /**
    * @return array
    */
@@ -80,6 +91,7 @@ class VRListing extends PostType {
           'labels' => $labels,
           'show_ui' => TRUE,
           'show_admin_column' => TRUE,
+          'rewrite' => array( 'with_front' => false, 'slug' => strtolower($category->name) ),
         ];
 
         register_taxonomy(CategoryRepository::categoryMachineName($category->name), [self::getPostTypeName()], $args);
@@ -91,7 +103,6 @@ class VRListing extends PostType {
    * @return array
    */
   public function getPostTypeDefinition(): array {
-
     $taxonomies = get_taxonomies([], 'names');
     $rzf = [];
     foreach($taxonomies as $taxonomy) {
@@ -119,6 +130,7 @@ class VRListing extends PostType {
       'publicly_queryable' => TRUE,
       'capability_type' => 'page',
       'show_in_rest' => true,
+      'rewrite' => array('with_front' => false, 'slug' => get_option( 'rezfusion_hub_custom_listing_slug') ?: 'vacation-rentals')
     ];
   }
 
@@ -192,4 +204,73 @@ class VRListing extends PostType {
     ]);
   }
 
+  public function addIconPicker($taxonomy) {
+    $icons = $this->icon_picker_options;
+    ?>
+    <div class="form-field term-icon-picker">
+      <label for="term-icon">Icon</label>
+      <select name="term-icon-picker" id="term-icon" class="postform" style="font-family: 'FontAwesome', system-ui, sans-serif">
+      <option value="-1">none</option>
+      <?php foreach ($icons as $key => $value) : ?>
+      <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+      <?php endforeach; ?>
+      </select>
+      <p class="description">Select an icon to display if this category is set to featured</p>
+    </div>
+    <?php
+  }
+
+  public function saveIconPicker($term_id, $tt_id) {
+    if (isset($_POST['term-icon-picker']) && !empty($_POST['term-icon-picker'])) {
+      $icon = $_POST['term-icon-picker'];
+      add_term_meta( $term_id, 'icon', $icon, false);
+    }
+  }
+
+  public function editIconPicker($term, $taxonomy) {
+    $icons = $this->icon_picker_options;
+    $current_icon = get_term_meta( $term->term_id, 'icon', true );
+    ?>
+    <tr class="form-field term-icon-picker-wrap">
+      <th scope="row"><label for="term-icon">Icon</label></th>
+      <td>
+      <select name="term-icon-picker" id="term-icon" class="postform" style="font-family: 'FontAwesome', system-ui, sans-serif">
+      <option value="-1">none</option>
+      <?php foreach ($icons as $key => $value) : ?>
+      <option value="<?php echo $key; ?>" <?php selected($current_icon, $key); ?>><?php echo $value; ?></option>
+      <?php endforeach; ?>
+      </select>
+      <p class="description">Select an icon to display if this category is set to featured</p>
+      </td>
+    </tr>
+    <?php
+  }
+
+  public function updateIconPicker($term_id, $tt_id) {
+    if (isset( $_POST['term-icon-picker']) && !empty($_POST['term-icon-picker'])) {
+      $icon = $_POST['term-icon-picker'];
+      update_term_meta( $term_id, 'icon', $icon );
+    }
+  }
+
+  public function checkListingSlug($old_value, $value) {
+    if ($old_value !== $value) {
+      update_option('rezfusion_trigger_rewrite_flush', 1);
+      return true;
+      show_message('flush set');
+    }
+  }
+
+  public function delayedListingFlush() {
+    if (!$option = get_option('rezfusion_trigger_rewrite_flush')) {
+      return false;
+    }
+
+    if ($option == 1) {
+      Plugin::refreshData();
+      flush_rewrite_rules();
+      update_option( 'rezfusion_trigger_rewrite_flush', 0 );
+    }
+    return true;
+  }
 }

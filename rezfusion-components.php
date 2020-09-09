@@ -13,6 +13,7 @@ Version: 0.1
 Author URI: https://bluetent.com
 */
 
+define( 'REZFUSION_PLUGIN',  __FILE__  );
 define( 'REZFUSION_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'REZFUSION_PLUGIN_ADMIN_BUILD_PATH', REZFUSION_PLUGIN_PATH . "dist/admin" );
 define( 'REZFUSION_PLUGIN_TEMPLATES_PATH', REZFUSION_PLUGIN_PATH . "templates" );

@@ -15,11 +15,6 @@ class ItemFlag extends Shortcode {
       'itemid' => $atts['itemid']
     ], $atts );
 
-    wp_enqueue_script(
-      'rezfusion_components_flag',
-      plugins_url('rezfusion-components/dist/bundle.js')
-    );
-
     wp_enqueue_style(
       'rezfusion_components_flag',
       plugins_url('rezfusion-components/assets/css/favorites.css')

@@ -9,6 +9,8 @@ namespace Rezfusion\Pages\Admin;
 use Rezfusion\Pages\Page;
 use Rezfusion\Plugin;
 
+session_start();
+
 class ConfigurationPage extends Page {
 
   /**
@@ -32,17 +34,68 @@ class ConfigurationPage extends Page {
    * @param $values
    */
   protected function save($values) {
-    $keys = [
-      'rezfusion_hub_channel',
-      'rezfusion_hub_folder',
-      'rezfusion_hub_env',
-      'rezfusion_hub_redirect_urls',
-      'rezfusion_hub_sync_items',
-      'rezfusion_hub_sync_items_post_type',
-    ];
+    switch ($_SESSION['savetab']) {
+      case 'general':
+        $keys = [
+          'rezfusion_hub_channel',
+          'rezfusion_hub_folder',
+          'rezfusion_hub_env',
+          'rezfusion_hub_enable_favorites',
+          'rezfusion_hub_redirect_urls',
+          'rezfusion_hub_sync_items',
+          'rezfusion_hub_sync_items_post_type',
+          'rezfusion_hub_google_maps_api_key',
+          'rezfusion_hub_custom_listing_slug'
+        ];
+        break;
+      case 'policies':
+        $keys  = [
+          'rezfusion_hub_policies_general',
+          'rezfusion_hub_policies_pets',
+          'rezfusion_hub_policies_payment',
+          'rezfusion_hub_policies_cancellation',
+          'rezfusion_hub_policies_changing',
+          'rezfusion_hub_policies_insurance',
+          'rezfusion_hub_policies_cleaning',
+        ];
+        break;
+      case 'amenities':
+        $keys = [
+          'rezfusion_hub_amenities_featured',
+          'rezfusion_hub_amenities_general',
+        ];
+        break;
+      case 'forms':
+        $keys = [
+          'rezfusion_hub_review_btn_text',
+          'rezfusion_hub_review_form',
+          'rezfusion_hub_inquiry_btn_text',
+          'rezfusion_hub_inquiry_form',
+        ];
+        break;
+    }
 
     foreach ($keys as $key) {
-      update_option($key, $values[$key]);
+      if ( isset($_POST[$key]) && !empty($_POST[$key])) {
+        update_option($key, $values[$key]);
+      } else {
+        update_option($key, NULL);
+      }
+    }
+    
+    if (!empty(get_option( 'rezfusion_hub_folder' ))) {
+      $themeUrl = null;
+      $bundle = file(get_option( 'rezfusion_hub_folder' ), FILE_SKIP_EMPTY_LINES);
+      foreach ($bundle as $key => $value) {
+        preg_match('~https://rezfusion-components-storage.*\.css~', $value, $match);
+        if (!empty($match)) {
+          $themeUrl .= $match[0];
+        }
+      }
+      
+      update_option('rezfusion_hub_theme', $themeUrl);
+    } else {
+      update_option( 'rezfusion_hub_theme', NULL );
     }
 
     if (!empty($values['rezfusion_hub_fetch_data'])) {
