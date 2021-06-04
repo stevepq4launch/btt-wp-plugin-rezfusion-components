@@ -46,7 +46,6 @@
   <div class="lodging-item-review__comment">
     <?php print $currentReview->comment; ?>
   </div>
-</div>
 
 <?php endfor; ?>
 

@@ -149,7 +149,7 @@ abstract class Client implements ClientInterface {
    * @return string
    */
   public static function cacheKey($query, $variables = []) {
-    return md5($query) . ":" . md5(serialize($variables));
+    return md5($query) . ":" . md5(json_encode($variables));
   }
 
   /**
