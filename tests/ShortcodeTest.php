@@ -23,7 +23,7 @@ class ShortcodeTest extends BaseTestCase {
     $doc->loadXML($out);
     $xpath = new \DOMXPath($doc);
     $wrappers = $xpath->query('//div[contains(@class,"lodging-item")]');
-    $this->assertEquals(6, $wrappers->length);
+    $this->assertEquals(11, $wrappers->length);
     $beds = $xpath->query('//div[contains(@class, "lodging-item-details__beds")]');
     $this->assertEquals(1, $beds->length);
     $baths = $xpath->query('//div[contains(@class, "lodging-item-details__baths")]');
@@ -36,8 +36,6 @@ class ShortcodeTest extends BaseTestCase {
     $out2 = do_shortcode("[rezfusion-lodging-item itemid=\"{$meta['rezfusion_hub_item_id'][0]}\"]");
     $this->assertTrue(!!stristr($out2, 'THEME TEMPLATE'));
 
-    $this->assertTrue(wp_script_is('rezfusion_components_flag'));
-    $this->assertTrue(wp_style_is('rezfusion_components_flag'));
   }
 
   public function tearDown(): void {

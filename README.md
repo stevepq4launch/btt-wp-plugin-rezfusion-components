@@ -16,7 +16,7 @@ Bluetent can not offer free or paid support for individual application installat
 
 Inject the `[rezfusion-component]` shortcode with a `channel` attribute anywhere shortcodes are permitted.
 
-##### Provide a Search UI:
+##### Provide a Search UI: (deprecated)
 
 `[rezfusion-component element="some-html-id" channel="https://MY_CHANNEL_URI" guid="MY_GUID"]`
 
@@ -41,3 +41,27 @@ You can clone this directory down and use `docker-compose up` from the root to s
 all public images, you only need a Docker account to use it.
 
 After running the `up` command you should be able to visit `localhost:8080` and see a WordPress install (or site).
+
+#### Provide a favorite toggle button
+`[rezfusion-favorite-toggle itemid="item-id" type="small"]`
+
+Provides a button to toggle an item as favorite on/off.
+"type" can be `'large'`, which displays an icon and text or `'small'`, which only displays an icon.
+
+#### Provide a search page
+`[rezfusion-search]`
+
+Requires the following Rezfusion plugin settings:
+- `rezfusion_hub_channel`
+- `rezfusion_hub_google_maps_api_key`
+- `rezfusion_hub_sps_domain`
+
+#### Provide a favorites page (deprecated)
+`[rezfusion-favorites]`
+Requires the setting `settings.favorites.enable` to `true`.
+
+Also requires the following configuration options to be set correctly:
+- `settings.components.SearchProvider.channels`
+- `settings.components.SearchProvider.endpoint`
+- `settings.components.Map.id`
+- `settings.components.Map.apiKey`

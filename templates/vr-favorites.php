@@ -1,0 +1,1 @@
+<div id="favorites-page"></div>

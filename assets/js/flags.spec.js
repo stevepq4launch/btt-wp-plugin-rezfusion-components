@@ -1,10 +1,11 @@
-import {RezfusionItemFlag, rezfusionItemIsFlagged} from './flags';
+/* eslint-env jest */
+import { RezfusionItemFlag, rezfusionItemIsFlagged } from './flags';
 import localStorage from './__mocks__/localStorage';
 
 window.localStorage = localStorage;
 
 test('Classes', () => {
-  document.body.innerHTML = '<div><div class="flag"></div></div>'
+  document.body.innerHTML = '<div><div class="flag"></div></div>';
   const el = document.querySelector('.flag');
   const flag = new RezfusionItemFlag(el, 'test-ns', 1234);
   flag.flag();
@@ -14,7 +15,7 @@ test('Classes', () => {
 });
 
 test('Toggles Items', () => {
-  document.body.innerHTML = '<div><div class="flag"></div></div>'
+  document.body.innerHTML = '<div><div class="flag"></div></div>';
   const el = document.querySelector('.flag');
   const flag = new RezfusionItemFlag(el, 'test-ns', 1234);
   const flagged = rezfusionItemIsFlagged('test-ns', 1234);

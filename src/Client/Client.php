@@ -141,6 +141,18 @@ abstract class Client implements ClientInterface {
   }
 
   /**
+   * Make a cache key for the call.
+   *
+   * @param $query
+   * @param array $variables
+   *
+   * @return string
+   */
+  public static function cacheKey($query, $variables = []) {
+    return md5($query) . ":" . md5(json_encode($variables));
+  }
+
+  /**
    * Public API which wraps the HTTP request method.
    *
    * @param $query
@@ -149,18 +161,16 @@ abstract class Client implements ClientInterface {
    * @return mixed
    */
   public function call($query, $variables = []) {
-    $key = md5($query) . ":" . md5(serialize($variables));
+    $key = self::cacheKey($query, $variables);
 
     if($this->cache && ($this->cache->getMode() & $this->cache::MODE_READ) && $this->cache->has($key)) {
       return $this->cache->get($key);
     }
 
     $response = $this->request($query, $variables);
-
     if($this->cache && ($this->cache->getMode() & $this->cache::MODE_WRITE)) {
       $this->cache->set($key, $response);
     }
-
     return $response;
   }
 
