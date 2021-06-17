@@ -1,4 +1,5 @@
-FROM wordpress:latest
+# @todo: argument/env var?
+FROM wordpress:5.5
 
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
   && chmod +x wp-cli.phar \

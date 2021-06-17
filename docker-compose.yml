@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   wordpress:
-    image: wordpress:5.5
+    image: ${WP_BASE_IMAGE}
     restart: always
     volumes:
       - .:/var/www/html/wp-content/plugins/rezfusion-components
