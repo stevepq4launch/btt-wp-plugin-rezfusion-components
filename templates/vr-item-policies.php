@@ -7,7 +7,7 @@
 
 <h2 class="lodging-item-details__section-heading">Policies</h2>
 
-<hr>
+<hr />
 
 <div class="lodging-item-policies__list">
   <div class="lodging-item-policies__section lodging-item-policies__section--general">
@@ -19,7 +19,7 @@
   </div>
 
   <?php if (!empty(get_option('rezfusion_hub_policies_pets'))) : ?>
-  <hr>
+  <hr />
   <div class="lodging-item-policies__section lodging-item-policies__section--pets">
     <h3 class="lodging-item-policies__subsection-heading">Pets & Service Animals</h3>
 
@@ -31,7 +31,7 @@
   <?php endif; ?>
 
   <?php if (!empty(get_option('rezfusion_hub_policies_payment'))) : ?>
-  <hr>
+  <hr />
   <div class="lodging-item-policies__section lodging-item-policies__section--payment">
     <h3 class="lodging-item-policies__subsection-heading">Payment Policy</h3>
 
@@ -43,7 +43,7 @@
   <?php endif; ?>
 
   <?php if (!empty(get_option('rezfusion_hub_policies_cancellation'))) : ?>
-  <hr>
+  <hr />
   <div class="lodging-item-policies__section lodging-item-policies__section--cancellation">
     <h3 class="lodging-item-policies__subsection-heading">Cancellation Policy</h3>
 
@@ -55,7 +55,7 @@
   <?php endif; ?>
 
   <?php if (!empty(get_option('rezfusion_hub_policies_changing'))) : ?>
-  <hr>
+  <hr />
   <div class="lodging-item-policies__section lodging-item-policies__section--changing">
     <h3 class="lodging-item-policies__subsection-heading">Changing Reservations</h3>
 
@@ -67,7 +67,7 @@
   <?php endif; ?>
 
   <?php if (!empty(get_option('rezfusion_hub_policies_insurance'))) : ?>
-  <hr>
+  <hr />
   <div class="lodging-item-policies__section lodging-item-policies__section--insurance">
     <h3 class="lodging-item-policies__subsection-heading">Trip Insurance</h3>
 
@@ -79,7 +79,7 @@
   <?php endif; ?>
 
   <?php if (!empty(get_option('rezfusion_hub_policies_cleaning'))) : ?>
-  <hr>
+  <hr />
   <div class="lodging-item-policies__section lodging-item-policies__section--cleaning">
     <h3 class="lodging-item-policies__subsection-heading">Cleaning/Damage Policy</h3>
 
