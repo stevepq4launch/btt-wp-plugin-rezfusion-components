@@ -21,6 +21,7 @@ class ShortcodeTest extends BaseTestCase {
     $out = do_shortcode("[rezfusion-lodging-item itemid=\"{$meta['rezfusion_hub_item_id'][0]}\"]");
     $doc = new \DOMDocument();
     $doc->loadXML($out);
+    print_r($out);
     $xpath = new \DOMXPath($doc);
     $wrappers = $xpath->query('//div[contains(@class,"lodging-item")]');
     $this->assertEquals(11, $wrappers->length);
