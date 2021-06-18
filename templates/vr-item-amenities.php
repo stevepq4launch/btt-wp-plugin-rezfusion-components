@@ -9,7 +9,7 @@
 
 <h2 class="lodging-item-details__section-heading">Amenities</h2>
 
-<hr>
+<hr />
 
 <?php if (!empty(get_option('rezfusion_hub_amenities_featured'))) : ?>
 <div class="lodging-amenities lodging-amenities--featured">

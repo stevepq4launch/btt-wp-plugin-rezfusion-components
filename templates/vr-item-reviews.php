@@ -15,7 +15,7 @@
 
 <h2 class="lodging-item-details__section-heading">Reviews</h2>
 
-<hr>
+<hr />
 
 <div class="lodging-item-reviews-list">
 
