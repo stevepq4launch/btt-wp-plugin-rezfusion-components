@@ -9,9 +9,10 @@ if (el) {
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
     const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts');
     const images = JSON.parse(el.dataset.rezfusionPhotos.toString());
+    const itemName = JSON.parse(el.dataset.rezfusionItemName.toString());
     ReactDOM.render(
       <ThemeProvider theme={{ ...defaultTheme, ...getConfigOption(['settings', 'theme']) }}>
-        <Photos imageSize={-1} unitName="Foo" images={images} />
+        <Photos imageSize={-1} unitName={itemName} images={images} />
       </ThemeProvider>, el,
     );
   }());
