@@ -28,6 +28,7 @@ use Rezfusion\Shortcodes\LodgingItemAmenities;
 use Rezfusion\Shortcodes\LodgingItemFavoriteToggle;
 use Rezfusion\Shortcodes\Favorites;
 use Rezfusion\Shortcodes\Search;
+use Rezfusion\Shortcodes\PropertiesAd;
 
 class Plugin
 {
@@ -181,6 +182,7 @@ class Plugin
     new LodgingItemFavoriteToggle(new Template('vr-favorite-toggle.php'));
     new Favorites(new Template('vr-favorites.php'));
     new Search(new Template('vr-search.php'));
+    new PropertiesAd(new Template('vr-properties-ad.php'));
   }
 
   /**

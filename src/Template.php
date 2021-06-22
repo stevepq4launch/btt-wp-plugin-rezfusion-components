@@ -55,11 +55,15 @@ class Template implements Renderable {
    *
    * @return string
    */
-  public function render($variables = []): string {
+  public function render($variables = [], $multiple = ''): string {
     $variables = apply_filters("variables_{$this->locateTemplate()}", $variables);
     extract($variables);
     ob_start();
-    require_once($this->locateTemplate());
+    if ($multiple == true) {
+      require($this->locateTemplate());
+    } else {
+      require_once($this->locateTemplate());
+    }
     return ob_get_clean();
   }
 }
