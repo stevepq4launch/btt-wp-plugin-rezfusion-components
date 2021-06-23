@@ -61,7 +61,6 @@ class Plugin
    * hooks only once.
    */
   private function __construct() {
-    register_activation_hook( REZFUSION_PLUGIN, [$this, 'rzfInstall'] );
     $this->registerPostTypes();
     add_action('init', [$this, 'registerShortcodes']);
     add_action('init', [$this, 'registerRewriteTags']);
