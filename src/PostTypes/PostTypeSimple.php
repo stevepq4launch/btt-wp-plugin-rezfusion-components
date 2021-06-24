@@ -15,8 +15,6 @@ abstract class PostTypeSimple
   {
     $this->postTypeName = $postTypeName;
     add_action('init', [$this, 'register']);
-    add_action('update_option_rezfusion_hub_custom_promo_slug', [$this, 'checkPromoSlug'], 10, 2);
-    add_action('init', [$this, 'delayedPromoFlush']);
   }
 
   /**

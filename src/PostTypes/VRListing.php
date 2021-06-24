@@ -252,25 +252,4 @@ class VRListing extends PostType {
       update_term_meta( $term_id, 'icon', $icon );
     }
   }
-
-  public function checkListingSlug($old_value, $value) {
-    if ($old_value !== $value) {
-      update_option('rezfusion_trigger_rewrite_flush', 1);
-      return true;
-      show_message('flush set');
-    }
-  }
-
-  public function delayedListingFlush() {
-    if (!$option = get_option('rezfusion_trigger_rewrite_flush')) {
-      return false;
-    }
-
-    if ($option == 1) {
-      Plugin::refreshData();
-      flush_rewrite_rules();
-      update_option( 'rezfusion_trigger_rewrite_flush', 0 );
-    }
-    return true;
-  }
 }
