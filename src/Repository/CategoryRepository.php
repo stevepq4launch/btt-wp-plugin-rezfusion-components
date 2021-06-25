@@ -86,19 +86,24 @@ class CategoryRepository {
     $to_create = array_diff_key($category_values, $terms);
 
     foreach ($to_create as $value) {
-      $term = wp_insert_term($value->name, $value->wp_taxonomy_name);
-      add_term_meta(
-        $term['term_id'],
-        'rezfusion_hub_category_value_id',
-        $value->id,
-        TRUE
-      );
-      add_term_meta(
-        $term['term_id'],
-        'rezfusion_hub_category_id',
-        $value->category_id,
-        FALSE
-      );
+      if (!term_exists( $value->name, $value->wp_taxonomy_name )) {
+        $term = wp_insert_term($value->name, $value->wp_taxonomy_name);
+      }
+
+      if (!empty($term)) {
+        add_term_meta(
+          $term['term_id'],
+          'rezfusion_hub_category_value_id',
+          $value->id,
+          TRUE
+        );
+        add_term_meta(
+          $term['term_id'],
+          'rezfusion_hub_category_id',
+          $value->category_id,
+          FALSE
+        );
+      }
     }
   }
 }
