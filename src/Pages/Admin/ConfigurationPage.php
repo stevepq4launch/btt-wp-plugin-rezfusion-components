@@ -119,6 +119,8 @@ class ConfigurationPage extends Page {
         <?php } );
       }
     }
+    
+    update_option('rezfusion_trigger_rewrite_flush', 1);
 
     add_action('admin_notices', function ()
     { ?>
