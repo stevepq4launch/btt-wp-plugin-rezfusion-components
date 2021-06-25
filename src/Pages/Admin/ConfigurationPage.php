@@ -104,10 +104,28 @@ class ConfigurationPage extends Page {
     if (!empty($values['rezfusion_hub_fetch_data'])) {
       try {
         Plugin::refreshData();
-        show_message('Data updated.');
+        add_action( 'admin_notices', function ()
+        { ?>
+          <div class="notice notice-success is-dismissible">
+            <p><?php echo 'Item data refreshed.'; ?></p>
+          </div>
+        <?php } );
       } catch (\Exception $e) {
-        show_message('Data not updated.');
+        add_action( 'admin_notices', function ()
+        { ?>
+          <div class="notice notice-error is-dismissible">
+            <p><?php echo 'Item data not refreshed.'; ?></p>
+          </div>
+        <?php } );
       }
     }
+
+    add_action('admin_notices', function ()
+    { ?>
+      <div class="notice notice-success is-dismissible">
+        <p><?php echo 'Settings saved.'; ?></p>
+      </div>
+    <?php });
+
   }
 }
