@@ -61,10 +61,10 @@ class Plugin
    * hooks only once.
    */
   private function __construct() {
-    register_activation_hook( REZFUSION_PLUGIN, [$this, 'rzfInstall'] );
     $this->registerPostTypes();
     add_action('init', [$this, 'registerShortcodes']);
     add_action('init', [$this, 'registerRewriteTags']);
+    add_action('init', [$this, 'delayedRewriteFlush']);
     add_action('admin_menu', [$this, 'registerPages']);
     add_action('admin_init', [$this, 'registerSettings']);
     add_action('template_redirect', [$this, 'templateRedirect']);
@@ -285,5 +285,17 @@ class Plugin
   public function loadFontAwesomeIcons() {
     wp_register_style( 'fontawesome_admin_icons', 'https://use.fontawesome.com/releases/v5.15.1/css/all.css', '', '5.15.1', 'all');
     wp_enqueue_style('fontawesome_admin_icons');
+  }
+
+  public function delayedRewriteFlush()
+  {
+    if (!$option = get_option( 'rezfusion_trigger_rewrite_flush' )) {
+      return false;
+    }
+
+    if ($option == 1) {
+      flush_rewrite_rules();
+      delete_option('rezfusion_trigger_rewrite_flush');
+    }
   }
 }

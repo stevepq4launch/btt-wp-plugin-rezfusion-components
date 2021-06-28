@@ -200,26 +200,4 @@ class VRPromo extends PostTypeSimple
     }
   }
 
-  public function checkPromoSlug($old_value, $value)
-  {
-    if ($old_value !== $value) {
-      update_option('rezfusion_trigger_rewrite_flush_promo', 1);
-      return true;
-      show_message('flush set');
-    }
-  }
-
-  public function delayedPromoFlush()
-  {
-    if (!$option = get_option('rezfusion_trigger_rewrite_flush_promo')) {
-      return false;
-    }
-
-    if ($option == 1) {
-      Plugin::refreshData();
-      flush_rewrite_rules();
-      update_option('rezfusion_trigger_rewrite_flush_promo', 0);
-    }
-    return true;
-  }
 }

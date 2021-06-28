@@ -40,12 +40,15 @@ class ConfigurationPage extends Page {
           'rezfusion_hub_channel',
           'rezfusion_hub_folder',
           'rezfusion_hub_env',
-          'rezfusion_hub_enable_favorites',
+          'rezfusion_hub_sps_domain',
+          'rezfusion_hub_conf_page',
           'rezfusion_hub_redirect_urls',
           'rezfusion_hub_sync_items',
           'rezfusion_hub_sync_items_post_type',
+          'rezfusion_hub_enable_favorites',
           'rezfusion_hub_google_maps_api_key',
-          'rezfusion_hub_custom_listing_slug'
+          'rezfusion_hub_custom_listing_slug',
+          'rezfusion_hub_custom_promo_slug'
         ];
         break;
       case 'policies':
@@ -101,11 +104,30 @@ class ConfigurationPage extends Page {
     if (!empty($values['rezfusion_hub_fetch_data'])) {
       try {
         Plugin::refreshData();
-        flush_rewrite_rules();
-        show_message('Data updated.');
+        add_action( 'admin_notices', function ()
+        { ?>
+          <div class="notice notice-success is-dismissible">
+            <p><?php echo 'Item data refreshed.'; ?></p>
+          </div>
+        <?php } );
       } catch (\Exception $e) {
-        show_message('Data not updated.');
+        add_action( 'admin_notices', function ()
+        { ?>
+          <div class="notice notice-error is-dismissible">
+            <p><?php echo 'Item data not refreshed.'; ?></p>
+          </div>
+        <?php } );
       }
     }
+    
+    update_option('rezfusion_trigger_rewrite_flush', 1);
+
+    add_action('admin_notices', function ()
+    { ?>
+      <div class="notice notice-success is-dismissible">
+        <p><?php echo 'Settings saved.'; ?></p>
+      </div>
+    <?php });
+
   }
 }

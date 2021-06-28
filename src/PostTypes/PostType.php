@@ -16,8 +16,6 @@ abstract class PostType {
     add_filter("manage_{$this->postTypeName}_posts_columns", [$this, 'getColumns']);
     add_action( "manage_{$this->postTypeName}_posts_custom_column", [$this, 'getColumnContents'], 10, 2);
     $this->icon_picker_options = include plugin_dir_path( __FILE__ ) . 'IconArray.php'; 
-    add_action('update_option_rezfusion_hub_custom_listing_slug', [$this, 'checkListingSlug'], 10, 2);
-    add_action('init', [$this, 'delayedListingFlush']);
   }
 
   /**

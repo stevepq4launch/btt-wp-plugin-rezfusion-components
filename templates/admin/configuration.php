@@ -35,6 +35,8 @@ function rezfusion_admin_tabs($current = 'general')
 <div class="wrap">
   <h1>Rezfusion Components</h1>
 
+  <?php do_action( 'admin_notices' ); ?>
+
   <?php isset($_GET['tab']) ? rezfusion_admin_tabs($_GET['tab']) : rezfusion_admin_tabs('general'); ?>
 
   <form method="post" action="/wp-admin/admin.php?page=rezfusion_components_config">

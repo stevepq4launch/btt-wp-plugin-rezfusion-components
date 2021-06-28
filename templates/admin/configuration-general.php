@@ -32,7 +32,7 @@
   <td>
     <input type="text" name="rezfusion_hub_sps_domain" value="<?php echo esc_attr(get_option('rezfusion_hub_sps_domain')); ?>" />
     <br />
-    <label for="rezfusion_hub_folder">Provide the hostname/domain to use for SPS. This option is only configurable
+    <label for="rezfusion_hub_sps_domain">Provide the hostname/domain to use for SPS. This option is only configurable
       during development.
     </label>
   </td>
@@ -41,7 +41,7 @@
   <th scope="row">Booking Confirmation URL</th>
   <td><input type="text" name="rezfusion_hub_conf_page" value="<?php echo esc_attr(get_option('rezfusion_hub_conf_page')); ?>" />
     <br />
-    <label for="rezfusion_hub_folder">Provide the full URL to the booking confirmation page.
+    <label for="rezfusion_hub_conf_page">Provide the full URL to the booking confirmation page.
     </label>
   </td>
 </tr>
