@@ -175,6 +175,15 @@ abstract class Client implements ClientInterface {
   }
 
   /**
+   * Get path to directory in which queries are kept.
+   * 
+   * @return string
+   */
+  public function getQueriesBasePath(){
+    return $this->queriesBasePath;
+  }
+
+  /**
    * This is the internal API provided to clients for initiating a request
    * to the Blueprint service.
    *

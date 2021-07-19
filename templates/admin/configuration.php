@@ -5,6 +5,9 @@
  *
  */
 
+use Rezfusion\Factory\FeaturedPropertiesConfigurationTemplateVariablesFactory;
+use Rezfusion\Template;
+
 if (isset($_GET['tab'])) {
   $_SESSION['savetab'] = $_GET['tab'];
 } else {
@@ -20,6 +23,7 @@ function rezfusion_admin_tabs($current = 'general')
     'policies'  => 'Policies',
     'amenities' => 'Amenities',
     'forms'     => 'Forms',
+    'featured-properties' => 'Featured Properties'
   );
 
   echo '<div id="icon-themes" class="icon32"><br></div>';
@@ -35,7 +39,7 @@ function rezfusion_admin_tabs($current = 'general')
 <div class="wrap">
   <h1>Rezfusion Components</h1>
 
-  <?php do_action( 'admin_notices' ); ?>
+  <?php do_action('admin_notices'); ?>
 
   <?php isset($_GET['tab']) ? rezfusion_admin_tabs($_GET['tab']) : rezfusion_admin_tabs('general'); ?>
 
@@ -56,12 +60,17 @@ function rezfusion_admin_tabs($current = 'general')
         case 'policies':
           include plugin_dir_path(__FILE__) . 'configuration-policies.php';
           break;
-        case 'amenities': 
+        case 'amenities':
           include plugin_dir_path(__FILE__) . 'configuration-amenities.php';
           break;
-        case 'forms': 
+        case 'forms':
           include plugin_dir_path(__FILE__) . 'configuration-forms.php';
           break;
+        case 'featured-properties': {
+            echo (new Template('configuration-featured-properties.php', plugin_dir_path(__FILE__)))
+              ->render((new FeaturedPropertiesConfigurationTemplateVariablesFactory)->make());
+            break;
+          }
       }
       ?>
     </table>

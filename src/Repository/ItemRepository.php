@@ -10,6 +10,8 @@ use Rezfusion\Client\ClientInterface;
 
 class ItemRepository {
 
+  const ITEM_META_KEY = "rezfusion_hub_item_id";
+
   /**
    * @var \Rezfusion\Client\ClientInterface
    */
@@ -161,6 +163,30 @@ class ItemRepository {
   public function getItemById($id) {
     global $wpdb;
     return $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = 'rezfusion_hub_item_id' AND  meta_value = '$id' LIMIT 1", ARRAY_A);
+  }
+
+  /**
+   * Get all items.
+   * 
+   * @return array
+   */
+  public function getAllItems(){
+    global $wpdb;
+    return is_array(
+      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE pm.meta_key = '" . static::ITEM_META_KEY . "' AND pm.meta_value IS NOT NULL LIMIT 100", ARRAY_A)
+    ) ? $items : [];
+  }
+
+  /**
+   * Get all items keys (meta_value) from post_meta.
+   * 
+   * @return string[]
+   */
+  public function getAllItemsIds(){
+    global $wpdb;
+    return is_array(
+      $items = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '" . static::ITEM_META_KEY . "' AND meta_value IS NOT NULL LIMIT 100", ARRAY_A)
+    ) ? array_column($items, 'meta_value') : [];
   }
 
 }

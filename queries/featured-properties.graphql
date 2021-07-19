@@ -1,0 +1,19 @@
+query($channels:ChannelFilter!, $itemIds:[String]) {
+    lodgingProducts(channels:$channels,itemIds:$itemIds) {
+        results {
+            beds
+            baths
+            occ_total
+            item {
+                id,
+                name,
+                images(limit:1) {
+                    url,
+                    derivatives,
+                    description,
+                    title
+                }
+            }
+        }
+    }
+}

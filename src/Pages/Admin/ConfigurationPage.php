@@ -6,6 +6,7 @@
 
 namespace Rezfusion\Pages\Admin;
 
+use Rezfusion\Options;
 use Rezfusion\Pages\Page;
 use Rezfusion\Plugin;
 
@@ -74,6 +75,15 @@ class ConfigurationPage extends Page {
           'rezfusion_hub_review_form',
           'rezfusion_hub_inquiry_btn_text',
           'rezfusion_hub_inquiry_form',
+        ];
+        break;
+      case 'featured-properties':
+        $keys = [
+          Options::featuredPropertiesUseIcons(),
+          Options::featuredPropertiesBedsLabel(),
+          Options::featuredPropertiesBathsLabel(),
+          Options::featuredPropertiesSleepsLabel(),
+          Options::featuredPropertiesIds()
         ];
         break;
     }
