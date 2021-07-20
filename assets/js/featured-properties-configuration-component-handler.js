@@ -52,7 +52,7 @@ function featuredPropertiesConfigurationComponentHandler(dependencies = {}) {
         let checkboxes, currentPropertiesIds, countElement, buttonsContainer, clearSelectionButton, selectAllButton;
 
         checkboxes = [];
-        currentPropertiesIds = JSON.parse(idsInput.value.replaceAll("\\", ""));
+        currentPropertiesIds = idsInput.value ? JSON.parse(idsInput.value.replaceAll("\\", "")) : [];
 
         countElement = document.createElement('span');
         countElement.style.fontWeight = "bold";
