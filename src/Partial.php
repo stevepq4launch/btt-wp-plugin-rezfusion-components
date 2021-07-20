@@ -7,7 +7,7 @@ class Partial extends Template
     /**
      * @inheritdoc
      */
-    public function render($variables = []): string
+    public function render($variables = [], $multiple = false): string
     {
         $variables = apply_filters("variables_{$this->locateTemplate()}", $variables);
         extract($variables);
