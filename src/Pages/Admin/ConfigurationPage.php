@@ -16,6 +16,16 @@ session_start();
 class ConfigurationPage extends Page {
 
   /**
+   * @var string
+   */
+  const PAGE_NAME = 'rezfusion_components_config';
+
+  /**
+   * @var string
+   */
+  const GENERAL_TAB_NAME = 'general';
+
+  /**
    * This will display a settings form.
    *
    * @see \Rezfusion\Plugin::registerPages()
@@ -142,5 +152,19 @@ class ConfigurationPage extends Page {
       </div>
     <?php });
 
+  }
+
+  /**
+   * @return string
+   */
+  public static function pageName(){
+    return static::PAGE_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function generalTabName(){
+    return static::GENERAL_TAB_NAME;
   }
 }

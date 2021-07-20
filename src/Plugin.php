@@ -83,7 +83,24 @@ class Plugin
     add_action('admin_init', [$this, 'registerSettings']);
     add_action('template_redirect', [$this, 'templateRedirect']);
     add_action('wp_head', [$this, 'wpHead']);
+    add_action('admin_enqueue_scripts', [$this, 'loadFontAwesomeIcons']);
+    add_action('admin_enqueue_scripts', [$this, 'enqueueConfigurationPageScripts']);
     add_action('admin_enqueue_scripts', [$this, 'enqueueFeaturedPropertiesConfigurationScripts']);
+  }
+
+  /**
+   * Enqueue scripts and styles for configuration page.
+   */
+  public function enqueueConfigurationPageScripts()
+  {
+    if(@$_GET['page'] === ConfigurationPage::pageName() && @$_GET['tab'] === ConfigurationPage::generalTabName()){
+      wp_register_style('fields-validation-css', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/css/fields-validation.css');
+      wp_register_script('fields-validation-js', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/fields-validation.js');
+      wp_register_script('configuration-page-validation-js', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/configuration-page-validation.js');
+      wp_enqueue_style('fields-validation-css');
+      wp_enqueue_script('fields-validation-js');
+      wp_enqueue_script('configuration-page-validation-js');
+    }
   }
 
   /**
