@@ -8,9 +8,6 @@
 							<figure class="featured-properties__image">
 								<img src="<?php echo $property['image_url']; ?>" alt="<?php echo $property['image_title'] || $property['image_description']; ?>">
 							</figure>
-							<div class="featured-properties__name flex-row flex-xs-center">
-								<h4><?php echo $property['name']; ?></h4>
-							</div>
 							<div class="featured-properties__details">
 								<?php echo $propertyDetailsPartial->render([
 									'baths' => $property['baths'],
@@ -22,6 +19,9 @@
 									'sleepsLabel' => $sleepsLabel,
 								]);
 								?>
+							</div>
+							<div class="featured-properties__name flex-row flex-xs-center">
+								<h4><?php echo $property['name']; ?></h4>
 							</div>
 						</a>
 					</article>
