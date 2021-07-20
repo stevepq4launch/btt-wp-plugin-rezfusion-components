@@ -7,6 +7,7 @@
 namespace Rezfusion\Pages\Admin;
 
 use Rezfusion\Options;
+use Rezfusion\Factory\ValuesCleanerFactory;
 use Rezfusion\Pages\Page;
 use Rezfusion\Plugin;
 
@@ -87,6 +88,8 @@ class ConfigurationPage extends Page {
         ];
         break;
     }
+
+    $values = (new ValuesCleanerFactory)->make()->clean($values);
 
     foreach ($keys as $key) {
       if ( isset($_POST[$key]) && !empty($_POST[$key])) {
