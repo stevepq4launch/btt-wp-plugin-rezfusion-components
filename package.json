@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@propertybrands/btt-availability": "^0.2.2",
-    "@propertybrands/btt-bluetent-components": "0.0.21",
+    "@propertybrands/btt-bluetent-components": "0.0.22-1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0"
   }
