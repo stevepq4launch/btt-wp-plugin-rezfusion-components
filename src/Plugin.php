@@ -16,6 +16,8 @@ use Rezfusion\PostTypes\VRListing;
 use Rezfusion\PostTypes\VRPromo;
 use Rezfusion\Repository\CategoryRepository;
 use Rezfusion\Repository\ItemRepository;
+use Rezfusion\SessionHandler\SessionHandler;
+use Rezfusion\SessionHandler\SessionHandlerInterface;
 use Rezfusion\Shortcodes\Component;
 use Rezfusion\Shortcodes\ItemFlag;
 use Rezfusion\Shortcodes\LodgingItemAvailCalendar;
@@ -28,6 +30,7 @@ use Rezfusion\Shortcodes\LodgingItemAmenities;
 use Rezfusion\Shortcodes\LodgingItemFavoriteToggle;
 use Rezfusion\Shortcodes\Favorites;
 use Rezfusion\Shortcodes\Search;
+use Rezfusion\Shortcodes\UrgencyAlert;
 
 class Plugin
 {
@@ -55,12 +58,18 @@ class Plugin
   public static $apiClient;
 
   /**
+   * @var SessionHandlerInterface
+   */
+  protected $SessionHandler;
+
+  /**
    * Plugin constructor.
    *
    * Private to enforce this class a singleton that binds
    * hooks only once.
    */
   private function __construct() {
+    $this->SessionHandler = SessionHandler::getInstance();
     $this->registerPostTypes();
     add_action('init', [$this, 'registerShortcodes']);
     add_action('init', [$this, 'registerRewriteTags']);
@@ -70,6 +79,12 @@ class Plugin
     add_action('template_redirect', [$this, 'templateRedirect']);
     add_action('wp_head', [$this, 'wpHead']);
     add_action('admin_enqueue_scripts', [$this, 'loadFontAwesomeIcons']);
+    add_action('init', [$this, 'initializeSession']);
+  }
+
+  public function initializeSession()
+  {
+    (!$this->SessionHandler->getSessionId()) && $this->SessionHandler->startSession();
   }
 
   /**
@@ -181,6 +196,7 @@ class Plugin
     new LodgingItemFavoriteToggle(new Template('vr-favorite-toggle.php'));
     new Favorites(new Template('vr-favorites.php'));
     new Search(new Template('vr-search.php'));
+    new UrgencyAlert(new Template('vr-urgency-alert.php'));
   }
 
   /**

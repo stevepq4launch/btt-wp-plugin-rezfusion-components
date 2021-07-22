@@ -5,6 +5,10 @@
  *
  */
 
+use Rezfusion\PostRecentVisits;
+use Rezfusion\Shortcodes\UrgencyAlert;
+use Rezfusion\Template;
+
 if (isset($_GET['tab'])) {
   $_SESSION['savetab'] = $_GET['tab'];
 } else {
@@ -20,6 +24,7 @@ function rezfusion_admin_tabs($current = 'general')
     'policies'  => 'Policies',
     'amenities' => 'Amenities',
     'forms'     => 'Forms',
+    'urgency-alert' => 'Urgency Alert'
   );
 
   echo '<div id="icon-themes" class="icon32"><br></div>';
@@ -35,7 +40,7 @@ function rezfusion_admin_tabs($current = 'general')
 <div class="wrap">
   <h1>Rezfusion Components</h1>
 
-  <?php do_action( 'admin_notices' ); ?>
+  <?php do_action('admin_notices'); ?>
 
   <?php isset($_GET['tab']) ? rezfusion_admin_tabs($_GET['tab']) : rezfusion_admin_tabs('general'); ?>
 
@@ -56,11 +61,23 @@ function rezfusion_admin_tabs($current = 'general')
         case 'policies':
           include plugin_dir_path(__FILE__) . 'configuration-policies.php';
           break;
-        case 'amenities': 
+        case 'amenities':
           include plugin_dir_path(__FILE__) . 'configuration-amenities.php';
           break;
-        case 'forms': 
+        case 'forms':
           include plugin_dir_path(__FILE__) . 'configuration-forms.php';
+          break;
+        case 'urgency-alert':
+          $Template = new Template('admin/configuration-urgency-alert.php', REZFUSION_PLUGIN_TEMPLATES_PATH);
+          $prefix = 'rezfusion_hub_urgency_alert_';
+          echo $Template->render([
+            'urgencyAlertEnabled' => $prefix . 'enabled',
+            'daysThreshold' => $prefix . 'days_threshold',
+            'minimumVisitors' => $prefix . 'minimum_visitors',
+            'highlightedText' => $prefix . 'highlighted_text',
+            'text' => $prefix . "text",
+            "defaultUrgencyText" => UrgencyAlert::defaultUrgencyText()
+          ]);
           break;
       }
       ?>
