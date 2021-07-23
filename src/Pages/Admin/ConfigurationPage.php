@@ -6,12 +6,24 @@
 
 namespace Rezfusion\Pages\Admin;
 
+use Rezfusion\Options;
+use Rezfusion\Factory\ValuesCleanerFactory;
 use Rezfusion\Pages\Page;
 use Rezfusion\Plugin;
 
 session_start();
 
 class ConfigurationPage extends Page {
+
+  /**
+   * @var string
+   */
+  const PAGE_NAME = 'rezfusion_components_config';
+
+  /**
+   * @var string
+   */
+  const GENERAL_TAB_NAME = 'general';
 
   /**
    * This will display a settings form.
@@ -76,7 +88,18 @@ class ConfigurationPage extends Page {
           'rezfusion_hub_inquiry_form',
         ];
         break;
+      case 'featured-properties':
+        $keys = [
+          Options::featuredPropertiesUseIcons(),
+          Options::featuredPropertiesBedsLabel(),
+          Options::featuredPropertiesBathsLabel(),
+          Options::featuredPropertiesSleepsLabel(),
+          Options::featuredPropertiesIds()
+        ];
+        break;
     }
+
+    $values = (new ValuesCleanerFactory)->make()->clean($values);
 
     foreach ($keys as $key) {
       if ( isset($_POST[$key]) && !empty($_POST[$key])) {
@@ -129,5 +152,19 @@ class ConfigurationPage extends Page {
       </div>
     <?php });
 
+  }
+
+  /**
+   * @return string
+   */
+  public static function pageName(){
+    return static::PAGE_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function generalTabName(){
+    return static::GENERAL_TAB_NAME;
   }
 }

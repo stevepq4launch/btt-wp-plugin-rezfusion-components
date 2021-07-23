@@ -1,0 +1,21 @@
+.featured-properties-configuration__properties-ids {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+.featured-properties-configuration__properties-container {
+  border-left: 3px dotted #e0e0e0;
+  padding: 10px;
+  background: #f7f7f7;
+}
+
+.featured-properties-configuration__ids-count {
+  color: #888;
+}
+
+.featured-properties-configuration__checkbox-list {
+  overflow: auto;
+  margin: 15px 10px 10px;
+  height: 215px;
+}

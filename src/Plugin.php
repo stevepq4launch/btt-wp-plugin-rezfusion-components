@@ -27,7 +27,10 @@ use Rezfusion\Shortcodes\LodgingItemReviews;
 use Rezfusion\Shortcodes\LodgingItemAmenities;
 use Rezfusion\Shortcodes\LodgingItemFavoriteToggle;
 use Rezfusion\Shortcodes\Favorites;
+use Rezfusion\Shortcodes\FeaturedProperties;
 use Rezfusion\Shortcodes\Search;
+use Rezfusion\Shortcodes\PropertiesAd;
+use Rezfusion\Templates;
 
 class Plugin
 {
@@ -45,6 +48,16 @@ class Plugin
   const VR_PROMO_NAME = "vr_promo";
 
   /**
+   * @var string
+   */
+  const FEATURED_PROPERTIES_CONFIG_SCRIPT_NAME = 'featured-properties-configuration-component-handler';
+
+  /**
+   * @var string
+   */
+  const FEATURED_PROPERTIES_STYLE_NAME = 'featured-properties-configuration-component-style';
+
+  /**
    * @var \Rezfusion\Plugin
    */
   public static $instance;
@@ -60,7 +73,8 @@ class Plugin
    * Private to enforce this class a singleton that binds
    * hooks only once.
    */
-  private function __construct() {
+  private function __construct()
+  {
     $this->registerPostTypes();
     add_action('init', [$this, 'registerShortcodes']);
     add_action('init', [$this, 'registerRewriteTags']);
@@ -70,6 +84,34 @@ class Plugin
     add_action('template_redirect', [$this, 'templateRedirect']);
     add_action('wp_head', [$this, 'wpHead']);
     add_action('admin_enqueue_scripts', [$this, 'loadFontAwesomeIcons']);
+    add_action('admin_enqueue_scripts', [$this, 'enqueueConfigurationPageScripts']);
+    add_action('admin_enqueue_scripts', [$this, 'enqueueFeaturedPropertiesConfigurationScripts']);
+  }
+
+  /**
+   * Enqueue scripts and styles for configuration page.
+   */
+  public function enqueueConfigurationPageScripts()
+  {
+    if(@$_GET['page'] === ConfigurationPage::pageName() && @$_GET['tab'] === ConfigurationPage::generalTabName()){
+      wp_register_style('fields-validation-css', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/css/fields-validation.css');
+      wp_register_script('fields-validation-js', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/fields-validation.js');
+      wp_register_script('configuration-page-validation-js', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/configuration-page-validation.js');
+      wp_enqueue_style('fields-validation-css');
+      wp_enqueue_script('fields-validation-js');
+      wp_enqueue_script('configuration-page-validation-js');
+    }
+  }
+
+  /**
+   * Enqueue required styles and scripts for "Featured Properties" component.
+   */
+  public function enqueueFeaturedPropertiesConfigurationScripts()
+  {
+    wp_register_style(static::FEATURED_PROPERTIES_STYLE_NAME, plugin_dir_url(REZFUSION_PLUGIN) . '/assets/css/featured-properties-configuration.css');
+    wp_register_script(static::FEATURED_PROPERTIES_CONFIG_SCRIPT_NAME, plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/featured-properties-configuration-component-handler.js');
+    wp_enqueue_style(static::FEATURED_PROPERTIES_STYLE_NAME);
+    wp_enqueue_script(static::FEATURED_PROPERTIES_CONFIG_SCRIPT_NAME);
   }
 
   /**
@@ -98,9 +140,10 @@ class Plugin
   /**
    * Register custom post types.
    */
-  public function registerPostTypes() {
-     new VRListing(self::VR_LISTING_NAME);
-     new VRPromo(self::VR_PROMO_NAME);
+  public function registerPostTypes()
+  {
+    new VRListing(self::VR_LISTING_NAME);
+    new VRPromo(self::VR_PROMO_NAME);
   }
 
   /**
@@ -181,6 +224,8 @@ class Plugin
     new LodgingItemFavoriteToggle(new Template('vr-favorite-toggle.php'));
     new Favorites(new Template('vr-favorites.php'));
     new Search(new Template('vr-search.php'));
+    new PropertiesAd(new Template('vr-properties-ad.php'));
+    new FeaturedProperties(new Template(Templates::featuredPropertiesTemplate()));
   }
 
   /**
@@ -282,14 +327,15 @@ class Plugin
     $cache->setMode($mode);
   }
 
-  public function loadFontAwesomeIcons() {
-    wp_register_style( 'fontawesome_admin_icons', 'https://use.fontawesome.com/releases/v5.15.1/css/all.css', '', '5.15.1', 'all');
+  public function loadFontAwesomeIcons()
+  {
+    wp_register_style('fontawesome_admin_icons', 'https://use.fontawesome.com/releases/v5.15.1/css/all.css', '', '5.15.1', 'all');
     wp_enqueue_style('fontawesome_admin_icons');
   }
 
   public function delayedRewriteFlush()
   {
-    if (!$option = get_option( 'rezfusion_trigger_rewrite_flush' )) {
+    if (!$option = get_option('rezfusion_trigger_rewrite_flush')) {
       return false;
     }
 
