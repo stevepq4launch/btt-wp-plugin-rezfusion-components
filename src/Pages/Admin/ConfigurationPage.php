@@ -48,7 +48,8 @@ class ConfigurationPage extends Page {
           'rezfusion_hub_enable_favorites',
           'rezfusion_hub_google_maps_api_key',
           'rezfusion_hub_custom_listing_slug',
-          'rezfusion_hub_custom_promo_slug'
+          'rezfusion_hub_custom_promo_slug',
+          'rezfusion_hub_promo_code_flag_text'
         ];
         break;
       case 'policies':
