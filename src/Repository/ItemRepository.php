@@ -173,7 +173,7 @@ class ItemRepository {
   public function getAllItems(){
     global $wpdb;
     return is_array(
-      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE pm.meta_key = '" . static::ITEM_META_KEY . "' AND pm.meta_value IS NOT NULL LIMIT 100", ARRAY_A)
+      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE pm.meta_key = '" . static::ITEM_META_KEY . "' AND pm.meta_value IS NOT NULL ORDER BY p.post_title ASC LIMIT 100", ARRAY_A)
     ) ? $items : [];
   }
 
