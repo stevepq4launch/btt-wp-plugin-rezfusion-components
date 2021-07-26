@@ -11,7 +11,6 @@ function propertyCardFlag(componentElement, propertiesKeys = [], flagText = '') 
     const resultsListClassName = 'bt-results-list';
     const teaserClassName = 'bt-teaser';
     const teaserWithFlagClassName = teaserClassName + '--with-flag';
-    const teaserWithFlagClassNameRegEx = new RegExp('.*' + teaserWithFlagClassName + '.*', 'g');
     const flagClassName = 'bt-teaser__flag';
     let doUpdateTimeout = null;
 
@@ -32,7 +31,7 @@ function propertyCardFlag(componentElement, propertiesKeys = [], flagText = '') 
      * @param {HTMLElement} teaserElement
      */
     function addFlag(teaserElement) {
-        if (teaserWithFlagClassNameRegEx.test(teaserElement.className) === false) {
+        if (teaserElement.className.indexOf(teaserWithFlagClassName) === -1) {
             teaserElement.append(makeFlag(_flagText));
             teaserElement.classList.add(teaserWithFlagClassName);
         }
