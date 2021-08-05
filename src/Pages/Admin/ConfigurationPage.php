@@ -24,6 +24,11 @@ class ConfigurationPage extends Page {
    * @var string
    */
   const GENERAL_TAB_NAME = 'general';
+  
+  /**
+   * @var string
+   */
+  const REVIEWS_TAB_NAME = 'reviews';
 
   /**
    * This will display a settings form.
@@ -97,6 +102,13 @@ class ConfigurationPage extends Page {
           Options::featuredPropertiesIds()
         ];
         break;
+      case 'reviews':
+        $keys = [
+          Options::newReviewNotificationRecipients()
+        ];
+        break;
+      default:
+        break;
     }
 
     $values = (new ValuesCleanerFactory)->make()->clean($values);
@@ -157,14 +169,14 @@ class ConfigurationPage extends Page {
   /**
    * @return string
    */
-  public static function pageName(){
-    return static::PAGE_NAME;
+  public static function generalTabName(){
+    return static::GENERAL_TAB_NAME;
   }
 
   /**
    * @return string
    */
-  public static function generalTabName(){
-    return static::GENERAL_TAB_NAME;
+  public static function reviewsTabName(): string {
+    return static::REVIEWS_TAB_NAME;
   }
 }

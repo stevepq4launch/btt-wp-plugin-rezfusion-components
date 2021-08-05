@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file - Render a page.
  */
@@ -7,9 +8,15 @@ namespace Rezfusion\Pages;
 
 use Rezfusion\Template;
 
-abstract class Page {
+abstract class Page
+{
 
-   protected $template;
+  /**
+   * @var string
+   */
+  const PAGE_NAME = '';
+
+  protected $template;
 
   /**
    * Page constructor.
@@ -19,15 +26,23 @@ abstract class Page {
    *
    * @param \Rezfusion\Template $template
    */
-   public function __construct(Template $template) {
-     $this->template = $template;
-   }
+  public function __construct(Template $template)
+  {
+    $this->template = $template;
+  }
 
   /**
    * Handle the display of an individual page.
    *
    * @return mixed
    */
-   abstract public function display();
+  abstract public function display();
 
+  /**
+   * @return string
+   */
+  public static function pageName()
+  {
+    return static::PAGE_NAME;
+  }
 }

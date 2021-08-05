@@ -20,6 +20,7 @@ define( 'REZFUSION_PLUGIN_TEMPLATES_PATH', REZFUSION_PLUGIN_PATH . "templates" )
 define( 'REZFUSION_PLUGIN_QUERIES_PATH', REZFUSION_PLUGIN_PATH . "queries" );
 
 require_once "includes/autoloader.php";
+require_once "src/TemplateFunctions.php";
 
 $loader = new RezfusionAutoloader();
 $loader->register();

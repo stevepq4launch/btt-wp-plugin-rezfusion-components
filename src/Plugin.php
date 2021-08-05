@@ -9,9 +9,12 @@ namespace Rezfusion;
 use Rezfusion\Client\Cache;
 use Rezfusion\Client\CurlClient;
 use Rezfusion\Client\TransientCache;
+use Rezfusion\Controller\ReviewController;
+use Rezfusion\Helper\Registerer;
 use Rezfusion\Pages\Admin\ConfigurationPage;
 use Rezfusion\Pages\Admin\CategoryInfoPage;
 use Rezfusion\Pages\Admin\ItemInfoPage;
+use Rezfusion\Pages\Admin\ReviewsListPage;
 use Rezfusion\PostTypes\VRListing;
 use Rezfusion\PostTypes\VRPromo;
 use Rezfusion\Repository\CategoryRepository;
@@ -30,6 +33,8 @@ use Rezfusion\Shortcodes\Favorites;
 use Rezfusion\Shortcodes\FeaturedProperties;
 use Rezfusion\Shortcodes\Search;
 use Rezfusion\Shortcodes\PropertiesAd;
+use Rezfusion\Shortcodes\Reviews;
+use Rezfusion\Shortcodes\ReviewSubmitForm;
 use Rezfusion\Templates;
 
 class Plugin
@@ -68,6 +73,11 @@ class Plugin
   public static $apiClient;
 
   /**
+   * @var Registerer
+   */
+  protected $Registerer;
+
+  /**
    * Plugin constructor.
    *
    * Private to enforce this class a singleton that binds
@@ -76,6 +86,7 @@ class Plugin
   private function __construct()
   {
     $this->registerPostTypes();
+    $this->Registerer = new Registerer();
     add_action('init', [$this, 'registerShortcodes']);
     add_action('init', [$this, 'registerRewriteTags']);
     add_action('init', [$this, 'delayedRewriteFlush']);
@@ -84,34 +95,63 @@ class Plugin
     add_action('template_redirect', [$this, 'templateRedirect']);
     add_action('wp_head', [$this, 'wpHead']);
     add_action('admin_enqueue_scripts', [$this, 'loadFontAwesomeIcons']);
-    add_action('admin_enqueue_scripts', [$this, 'enqueueConfigurationPageScripts']);
-    add_action('admin_enqueue_scripts', [$this, 'enqueueFeaturedPropertiesConfigurationScripts']);
+    $this->enqueueConfigurationPageScripts();
+    $this->enqueueFeaturedPropertiesConfigurationScripts();
+    (new ReviewController)->initialize();
+    $this->enqueueRezfusionHTML_Components();
+  }
+
+  /**
+   * Enqueue (and register) HTML components/widgets.
+   * 
+   * @return void
+   */
+  protected function enqueueRezfusionHTML_Components(): void
+  {
+    $this->Registerer->handleStyle('rezfusion-stars-rating.css');
+    $this->Registerer->handleScript('rezfusion-stars-rating.js');
+    $this->Registerer->handleStyle('rezfusion-fields-validation.css');
+    $this->Registerer->handleScript('rezfusion-fields-validation.js');
+    $this->Registerer->handleStyle('rezfusion-modal.css');
+    $this->Registerer->handleScript('rezfusion-modal.js');
+    $this->Registerer->handleScript('rezfusion-review-submit-form.js');
+    $this->Registerer->handleScript('rezfusion.js');
   }
 
   /**
    * Enqueue scripts and styles for configuration page.
+   * 
+   * @return void
    */
-  public function enqueueConfigurationPageScripts()
+  protected function enqueueConfigurationPageScripts(): void
   {
-    if(@$_GET['page'] === ConfigurationPage::pageName() && @$_GET['tab'] === ConfigurationPage::generalTabName()){
-      wp_register_style('fields-validation-css', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/css/fields-validation.css');
-      wp_register_script('fields-validation-js', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/fields-validation.js');
-      wp_register_script('configuration-page-validation-js', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/configuration-page-validation.js');
-      wp_enqueue_style('fields-validation-css');
-      wp_enqueue_script('fields-validation-js');
-      wp_enqueue_script('configuration-page-validation-js');
-    }
+    add_action('admin_enqueue_scripts', function () {
+      $pageName = @$_GET['page'];
+      if ($pageName === ConfigurationPage::pageName()) {
+        $currentTab = @$_GET['tab'];
+        if ($currentTab === ConfigurationPage::generalTabName() || empty($currentTab)) {
+          $this->Registerer->handleScript('configuration-page-validation.js');
+        }
+      } else if ($pageName === ReviewsListPage::pageName()) {
+        $this->Registerer->handleScript('rezfusion-table.js');
+        $this->Registerer->handleScript('configuration-reviews-list-view-handler.js');
+      }
+    });
   }
 
   /**
    * Enqueue required styles and scripts for "Featured Properties" component.
+   * 
+   * @return void
    */
-  public function enqueueFeaturedPropertiesConfigurationScripts()
+  protected function enqueueFeaturedPropertiesConfigurationScripts(): void
   {
-    wp_register_style(static::FEATURED_PROPERTIES_STYLE_NAME, plugin_dir_url(REZFUSION_PLUGIN) . '/assets/css/featured-properties-configuration.css');
-    wp_register_script(static::FEATURED_PROPERTIES_CONFIG_SCRIPT_NAME, plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/featured-properties-configuration-component-handler.js');
-    wp_enqueue_style(static::FEATURED_PROPERTIES_STYLE_NAME);
-    wp_enqueue_script(static::FEATURED_PROPERTIES_CONFIG_SCRIPT_NAME);
+    add_action('admin_enqueue_scripts', function () {
+      wp_register_style(static::FEATURED_PROPERTIES_STYLE_NAME, plugin_dir_url(REZFUSION_PLUGIN) . '/assets/css/featured-properties-configuration.css');
+      wp_register_script(static::FEATURED_PROPERTIES_CONFIG_SCRIPT_NAME, plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/featured-properties-configuration-component-handler.js');
+      wp_enqueue_style(static::FEATURED_PROPERTIES_STYLE_NAME);
+      wp_enqueue_script(static::FEATURED_PROPERTIES_CONFIG_SCRIPT_NAME);
+    });
   }
 
   /**
@@ -205,6 +245,15 @@ class Plugin
       'rezfusion_components_categories',
       [$categoryInfoPage, 'display']
     );
+
+    add_submenu_page(
+      'rezfusion_components_config',
+      'Reviews List',
+      'Reviews List',
+      'administrator',
+      ReviewsListPage::pageName(),
+      [new ReviewsListPage(new Template(Templates::reviewsListPage(), REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin")), 'display']
+    );
   }
 
   /**
@@ -226,6 +275,8 @@ class Plugin
     new Search(new Template('vr-search.php'));
     new PropertiesAd(new Template('vr-properties-ad.php'));
     new FeaturedProperties(new Template(Templates::featuredPropertiesTemplate()));
+    new Reviews(new Template(Templates::reviewsTemplate()));
+    new ReviewSubmitForm(new Template(Templates::reviewSubmitForm()));
   }
 
   /**

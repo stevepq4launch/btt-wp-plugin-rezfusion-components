@@ -1,0 +1,12 @@
+.rezfusion-fields-validation__has-field-validation-error,
+input[type].rezfusion-fields-validation__has-field-validation-error {
+  border: 2px solid #f00;
+}
+
+.rezfusion-fields-validation__field-validation-error-message {
+  padding: 5px;
+  box-sizing: border-box;
+  background: #f00;
+  color: #fff;
+  width: 100%;
+}
