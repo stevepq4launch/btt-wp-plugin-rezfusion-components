@@ -44,6 +44,26 @@ class Options
     const FEATURED_PROPERTIES_PROPERTIES_IDS = "properties_ids";
 
     /**
+     * @var
+     */
+    const HUB_CHANNEL_URL = 'hub_channel';
+
+    /**
+     * @var
+     */
+    const COMPONENTS_URL = 'hub_folder';
+
+    /**
+     * @var
+     */
+    const SPS_DOMAIN = 'hub_sps_domain';
+
+    /**
+     * @var
+     */
+    const BOOKING_CONFIRMATION_URL = 'hub_conf_page';
+
+    /**
      * @var string
      */
     const HUB_CHANNEL = 'channel';
@@ -103,7 +123,31 @@ class Options
      */
     public static function hubChannel(): string
     {
-        return static::PREFIX . 'channel';
+        return static::PREFIX . static::HUB_CHANNEL_URL;
+    }
+
+    /**
+     * @return string
+     */
+    public static function componentsURL(): string
+    {
+        return static::PREFIX . static::COMPONENTS_URL;
+    }
+
+    /**
+     * @return string
+     */
+    public static function SPS_Domain(): string
+    {
+        return static::PREFIX . static::SPS_DOMAIN;
+    }
+
+    /**
+     * @return string
+     */
+    public static function bookingConfirmationURL(): string
+    {
+        return static::PREFIX . static::BOOKING_CONFIRMATION_URL;
     }
 
     /**

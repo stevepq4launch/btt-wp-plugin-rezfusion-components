@@ -13,6 +13,22 @@
                     input: document.getElementsByName('rezfusion_hub_custom_promo_slug')[0],
                     validators: ['slug']
                 },
+                {
+                    input: document.getElementsByName('rezfusion_hub_channel')[0],
+                    validators: ['no-ending-slash']
+                },
+                {
+                    input: document.getElementsByName('rezfusion_hub_folder')[0],
+                    validators: ['no-ending-slash']
+                },
+                {
+                    input: document.getElementsByName('rezfusion_hub_sps_domain')[0],
+                    validators: ['no-ending-slash']
+                },
+                {
+                    input: document.getElementsByName('rezfusion_hub_conf_page')[0],
+                    validators: ['no-ending-slash']
+                }
             ]
         });
     };
