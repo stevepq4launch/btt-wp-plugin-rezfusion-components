@@ -6,7 +6,10 @@
  */
 
 use Rezfusion\Factory\FeaturedPropertiesConfigurationTemplateVariablesFactory;
+use Rezfusion\Options;
+use Rezfusion\Pages\Admin\ConfigurationPage;
 use Rezfusion\Template;
+use Rezfusion\Templates;
 
 if (isset($_GET['tab'])) {
   $_SESSION['savetab'] = $_GET['tab'];
@@ -23,7 +26,8 @@ function rezfusion_admin_tabs($current = 'general')
     'policies'  => 'Policies',
     'amenities' => 'Amenities',
     'forms'     => 'Forms',
-    'featured-properties' => 'Featured Properties'
+    'featured-properties' => 'Featured Properties',
+    ConfigurationPage::REVIEWS_TAB_NAME => 'Reviews'
   );
 
   echo '<div id="icon-themes" class="icon32"><br></div>';
@@ -70,6 +74,13 @@ function rezfusion_admin_tabs($current = 'general')
             echo (new Template('configuration-featured-properties.php', plugin_dir_path(__FILE__)))
               ->render((new FeaturedPropertiesConfigurationTemplateVariablesFactory)->make());
             break;
+          }
+        case ConfigurationPage::reviewsTabName(): {
+            $newReviewNotificationRecipientsOption = Options::newReviewNotificationRecipients();
+            echo (new Template(Templates::reviewsConfigurationPage(), plugin_dir_path(__FILE__)))->render([
+              'newReviewNotificationRecipientsOption' => $newReviewNotificationRecipientsOption,
+              'newReviewNotificationRecipientsValue' => esc_attr(get_option($newReviewNotificationRecipientsOption))
+            ]);
           }
       }
       ?>

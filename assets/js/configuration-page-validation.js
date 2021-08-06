@@ -1,7 +1,7 @@
 (function () {
     const initializeValidator = function () {
         let form = document.querySelector('.form-table').closest('form');
-        fieldsValidation({
+        REZFUSION.fieldsValidation({
             form: form,
             submitButton: form.querySelector('#submit'),
             fields: [

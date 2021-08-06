@@ -8,6 +8,7 @@ use Rezfusion\Plugin;
 use Rezfusion\Repository\ItemRepository;
 use Rezfusion\Repository\LodgingProductRepository;
 use Rezfusion\Template;
+use Rezfusion\Templates;
 
 class FeaturedProperties extends Shortcode
 {
@@ -76,7 +77,7 @@ class FeaturedProperties extends Shortcode
             'bathsLabel' => get_option(Options::featuredPropertiesBathsLabel()),
             'bedsLabel' => get_option(Options::featuredPropertiesBedsLabel()),
             'sleepsLabel' => get_option(Options::featuredPropertiesSleepsLabel()),
-            'propertyDetailsPartial' => new Partial('../templates/partials/property-details.php')
+            'propertyDetailsPartial' => new Partial(Templates::propertyDetailsParial())
         ];
 
         /* Fix empty variables. */

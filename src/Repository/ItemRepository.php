@@ -219,4 +219,16 @@ class ItemRepository {
     return $propertiesIds;
   }
 
+  /**
+   * Get property key by associated post ID.
+   * 
+   * @param int $postId
+   * 
+   * @return string
+   */
+  public function getPropertyKeyByPostId($postId): string {
+    global $wpdb;
+    return $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value IS NOT NULL AND post_id = %d LIMIT 1", [static::ITEM_META_KEY, $postId]));
+  }
+
 }
