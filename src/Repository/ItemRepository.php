@@ -189,4 +189,34 @@ class ItemRepository {
     ) ? array_column($items, 'meta_value') : [];
   }
 
+  /**
+   * Fetch ids of properties with active promo-codes.
+   * 
+   * @return string[]
+   */
+  public function getPromoCodePropertiesIds(){
+    global $wpdb;
+    $propertiesIds = [];
+    $postsIds = [];
+
+    $results = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rzf_promo_listing_value' AND (meta_value IS NOT NULL AND meta_value != '') LIMIT 100", ARRAY_A);
+    foreach($results as $result){
+      $metaValues = unserialize($result['meta_value']);
+      foreach($metaValues as $postId_){
+        if(!in_array($postId = intval($postId_), $postsIds)){
+          $postsIds[] = $postId;
+        }
+      }
+    }
+    if(count($postsIds)){
+      $results2 = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rezfusion_hub_item_id' AND (meta_value IS NOT NULL AND meta_value != '') AND post_id IN (".join(',', $postsIds).") LIMIT 100", ARRAY_A);
+      foreach($results2 as $record){
+        if(!empty($record['meta_value']))
+          $propertiesIds[] = $record['meta_value'];
+      }
+    }
+
+    return $propertiesIds;
+  }
+
 }
