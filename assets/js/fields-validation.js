@@ -73,6 +73,17 @@ function fieldsValidation(options = {}) {
                 }
                 return makeResult(valid, error);
             }
+        },
+        {
+            type: 'no-ending-slash',
+            handler: function (input) {
+                let valid = true, error = '', value = input.value;
+                if (value && /[^\/]$|^$/g.test(value) === false) {
+                    valid = false;
+                    error = 'Ending slash is not allowed.';
+                }
+                return makeResult(valid, error);
+            }
         }
     ];
 
