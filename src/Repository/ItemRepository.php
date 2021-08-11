@@ -173,7 +173,7 @@ class ItemRepository {
   public function getAllItems(){
     global $wpdb;
     return is_array(
-      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE pm.meta_key = '" . static::ITEM_META_KEY . "' AND pm.meta_value IS NOT NULL LIMIT 100", ARRAY_A)
+      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE pm.meta_key = '" . static::ITEM_META_KEY . "' AND pm.meta_value IS NOT NULL ORDER BY p.post_title ASC LIMIT 100", ARRAY_A)
     ) ? $items : [];
   }
 
@@ -187,6 +187,48 @@ class ItemRepository {
     return is_array(
       $items = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '" . static::ITEM_META_KEY . "' AND meta_value IS NOT NULL LIMIT 100", ARRAY_A)
     ) ? array_column($items, 'meta_value') : [];
+  }
+
+  /**
+   * Fetch ids of properties with active promo-codes.
+   * 
+   * @return string[]
+   */
+  public function getPromoCodePropertiesIds(){
+    global $wpdb;
+    $propertiesIds = [];
+    $postsIds = [];
+
+    $results = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rzf_promo_listing_value' AND (meta_value IS NOT NULL AND meta_value != '') LIMIT 100", ARRAY_A);
+    foreach($results as $result){
+      $metaValues = unserialize($result['meta_value']);
+      foreach($metaValues as $postId_){
+        if(!in_array($postId = intval($postId_), $postsIds)){
+          $postsIds[] = $postId;
+        }
+      }
+    }
+    if(count($postsIds)){
+      $results2 = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rezfusion_hub_item_id' AND (meta_value IS NOT NULL AND meta_value != '') AND post_id IN (".join(',', $postsIds).") LIMIT 100", ARRAY_A);
+      foreach($results2 as $record){
+        if(!empty($record['meta_value']))
+          $propertiesIds[] = $record['meta_value'];
+      }
+    }
+
+    return $propertiesIds;
+  }
+
+  /**
+   * Get property key by associated post ID.
+   * 
+   * @param int $postId
+   * 
+   * @return string
+   */
+  public function getPropertyKeyByPostId($postId): string {
+    global $wpdb;
+    return $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value IS NOT NULL AND post_id = %d LIMIT 1", [static::ITEM_META_KEY, $postId]));
   }
 
 }

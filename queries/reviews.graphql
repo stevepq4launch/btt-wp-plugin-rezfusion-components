@@ -1,0 +1,19 @@
+query($channels:ChannelFilter!, $itemIds:[String]) {
+    lodgingProducts(channels:$channels, itemIds:$itemIds) {
+        results {
+            item {
+                reviews {
+                    rating,
+                    headline,
+                    arrival,
+                    departure,
+                    review_date,
+                    response,
+                    guest_name,
+                    comment,
+                    id
+                }
+            }
+        }
+    }
+}

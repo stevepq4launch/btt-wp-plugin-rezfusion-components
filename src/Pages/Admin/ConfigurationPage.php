@@ -24,6 +24,11 @@ class ConfigurationPage extends Page {
    * @var string
    */
   const GENERAL_TAB_NAME = 'general';
+  
+  /**
+   * @var string
+   */
+  const REVIEWS_TAB_NAME = 'reviews';
 
   /**
    * This will display a settings form.
@@ -60,7 +65,8 @@ class ConfigurationPage extends Page {
           'rezfusion_hub_enable_favorites',
           'rezfusion_hub_google_maps_api_key',
           'rezfusion_hub_custom_listing_slug',
-          'rezfusion_hub_custom_promo_slug'
+          'rezfusion_hub_custom_promo_slug',
+          'rezfusion_hub_promo_code_flag_text'
         ];
         break;
       case 'policies':
@@ -96,6 +102,13 @@ class ConfigurationPage extends Page {
           Options::featuredPropertiesSleepsLabel(),
           Options::featuredPropertiesIds()
         ];
+        break;
+      case 'reviews':
+        $keys = [
+          Options::newReviewNotificationRecipients()
+        ];
+        break;
+      default:
         break;
     }
 
@@ -157,14 +170,14 @@ class ConfigurationPage extends Page {
   /**
    * @return string
    */
-  public static function pageName(){
-    return static::PAGE_NAME;
+  public static function generalTabName(){
+    return static::GENERAL_TAB_NAME;
   }
 
   /**
    * @return string
    */
-  public static function generalTabName(){
-    return static::GENERAL_TAB_NAME;
+  public static function reviewsTabName(): string {
+    return static::REVIEWS_TAB_NAME;
   }
 }

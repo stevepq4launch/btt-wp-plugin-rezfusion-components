@@ -1,0 +1,12 @@
+.rezfusion-stars-rating__star {
+  font-size: 28px;
+}
+
+.rezfusion-stars-rating__star:hover {
+  cursor: pointer;
+}
+
+.rezfusion-stars-rating--highlight .rezfusion-stars-rating__star {
+  opacity: 0.5;
+  transition: opacity 100ms;
+}

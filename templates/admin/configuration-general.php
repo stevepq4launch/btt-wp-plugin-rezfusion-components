@@ -94,3 +94,11 @@
     <label for="rezfusion_hub_custom_promo_slug">Enter the slug all lowercase and without spaces or slashes, e.g. <i>"vr-promos"</i>.  Defaults to "/specials/"</label>
   </td>
 </tr>
+<tr valign="top">
+  <th scope="row">Promo Code Flag Text</th>
+  <td>
+    <input type="text" name="rezfusion_hub_promo_code_flag_text" value="<?php echo esc_attr(get_option('rezfusion_hub_promo_code_flag_text')); ?>" />
+    <br />
+    <label for="rezfusion_hub_promo_code_flag_text">Text on flag for properties with active promo-codes (<i>Default: "Special!"</i>).</label>
+  </td>
+</tr>

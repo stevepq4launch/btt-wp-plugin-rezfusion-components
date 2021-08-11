@@ -2,7 +2,9 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Helper\PromoCodePropertiesHelper;
 use Rezfusion\Plugin;
+use Rezfusion\Repository\ItemRepository;
 
 class Search extends Shortcode
 {
@@ -107,6 +109,8 @@ class Search extends Shortcode
     if (!empty($fontUrl)) {
       wp_enqueue_style('rezfusion_hub_font', $fontUrl);
     }
+
+    (new PromoCodePropertiesHelper(Plugin::getInstance(), new ItemRepository(Plugin::apiClient())))->handle($atts);
 
     return $this->template->render($atts);
   }
