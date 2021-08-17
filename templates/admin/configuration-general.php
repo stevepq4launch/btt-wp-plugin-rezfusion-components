@@ -1,3 +1,7 @@
+<?php
+
+use Rezfusion\Options;
+?>
 <tr valign="top">
   <th scope="row">Components URL</th>
   <td><input type="text" name="rezfusion_hub_folder" value="<?php echo $rezfusion_hub_folder_value; ?>" />
@@ -64,5 +68,13 @@
     <input type="text" name="rezfusion_hub_promo_code_flag_text" value="<?php echo esc_attr(get_option('rezfusion_hub_promo_code_flag_text')); ?>" />
     <br />
     <label for="rezfusion_hub_promo_code_flag_text">Text on flag for properties with active promo-codes (<i>Default: "Special!"</i>).</label>
+  </td>
+</tr>
+<tr valign="top">
+  <th scope="row">Repository Token</th>
+  <td>
+    <input type="text" name="<?php echo Options::repositoryToken(); ?>" value="<?php echo esc_attr(get_option(Options::repositoryToken())); ?>" />
+    <br />
+    <label for="<?php echo Options::repositoryToken(); ?>">Enter repository token to be able to use automatic plugin update feature.</label>
   </td>
 </tr>

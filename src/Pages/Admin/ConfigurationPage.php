@@ -61,7 +61,8 @@ class ConfigurationPage extends Page {
           'rezfusion_hub_sync_items_post_type',
           'rezfusion_hub_custom_listing_slug',
           'rezfusion_hub_custom_promo_slug',
-          'rezfusion_hub_promo_code_flag_text'
+          'rezfusion_hub_promo_code_flag_text',
+          Options::repositoryToken()
         ];
         break;
       case 'policies':

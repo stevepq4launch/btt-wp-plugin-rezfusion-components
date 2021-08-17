@@ -238,6 +238,8 @@ class Plugin
     register_setting('rezfusion-components', 'rezfusion_hub_policies_cleaning');
     register_setting('rezfusion-components', 'rezfusion_hub_amenities_featured');
     register_setting('rezfusion-components', 'rezfusion_hub_amenities_general');
+    register_setting('rezfusion-components', 'rezfusion_hub_enable_favorites');
+    register_setting('rezfusion-components', Options::repositoryToken());
   }
 
   /**

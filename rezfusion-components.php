@@ -5,6 +5,9 @@
  * @version 0.1
  */
 
+use Rezfusion\Factory\PluginUpdaterFactory;
+use Rezfusion\PluginConfiguration;
+
 /*
 Plugin Name: Rezfusion Components
 Plugin URI: https://bluetent.com/
@@ -27,8 +30,10 @@ $loader = new RezfusionAutoloader();
 $loader->register();
 $loader->addNamespace('\\Rezfusion', REZFUSION_PLUGIN_PATH . '/src');
 
+$PluginConfiguration = PluginConfiguration::getInstance();
 global $rezfusion;
 $rezfusion = \Rezfusion\Plugin::getInstance();
+(new PluginUpdaterFactory($PluginConfiguration))->make();
 
 /**
  * Helper function for retrieving plugin options values.

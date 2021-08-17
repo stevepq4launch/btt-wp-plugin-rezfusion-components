@@ -81,6 +81,11 @@ class Options
     /**
      * @var string
      */
+    const REPOSITORY_TOKEN = "repository_token";
+
+    /**
+     * @var string
+     */
     const MAP_API_KEY = 'rezfusion_hub_google_maps_api_key';
 
     /**
@@ -199,6 +204,14 @@ class Options
     public static function maxReviewRating(): string
     {
         return static::MAX_REVIEW_RATING;
+    }
+
+    /**
+     * @return string
+     */
+    public static function repositoryToken(): string
+    {
+        return static::PREFIX . static::REPOSITORY_TOKEN;
     }
 
     /**
