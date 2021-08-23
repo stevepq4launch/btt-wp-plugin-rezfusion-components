@@ -23,7 +23,7 @@ class Reviews extends Shortcode
     public function render($atts = []): string
     {
         $atts = shortcode_atts([
-            'postid' => ''
+            'postid' => get_the_ID(  )
         ], $atts);
 
         if (empty($atts['postid']))
