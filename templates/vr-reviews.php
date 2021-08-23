@@ -15,7 +15,7 @@ $StarsRatingRenderer = new StarsRatingRenderer(Options::maxReviewRating());
 <?php if (is_array($reviews) && count($reviews)) : ?>
   <section id="rezfusion-reviews" class="rezfusion-reviews">
     <div class="rezfusion-reviews__section-title-wrap">
-      <h2 class="rezfusion-reviews__section-title-wrap__title"><?php _e('Reviews'); ?></h2>
+      <h2 class="rezfusion-reviews__section-title"><?php _e('Reviews'); ?></h2>
     </div>
     <div class="rezfusion-reviews__list">
       <?php foreach ($reviews as $review) : ?>
@@ -28,11 +28,11 @@ $StarsRatingRenderer = new StarsRatingRenderer(Options::maxReviewRating());
             <div class="rezfusion-review__comment">
               <?php echo mb_strimwidth($review['review'], 0, 150, '...<span class="pseudo-link">Read More <i class="fa fa-angle-right"></i></span>'); ?>
             </div>
-            <div class="rezfusion-review__info flex-row">
-              <div class="rezfusion-review__guest-name flex-xs-12 flex-sm-6">
+            <div class="rezfusion-review__info">
+              <div class="rezfusion-review__guest-name">
                 <?php print $review['guestName']; ?>
               </div>
-              <div class="rezfusion-review__stay-dates flex-xs-12 flex-sm-6">
+              <div class="rezfusion-review__stay-dates">
                 <em><?php print "Stayed on " . $review['stayDate']; ?></em>
               </div>
             </div>
@@ -55,8 +55,8 @@ $StarsRatingRenderer = new StarsRatingRenderer(Options::maxReviewRating());
         <div class="rezfusion-review__stay-date"></div>
       </div>
       <div class="rezfusion-review__buttons-container">
-        <button class="rezfusion-review__previous-button">Previous Review</button>
-        <button class="rezfusion-review__next-button">Next Review</button>
+        <button class="rezfusion-review__previous-button rezfusion-review__button">Previous Review</button>
+        <button class="rezfusion-review__next-button rezfusion-review__button">Next Review</button>
       </div>
     </div>
     <?php echo rezfusion_modal_close(); ?>
