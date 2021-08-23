@@ -123,7 +123,7 @@ class Options
      */
     public static function hubChannel(): string
     {
-        return static::PREFIX . static::HUB_CHANNEL_URL;
+        return static::PREFIX . 'channel';
     }
 
     /**
