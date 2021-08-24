@@ -43,6 +43,15 @@
     <?php print $lodgingItem->item->description; ?>
   </div>
 
+  <div class="lodging-item-details__sleeping_arrangements">
+    <?php
+      if (!empty($lodgingItem->item->rooms)) {
+        $roomsData = json_encode($lodgingItem->item->rooms);
+        print do_shortcode("[rezfusion-sleeping-arrangements rooms=\"$roomsData\"]");
+      }
+    ?>
+  </div>
+
   <div class="lodging-item-details__amenities">
     <?php print do_shortcode("[rezfusion-item-amenities]"); ?>
   </div>

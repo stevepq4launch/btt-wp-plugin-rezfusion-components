@@ -35,6 +35,7 @@ use Rezfusion\Shortcodes\Search;
 use Rezfusion\Shortcodes\PropertiesAd;
 use Rezfusion\Shortcodes\Reviews;
 use Rezfusion\Shortcodes\ReviewSubmitForm;
+use Rezfusion\Shortcodes\SleepingArrangements;
 use Rezfusion\Templates;
 
 class Plugin
@@ -103,7 +104,7 @@ class Plugin
 
   /**
    * Enqueue (and register) HTML components/widgets.
-   * 
+   *
    * @return void
    */
   protected function enqueueRezfusionHTML_Components(): void
@@ -120,7 +121,7 @@ class Plugin
 
   /**
    * Enqueue scripts and styles for configuration page.
-   * 
+   *
    * @return void
    */
   protected function enqueueConfigurationPageScripts(): void
@@ -141,7 +142,7 @@ class Plugin
 
   /**
    * Enqueue required styles and scripts for "Featured Properties" component.
-   * 
+   *
    * @return void
    */
   protected function enqueueFeaturedPropertiesConfigurationScripts(): void
@@ -277,6 +278,7 @@ class Plugin
     new FeaturedProperties(new Template(Templates::featuredPropertiesTemplate()));
     new Reviews(new Template(Templates::reviewsTemplate()));
     new ReviewSubmitForm(new Template(Templates::reviewSubmitForm()));
+    new SleepingArrangements(new Template('vr-sleeping-arrangements.php'));
   }
 
   /**
