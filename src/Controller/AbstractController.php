@@ -52,10 +52,12 @@ abstract class AbstractController
     protected function checkUserRoles($userRoles = []): bool
     {
         $valid = true;
-        foreach ($userRoles as $role) {
-            if (!current_user_can($role)) {
-                $valid = false;
-                break;
+        if (is_array($userRoles) && count($userRoles)) {
+            foreach ($userRoles as $role) {
+                if (!current_user_can($role)) {
+                    $valid = false;
+                    break;
+                }
             }
         }
         return $valid;

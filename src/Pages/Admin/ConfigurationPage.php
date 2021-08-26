@@ -53,17 +53,12 @@ class ConfigurationPage extends Page {
   protected function save($values) {
     switch ($_SESSION['savetab']) {
       case 'general':
-        $keys = [
-          'rezfusion_hub_channel',
+        $keys = [          
           'rezfusion_hub_folder',
           'rezfusion_hub_env',
-          'rezfusion_hub_sps_domain',
-          'rezfusion_hub_conf_page',
           'rezfusion_hub_redirect_urls',
           'rezfusion_hub_sync_items',
           'rezfusion_hub_sync_items_post_type',
-          'rezfusion_hub_enable_favorites',
-          'rezfusion_hub_google_maps_api_key',
           'rezfusion_hub_custom_listing_slug',
           'rezfusion_hub_custom_promo_slug',
           'rezfusion_hub_promo_code_flag_text'
@@ -120,21 +115,6 @@ class ConfigurationPage extends Page {
       } else {
         update_option($key, NULL);
       }
-    }
-    
-    if (!empty(get_option( 'rezfusion_hub_folder' ))) {
-      $themeUrl = null;
-      $bundle = file(get_option( 'rezfusion_hub_folder' ), FILE_SKIP_EMPTY_LINES);
-      foreach ($bundle as $key => $value) {
-        preg_match('~https://rezfusion-components-storage.*\.css~', $value, $match);
-        if (!empty($match)) {
-          $themeUrl .= $match[0];
-        }
-      }
-      
-      update_option('rezfusion_hub_theme', $themeUrl);
-    } else {
-      update_option( 'rezfusion_hub_theme', NULL );
     }
 
     if (!empty($values['rezfusion_hub_fetch_data'])) {

@@ -2,6 +2,7 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Options;
 use Rezfusion\Plugin;
 
 class LodgingItemFavoriteToggle extends  Shortcode
@@ -13,7 +14,7 @@ class LodgingItemFavoriteToggle extends  Shortcode
     global $post;
     $meta = get_post_meta($post->ID);
     $a = shortcode_atts([
-      'channel' => get_option('rezfusion_hub_channel'),
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
       'itemid' => !empty($meta['rezfusion_hub_item_id']) ? $meta['rezfusion_hub_item_id'][0] : $atts['itemid'],
       'type' => 'small',
     ], $atts);
@@ -22,7 +23,7 @@ class LodgingItemFavoriteToggle extends  Shortcode
       return "Rezfusion Lodging Item: A 'channel' and an 'itemId' attribute are both required";
     }
 
-    $favoritesEnabled = isset(get_option('rezfusion_hub_enable_favorites')['1']) ? true : false;
+    $favoritesEnabled = get_rezfusion_option(Options::enableFavorites());
     $favoritesChannel = $a['channel'];
 
     add_action('wp_footer', function () use ($favoritesChannel, $favoritesEnabled) { ?>

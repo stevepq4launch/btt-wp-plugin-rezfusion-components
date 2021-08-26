@@ -43,7 +43,7 @@ class Reviews extends Shortcode
         /* Fetch reviews from hub. */
         $propertyKey = (new ItemRepository(Plugin::apiClient()))->getPropertyKeyByPostId($atts['postid']);
         if (!empty($propertyKey)) {
-            $HubReviewRepository = new HubReviewRepository(Plugin::apiClient(), get_option(Options::hubChannel()));
+            $HubReviewRepository = new HubReviewRepository(Plugin::apiClient(), get_rezfusion_option(Options::hubChannelURL()));
             $hubReviews = $HubReviewRepository->getReviews([$propertyKey]);
         }
 
