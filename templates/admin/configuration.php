@@ -47,7 +47,7 @@ function rezfusion_admin_tabs($current = 'general')
 
   <?php isset($_GET['tab']) ? rezfusion_admin_tabs($_GET['tab']) : rezfusion_admin_tabs('general'); ?>
 
-  <form method="post" action="/wp-admin/admin.php?page=rezfusion_components_config">
+  <form id="rezfusion-configuration-form" method="post" action="/wp-admin/admin.php?page=rezfusion_components_config" nonce="<?php echo esc_attr(wp_create_nonce('wp_rest')); ?>">
     <?php settings_fields('rezfusion-components'); ?>
     <?php do_settings_sections('rezfusion-components'); ?>
     <table class="form-table">

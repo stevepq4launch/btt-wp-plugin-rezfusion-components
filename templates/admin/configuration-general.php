@@ -60,9 +60,12 @@
 <tr valign="top">
   <th scope="row">Refresh Item Data</th>
   <td>
-    <input type="checkbox" name="rezfusion_hub_fetch_data" value="1" /><label for="rezfusion_hub_fetch_data">
+    <input type="button" value="<?php _e("Refresh Data"); ?>" id="rezfusion-hub-fetch-data-button" class="button button-primary" />
+    <br />
+    <label for="rezfusion_hub_fetch_data">
       Use this option to refresh data if you've added new properties.
     </label>
+    <div id="rezfusion-hub-fetch-data-message" class="hidden"></div>
   </td>
 </tr>
 <tr valign="top">
