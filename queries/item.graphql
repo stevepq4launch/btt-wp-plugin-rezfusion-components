@@ -26,6 +26,7 @@ query($channels:ChannelFilter!, $itemIds:[String]) {
             occ_total,
             item {
                 hasStays,
+                rooms,
                 availability{
                     begin,
                     end,

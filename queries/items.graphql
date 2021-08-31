@@ -1,14 +1,15 @@
 query($channels:ChannelFilter!) {
     lodgingProducts(channels:$channels) {
         results {
-            beds
-            baths
+            beds,
+            baths,
             item {
-                id
-                name
+                id,
+                name,
+                rooms,
                 category_values {
                     value {
-                        name
+                        name,
                         id
                     }
                 }
