@@ -5,7 +5,7 @@ import SleepingArrangement from '@propertybrands/btt-bluetent-components/compone
 
 const element = document.querySelector('.sleeping-arrangements');
 if (element) {
-  const rooms = JSON.parse(element.dataset.rooms.toString());
+  const rooms = JSON.parse(element.dataset.rezfusionRooms.toString());
   const StyledDiv = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
