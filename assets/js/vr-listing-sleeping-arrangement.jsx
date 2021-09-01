@@ -17,7 +17,23 @@ if (element) {
     const Rooms = () => (
       <StyledDiv>
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        {rooms.map((room) => <SleepingArrangement {...room} key={room.name} />)}
+        {rooms.map((room) => {
+          const bedCounts = {
+            bunk_beds: room.bunk_beds,
+            child_beds: room.child_beds,
+            cribs: room.cribs,
+            double_beds: room.double_beds,
+            king_beds: room.king_beds,
+            murphy_beds: room.murphy_beds,
+            other_beds: room.other_beds,
+            queen_beds: room.queen_beds,
+            single_beds: room.single_beds,
+            sofa_beds: room.sofa_beds
+          };
+          return (
+            <SleepingArrangement {...room} bedCounts={bedCounts} key={room.name}/>
+          );
+        })}
       </StyledDiv>
     );
     ReactDOM.render(<Rooms />, element);
