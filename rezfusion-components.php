@@ -19,6 +19,11 @@ define( 'REZFUSION_PLUGIN_ADMIN_BUILD_PATH', REZFUSION_PLUGIN_PATH . "dist/admin
 define( 'REZFUSION_PLUGIN_TEMPLATES_PATH', REZFUSION_PLUGIN_PATH . "templates" );
 define( 'REZFUSION_PLUGIN_QUERIES_PATH', REZFUSION_PLUGIN_PATH . "queries" );
 
+if( ! class_exists( 'Gamajo_Template_Loader' ) ) {
+  require REZFUSION_PLUGIN_PATH . 'src/Templates/Gamajo_Template_Loader.php';
+}
+require REZFUSION_PLUGIN_PATH . 'src/Templates/RezFusionComponentsTemplateLoader.php';
+
 require_once "includes/autoloader.php";
 require_once "src/TemplateFunctions.php";
 
@@ -26,5 +31,7 @@ $loader = new RezfusionAutoloader();
 $loader->register();
 $loader->addNamespace('\\Rezfusion', REZFUSION_PLUGIN_PATH . '/src');
 
+global $rezfusion_templates;
 global $rezfusion;
 $rezfusion = \Rezfusion\Plugin::getInstance();
+$rezfusion_templates = new RezFusionComponentsTemplateLoader();
