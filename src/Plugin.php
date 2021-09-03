@@ -229,27 +229,63 @@ class Plugin
   }
 
   /**
+   * Prepares "Reviews List" menu item.
+   * 
+   * If user is not an administrator then it adds separate menu item,
+   * otherwise it will be added as sub-item.
+   * 
+   * @param string $menuPageId
+   */
+  private function prepareReviewsMenuItem($menuPageId = ''): void
+  {
+    if (is_user_logged_in()) {
+      $currentUser = wp_get_current_user();
+      $allowedUserRoles = ReviewController::getAllowedUserRoles();
+      if (UserRoles::userHasAnyRole($currentUser, $allowedUserRoles)) {
+        $function = 'add_submenu_page';
+        $name = 'Rezfusion Reviews List';
+        $parameters = [
+          !UserRoles::userHasRoles($currentUser, [UserRoles::administrator()]) ? '' : $menuPageId,
+          $name,
+          $name,
+          UserRoles::userHasRoles($currentUser, [UserRoles::administrator()]) ? UserRoles::administrator() : $currentUser->roles[0],
+          ReviewsListPage::pageName(),
+          [new ReviewsListPage(new Template(Templates::reviewsListPage(), REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin")), 'display']
+        ];
+        if (empty($parameters[0])) {
+          array_shift($parameters);
+          $function = 'add_menu_page';
+        }
+        call_user_func_array($function, $parameters);
+      }
+    }
+  }
+
+  /**
    * Add pages to the admin menu.
    */
   public function registerPages()
   {
+    $menuName = 'rezfusion_components_config';
+    $userRole = UserRoles::administrator();
+
     $configTemplate = new Template('configuration.php', REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin");
     $configPage = new ConfigurationPage($configTemplate);
     add_menu_page(
       $this->getPluginName() . ' Components',
       $this->getPluginName(),
-      'administrator',
-      'rezfusion_components_config',
+      $userRole,
+      $menuName,
       [$configPage, 'display']
     );
 
     $itemInfoTemplate = new Template('lodging-item.php', REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin");
     $itemInfoPage = new ItemInfoPage($itemInfoTemplate);
     add_submenu_page(
-      'rezfusion_components_config',
+      $menuName,
       'Items',
       'Items',
-      'administrator',
+      $userRole,
       'rezfusion_components_items',
       [$itemInfoPage, 'display']
     );
@@ -257,22 +293,15 @@ class Plugin
     $categoryInfoTemplate = new Template('category-info.php', REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin");
     $categoryInfoPage = new CategoryInfoPage($categoryInfoTemplate);
     add_submenu_page(
-      'rezfusion_components_config',
+      $menuName,
       'Categories',
       'Categories',
-      'administrator',
+      $userRole,
       'rezfusion_components_categories',
       [$categoryInfoPage, 'display']
     );
 
-    add_submenu_page(
-      'rezfusion_components_config',
-      'Reviews List',
-      'Reviews List',
-      'administrator',
-      ReviewsListPage::pageName(),
-      [new ReviewsListPage(new Template(Templates::reviewsListPage(), REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin")), 'display']
-    );
+    $this->prepareReviewsMenuItem($menuName);
   }
 
   /**
