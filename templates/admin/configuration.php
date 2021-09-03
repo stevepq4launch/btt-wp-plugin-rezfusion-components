@@ -8,9 +8,10 @@
 use Rezfusion\Factory\FeaturedPropertiesConfigurationTemplateVariablesFactory;
 use Rezfusion\Options;
 use Rezfusion\Pages\Admin\ConfigurationPage;
+use Rezfusion\PostRecentVisits;
+use Rezfusion\Shortcodes\UrgencyAlert;
 use Rezfusion\Template;
 use Rezfusion\Templates;
-
 if (isset($_GET['tab'])) {
   $_SESSION['savetab'] = $_GET['tab'];
 } else {
@@ -26,6 +27,7 @@ function rezfusion_admin_tabs($current = 'general')
     'policies'  => 'Policies',
     'amenities' => 'Amenities',
     'forms'     => 'Forms',
+    'urgency-alert' => 'Urgency Alert'
     'featured-properties' => 'Featured Properties',
     ConfigurationPage::REVIEWS_TAB_NAME => 'Reviews'
   );
@@ -69,6 +71,18 @@ function rezfusion_admin_tabs($current = 'general')
           break;
         case 'forms':
           include plugin_dir_path(__FILE__) . 'configuration-forms.php';
+          break;
+        case 'urgency-alert':
+          $Template = new Template('admin/configuration-urgency-alert.php', REZFUSION_PLUGIN_TEMPLATES_PATH);
+          $prefix = 'rezfusion_hub_urgency_alert_';
+          echo $Template->render([
+            'urgencyAlertEnabled' => $prefix . 'enabled',
+            'daysThreshold' => $prefix . 'days_threshold',
+            'minimumVisitors' => $prefix . 'minimum_visitors',
+            'highlightedText' => $prefix . 'highlighted_text',
+            'text' => $prefix . "text",
+            "defaultUrgencyText" => UrgencyAlert::defaultUrgencyText()
+          ]);
           break;
         case 'featured-properties': {
             echo (new Template('configuration-featured-properties.php', plugin_dir_path(__FILE__)))

@@ -19,6 +19,8 @@ use Rezfusion\PostTypes\VRListing;
 use Rezfusion\PostTypes\VRPromo;
 use Rezfusion\Repository\CategoryRepository;
 use Rezfusion\Repository\ItemRepository;
+use Rezfusion\SessionHandler\SessionHandler;
+use Rezfusion\SessionHandler\SessionHandlerInterface;
 use Rezfusion\Shortcodes\Component;
 use Rezfusion\Shortcodes\ItemFlag;
 use Rezfusion\Shortcodes\LodgingItemAvailCalendar;
@@ -32,6 +34,7 @@ use Rezfusion\Shortcodes\LodgingItemFavoriteToggle;
 use Rezfusion\Shortcodes\Favorites;
 use Rezfusion\Shortcodes\FeaturedProperties;
 use Rezfusion\Shortcodes\Search;
+use Rezfusion\Shortcodes\UrgencyAlert;
 use Rezfusion\Shortcodes\PropertiesAd;
 use Rezfusion\Shortcodes\Reviews;
 use Rezfusion\Shortcodes\ReviewSubmitForm;
@@ -78,13 +81,18 @@ class Plugin
   protected $Registerer;
 
   /**
+   * @var SessionHandlerInterface
+   */
+  protected $SessionHandler;
+
+  /**
    * Plugin constructor.
    *
    * Private to enforce this class a singleton that binds
    * hooks only once.
    */
-  private function __construct()
-  {
+  private function __construct() {
+    $this->SessionHandler = SessionHandler::getInstance();
     $this->registerPostTypes();
     $this->Registerer = new Registerer();
     add_action('init', [$this, 'registerShortcodes']);
@@ -95,10 +103,16 @@ class Plugin
     add_action('template_redirect', [$this, 'templateRedirect']);
     add_action('wp_head', [$this, 'wpHead']);
     add_action('admin_enqueue_scripts', [$this, 'loadFontAwesomeIcons']);
+    add_action('init', [$this, 'initializeSession']);
     $this->enqueueConfigurationPageScripts();
     $this->enqueueFeaturedPropertiesConfigurationScripts();
     (new ReviewController)->initialize();
     $this->enqueueRezfusionHTML_Components();
+  }
+
+  public function initializeSession()
+  {
+    (!$this->SessionHandler->getSessionId()) && $this->SessionHandler->startSession();
   }
 
   /**
@@ -273,6 +287,7 @@ class Plugin
     new LodgingItemFavoriteToggle(new Template('vr-favorite-toggle.php'));
     new Favorites(new Template('vr-favorites.php'));
     new Search(new Template('vr-search.php'));
+    new UrgencyAlert(new Template('vr-urgency-alert.php'));
     new PropertiesAd(new Template('vr-properties-ad.php'));
     new FeaturedProperties(new Template(Templates::featuredPropertiesTemplate()));
     new Reviews(new Template(Templates::reviewsTemplate()));

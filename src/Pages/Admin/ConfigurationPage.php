@@ -94,6 +94,16 @@ class ConfigurationPage extends Page {
           'rezfusion_hub_inquiry_form',
         ];
         break;
+      case 'urgency-alert':
+        $keyPrefix = 'rezfusion_hub_urgency_alert_';
+        $keys = [
+          $keyPrefix . 'enabled',
+          $keyPrefix . 'days_threshold',
+          $keyPrefix . 'minimum_visitors',
+          $keyPrefix . 'highlighted_text',
+          $keyPrefix . "text"
+        ];
+        break;
       case 'featured-properties':
         $keys = [
           Options::featuredPropertiesUseIcons(),
