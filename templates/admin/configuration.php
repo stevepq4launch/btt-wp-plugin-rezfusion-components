@@ -28,7 +28,7 @@ function rezfusion_admin_tabs($current = 'general')
     'policies'  => 'Policies',
     'amenities' => 'Amenities',
     'forms'     => 'Forms',
-    'urgency-alert' => 'Urgency Alert'
+    'urgency-alert' => 'Urgency Alert',
     'featured-properties' => 'Featured Properties',
     ConfigurationPage::REVIEWS_TAB_NAME => 'Reviews'
   );

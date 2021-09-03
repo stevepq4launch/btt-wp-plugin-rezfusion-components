@@ -243,7 +243,7 @@ class Plugin
       $allowedUserRoles = ReviewController::getAllowedUserRoles();
       if (UserRoles::userHasAnyRole($currentUser, $allowedUserRoles)) {
         $function = 'add_submenu_page';
-        $name = 'Rezfusion Reviews List';
+        $name = 'Reviews List';
         $parameters = [
           !UserRoles::userHasRoles($currentUser, [UserRoles::administrator()]) ? '' : $menuPageId,
           $name,
