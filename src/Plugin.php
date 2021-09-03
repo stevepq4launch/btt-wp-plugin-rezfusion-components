@@ -58,6 +58,11 @@ class Plugin
   /**
    * @var string
    */
+  const PLUGIN_NAME = 'Rezfusion';
+
+  /**
+   * @var string
+   */
   const FEATURED_PROPERTIES_CONFIG_SCRIPT_NAME = 'featured-properties-configuration-component-handler';
 
   /**
@@ -231,8 +236,8 @@ class Plugin
     $configTemplate = new Template('configuration.php', REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin");
     $configPage = new ConfigurationPage($configTemplate);
     add_menu_page(
-      'Rezfusion Components',
-      'Rezfusion',
+      $this->getPluginName() . ' Components',
+      $this->getPluginName(),
       'administrator',
       'rezfusion_components_config',
       [$configPage, 'display']
@@ -409,5 +414,17 @@ class Plugin
       flush_rewrite_rules();
       delete_option('rezfusion_trigger_rewrite_flush');
     }
+  }
+
+  /**
+   * Returns plugin name.
+   * 
+   * @todo Move to configuration object.
+   * 
+   * @return string
+   */
+  public function getPluginName(): string
+  {
+    return apply_filters('rezfusion_plugin_name', static::PLUGIN_NAME);
   }
 }

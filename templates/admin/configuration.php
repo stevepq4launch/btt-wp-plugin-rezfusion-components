@@ -10,6 +10,7 @@ use Rezfusion\Options;
 use Rezfusion\Pages\Admin\ConfigurationPage;
 use Rezfusion\PostRecentVisits;
 use Rezfusion\Shortcodes\UrgencyAlert;
+use Rezfusion\Plugin;
 use Rezfusion\Template;
 use Rezfusion\Templates;
 if (isset($_GET['tab'])) {
@@ -43,7 +44,7 @@ function rezfusion_admin_tabs($current = 'general')
 ?>
 
 <div class="wrap">
-  <h1>Rezfusion Components</h1>
+  <h1><?php echo sprintf('%s %s', Plugin::getInstance()->getPluginName(), __('Components')); ?></h1>
 
   <?php do_action('admin_notices'); ?>
 
