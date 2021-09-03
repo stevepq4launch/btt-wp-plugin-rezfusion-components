@@ -67,7 +67,7 @@ class UrgencyAlert extends Shortcode
      */
     public function render($atts = []): string
     {
-        $finalAttributes = shortcode_atts(['postid' => null], $atts);
+        $finalAttributes = shortcode_atts(['postid' => get_the_ID(  )], $atts);
         $postId = $finalAttributes['postid'];
         $enabled = boolval(get_option('rezfusion_hub_urgency_alert_enabled', false));
         $daysThreshold = intval(get_option('rezfusion_hub_urgency_alert_days_threshold'));
