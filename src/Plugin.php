@@ -9,10 +9,13 @@ namespace Rezfusion;
 use Rezfusion\Client\Cache;
 use Rezfusion\Client\CurlClient;
 use Rezfusion\Client\TransientCache;
+use Rezfusion\Configuration\HubConfigurationProvider;
+use Rezfusion\Controller\ConfigurationController;
 use Rezfusion\Controller\ReviewController;
 use Rezfusion\Helper\Registerer;
 use Rezfusion\Pages\Admin\ConfigurationPage;
 use Rezfusion\Pages\Admin\CategoryInfoPage;
+use Rezfusion\Pages\Admin\HubConfigurationPage;
 use Rezfusion\Pages\Admin\ItemInfoPage;
 use Rezfusion\Pages\Admin\ReviewsListPage;
 use Rezfusion\PostTypes\VRListing;
@@ -91,12 +94,21 @@ class Plugin
   protected $SessionHandler;
 
   /**
+   * @var OptionsHandler
+   */
+  protected $OptionsHandler;
+
+  /**
    * Plugin constructor.
    *
    * Private to enforce this class a singleton that binds
    * hooks only once.
+   * 
+   * @param OptionsHandler $OptionsHandler
    */
-  private function __construct() {
+  private function __construct(OptionsHandler $OptionsHandler)
+  {
+    $this->OptionsHandler = $OptionsHandler;
     $this->SessionHandler = SessionHandler::getInstance();
     $this->registerPostTypes();
     $this->Registerer = new Registerer();
@@ -112,6 +124,7 @@ class Plugin
     $this->enqueueConfigurationPageScripts();
     $this->enqueueFeaturedPropertiesConfigurationScripts();
     (new ReviewController)->initialize();
+    (new ConfigurationController)->initialize();
     $this->enqueueRezfusionHTML_Components();
   }
 
@@ -182,7 +195,7 @@ class Plugin
   public static function getInstance()
   {
     if (!isset(self::$instance)) {
-      self::$instance = new static();
+      self::$instance = new static(new OptionsHandler(HubConfigurationProvider::getInstance()));
     }
     return self::$instance;
   }
@@ -210,12 +223,9 @@ class Plugin
    */
   public function registerSettings()
   {
-    register_setting('rezfusion-components', 'rezfusion_hub_channel');
     register_setting('rezfusion-components', 'rezfusion_hub_folder');
-    register_setting('rezfusion-components', 'rezfusion_hub_theme');
     register_setting('rezfusion-components', 'rezfusion_hub_env');
     register_setting('rezfusion-components', 'rezfusion_hub_sync_items_post_type');
-    register_setting('rezfusion-components', 'rezfusion_hub_sps_domain');
     register_setting('rezfusion-components', 'rezfusion_hub_policies_general');
     register_setting('rezfusion-components', 'rezfusion_hub_policies_pets');
     register_setting('rezfusion-components', 'rezfusion_hub_policies_payment');
@@ -225,7 +235,6 @@ class Plugin
     register_setting('rezfusion-components', 'rezfusion_hub_policies_cleaning');
     register_setting('rezfusion-components', 'rezfusion_hub_amenities_featured');
     register_setting('rezfusion-components', 'rezfusion_hub_amenities_general');
-    register_setting('rezfusion-components', 'rezfusion_hub_enable_favorites');
   }
 
   /**
@@ -277,6 +286,16 @@ class Plugin
       $userRole,
       $menuName,
       [$configPage, 'display']
+    );
+
+    // Rezfusion Hub Configuration page.
+    add_submenu_page(
+      'rezfusion_components_config',
+      'Hub Configuration',
+      'Hub Configuration',
+      'administrator',
+      'rezfusion_components_hub_configuration',
+      [new HubConfigurationPage(new Template(Templates::hubConfigurationTemplate(), REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin")), 'display']
     );
 
     $itemInfoTemplate = new Template('lodging-item.php', REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin");
@@ -362,35 +381,6 @@ class Plugin
   }
 
   /**
-   * Get the configured environment.
-   *
-   * @return string
-   */
-  public static function env()
-  {
-    $env = get_option('rezfusion_hub_env', 'prd');
-    if (empty($env)) {
-      return 'prd';
-    }
-
-    return $env;
-  }
-
-  /**
-   * Get the blueprint URL.
-   *
-   * @return string
-   */
-  public static function blueprint()
-  {
-    $env = self::env();
-    if ($env === 'prd') {
-      return "https://blueprint.rezfusion.com/graphql";
-    }
-    return "https://blueprint.hub-stg.rezfusion.com/graphql";
-  }
-
-  /**
    * Provide a factory method for the api client instance for the
    * application.
    *
@@ -401,7 +391,7 @@ class Plugin
    */
   public static function apiClient()
   {
-    return new CurlClient(REZFUSION_PLUGIN_QUERIES_PATH, self::blueprint(), new TransientCache());
+    return new CurlClient(REZFUSION_PLUGIN_QUERIES_PATH, self::getInstance()->getOption(Options::blueprintURL()), new TransientCache());
   }
 
   /**
@@ -415,7 +405,7 @@ class Plugin
     $cache = $client->getCache();
     $mode = $cache->getMode();
     $cache->setMode(Cache::MODE_WRITE);
-    $channel = get_option('rezfusion_hub_channel');
+    $channel = get_rezfusion_option(Options::hubChannelURL());
     $repository = new ItemRepository($client);
     $categoryRepository = new CategoryRepository($client);
     // Prioritize category updates so that taxonomy IDs/information is
@@ -455,5 +445,18 @@ class Plugin
   public function getPluginName(): string
   {
     return apply_filters('rezfusion_plugin_name', static::PLUGIN_NAME);
+  }
+
+  /**
+   * Return value for option.
+   * 
+   * @param string $option
+   * @param null $default
+   * 
+   * @return mixed
+   */
+  public function getOption($option = '', $default = null)
+  {
+    return $this->OptionsHandler->getOption($option, $default);
   }
 }

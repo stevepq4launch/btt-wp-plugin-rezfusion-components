@@ -3,6 +3,7 @@
 namespace Rezfusion\Shortcodes;
 
 use Rezfusion\Helper\PromoCodePropertiesHelper;
+use Rezfusion\Options;
 use Rezfusion\Plugin;
 use Rezfusion\Repository\ItemRepository;
 
@@ -14,12 +15,12 @@ class Search extends Shortcode
   public function render($atts = []): string
   {
     $atts = shortcode_atts([
-      'channel' => get_option('rezfusion_hub_channel'),
-      'bundleUrl' => get_option('rezfusion_hub_folder'),
-      'endpoint' => Plugin::blueprint(),
-      'mapApiKey' => get_option('rezfusion_hub_google_maps_api_key'),
-      'favoritesEnabled' => isset(get_option('rezfusion_hub_enable_favorites')['1']) ? true : false,
-      'spsDomain' => get_option('rezfusion_hub_sps_domain'),
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
+      'bundleUrl' => get_rezfusion_option(Options::componentsURL()),
+      'endpoint' => get_rezfusion_option(Options::blueprintURL()),
+      'mapApiKey' => get_rezfusion_option(Options::mapAPI_Key()),
+      'favoritesEnabled' => get_rezfusion_option(Options::enableFavorites()),
+      'spsDomain' => get_rezfusion_option(Options::SPS_Domain()),
     ], $atts);
 
     $errorMessages = '';
@@ -41,16 +42,12 @@ class Search extends Shortcode
     }
 
     $trimmedBundle = NULL;
-    $fontUrl = NULL;
+    $fontUrl = get_rezfusion_option(Options::fontsURL());
     $bundle = file($atts['bundleUrl'], FILE_SKIP_EMPTY_LINES);
     foreach ($bundle as $key => $value) {
       preg_match('~^.*REZFUSION_COMPONENTS_BUNDLE_CONF.*~', $value, $c);
-      preg_match('~href = \'(https://fonts\.googleapis.*)\';~', $value, $f);
       if ( !empty( $c ) ) {
         $trimmedBundle .= $c[0];
-      }
-      if ( !empty( $f ) ) {
-        $fontUrl .= $f[1];
       }
     }
 
@@ -101,7 +98,7 @@ class Search extends Shortcode
       print "<script>REZFUSION_COMPONENTS_CONF = " . json_encode($configJson) . "</script>";
     });
 
-    $themeUrl = get_option('rezfusion_hub_theme');
+    $themeUrl = get_rezfusion_option(Options::themeURL());
     if ($themeUrl) {
       wp_enqueue_style('rezfusion_hub_theme', $themeUrl);
     }

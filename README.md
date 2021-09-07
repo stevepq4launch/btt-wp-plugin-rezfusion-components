@@ -52,9 +52,7 @@ Provides a button to toggle an item as favorite on/off.
 `[rezfusion-search]`
 
 Requires the following Rezfusion plugin settings:
-- `rezfusion_hub_channel`
-- `rezfusion_hub_google_maps_api_key`
-- `rezfusion_hub_sps_domain`
+- `rezfusion_hub_folder`
 
 #### Provide a favorites page (deprecated)
 `[rezfusion-favorites]`

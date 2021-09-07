@@ -5,6 +5,7 @@
 
 namespace Rezfusion\PostTypes;
 
+use Rezfusion\Options;
 use Rezfusion\Repository\CategoryRepository;
 use Rezfusion\Plugin;
 
@@ -66,7 +67,7 @@ class VRListing extends PostType {
    */
   public function registerTaxonomies() {
     $client = Plugin::apiClient();
-    $channel = get_option('rezfusion_hub_channel');
+    $channel = get_rezfusion_option(Options::hubChannelURL());
     $categories = $client->getCategories($channel);
     if(isset($categories->data->categoryInfo->categories) && !empty($categories->data->categoryInfo->categories)) {
       foreach ($categories->data->categoryInfo->categories as $category) {

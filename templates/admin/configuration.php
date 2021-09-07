@@ -6,6 +6,7 @@
  */
 
 use Rezfusion\Factory\FeaturedPropertiesConfigurationTemplateVariablesFactory;
+use Rezfusion\Configuration\HubConfigurationProvider;
 use Rezfusion\Options;
 use Rezfusion\Pages\Admin\ConfigurationPage;
 use Rezfusion\PostRecentVisits;
@@ -62,7 +63,11 @@ function rezfusion_admin_tabs($current = 'general')
 
       switch ($tab) {
         case 'general':
-          include plugin_dir_path(__FILE__) . 'configuration-general.php';
+          echo (new Template('configuration-general.php', plugin_dir_path(__FILE__)))->render([
+            'rezfusion_hub_folder_value' => esc_attr(get_rezfusion_option(Options::componentsURL())),
+            'isProdEnv' => get_rezfusion_option(Options::environment()) === HubConfigurationProvider::getInstance()->productionEnvironment(),
+            'isDevEnv' => get_rezfusion_option(Options::environment()) === HubConfigurationProvider::getInstance()->developmentEnvironment(),
+          ]);
           break;
         case 'policies':
           include plugin_dir_path(__FILE__) . 'configuration-policies.php';

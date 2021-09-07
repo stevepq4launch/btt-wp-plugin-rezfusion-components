@@ -5,6 +5,7 @@
 
 namespace Rezfusion\Pages\Admin;
 
+use Rezfusion\Options;
 use Rezfusion\Pages\Page;
 use Rezfusion\Plugin;
 
@@ -18,7 +19,7 @@ class ItemInfoPage extends Page {
    */
   public function display() {
     $client = Plugin::apiClient();
-    $channel = get_option('rezfusion_hub_channel');
+    $channel = get_rezfusion_option(Options::hubChannelURL());
     print $this->template->render(['items' => $client->getItems($channel)]);
   }
 

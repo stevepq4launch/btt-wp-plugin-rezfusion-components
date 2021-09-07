@@ -8,6 +8,7 @@ namespace Rezfusion\Tests;
  * @package Rezfusion_Components
  */
 
+use Rezfusion\Options;
 use Rezfusion\Repository\CategoryRepository;
 use Rezfusion\Repository\ItemRepository;
 use Rezfusion\Plugin;
@@ -25,7 +26,7 @@ class SyncTest extends BaseTestCase {
    */
 	public function testSyncsPropertyData() {
 	  $client = Plugin::apiClient();
-		$response = $client->getItems(get_option('rezfusion_hub_channel'));
+		$response = $client->getItems(get_rezfusion_option(Options::hubChannelURL()));
 		$this->assertNotEmpty($response->data->lodgingProducts->results);
 	}
 
@@ -37,7 +38,7 @@ class SyncTest extends BaseTestCase {
 	public function testCreatesItemPosts() {
     $client = Plugin::apiClient();
     Plugin::refreshData();
-    $channel = get_option('rezfusion_hub_channel');
+    $channel = get_rezfusion_option(Options::hubChannelURL());
     $data = $client->getItems($channel);
     $itemRepository = new ItemRepository($client);
     $query = new \WP_Query(array(
