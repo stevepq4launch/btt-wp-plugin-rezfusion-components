@@ -11,6 +11,7 @@ use Rezfusion\Client\CurlClient;
 use Rezfusion\Client\TransientCache;
 use Rezfusion\Configuration\HubConfigurationProvider;
 use Rezfusion\Controller\ConfigurationController;
+use Rezfusion\Controller\ItemController;
 use Rezfusion\Controller\ReviewController;
 use Rezfusion\Helper\Registerer;
 use Rezfusion\Pages\Admin\ConfigurationPage;
@@ -125,6 +126,7 @@ class Plugin
     $this->enqueueFeaturedPropertiesConfigurationScripts();
     (new ReviewController)->initialize();
     (new ConfigurationController)->initialize();
+    (new ItemController)->initialize();
     $this->enqueueRezfusionHTML_Components();
   }
 
@@ -163,6 +165,7 @@ class Plugin
         $currentTab = @$_GET['tab'];
         if ($currentTab === ConfigurationPage::generalTabName() || empty($currentTab)) {
           $this->Registerer->handleScript('configuration-page-validation.js');
+          $this->Registerer->handleScript('configuration-general-handler.js');
         }
       } else if ($pageName === ReviewsListPage::pageName()) {
         $this->Registerer->handleScript('rezfusion-table.js');
