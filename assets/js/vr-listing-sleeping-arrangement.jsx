@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import SleepingArrangement from '@propertybrands/btt-bluetent-components/components/Rooms/SleepingArrangement';
 
+{ /* eslint-disable */ }
+{ /* eslint no-lone-blocks: "off" */ }
 const element = document.querySelector('.sleeping-arrangements');
 if (element) {
   const rooms = JSON.parse(element.dataset.rezfusionRooms.toString());
@@ -16,7 +18,6 @@ if (element) {
   if (Array.isArray(rooms) && rooms.length) {
     const Rooms = () => (
       <StyledDiv>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         {rooms.map((room) => {
           const bedCounts = {
             bunk_beds: room.bunk_beds,
@@ -28,7 +29,7 @@ if (element) {
             other_beds: room.other_beds,
             queen_beds: room.queen_beds,
             single_beds: room.single_beds,
-            sofa_beds: room.sofa_beds
+            sofa_beds: room.sofa_beds,
           };
           return (
             <SleepingArrangement {...room} bedCounts={bedCounts} key={room.name}/>
