@@ -26,6 +26,20 @@ query($channels:ChannelFilter!, $itemIds:[String]) {
             occ_total,
             item {
                 hasStays,
+                rooms {
+                  type,
+                  name,
+                  bunk_beds,
+                  child_beds,
+                  cribs,
+                  double_beds,
+                  king_beds,
+                  murphy_beds,
+                  queen_beds,
+                  sofa_beds,
+                  single_beds,
+                  other_beds
+                }
                 availability{
                     begin,
                     end,
