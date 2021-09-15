@@ -39,7 +39,14 @@ class RemoteConfigurationStorage implements ConfigurationStorageInterface
         $configuration = new stdClass();
 
         if (empty($this->URL)) {
-            throw new Error("Invalid hub configuration URL.");
+          add_action( 'admin_notices', function ()
+          {
+            ?>
+              <div class="notice notice-error is-dismissible">
+                <p><?php _e('No hub configuration available.&nbsp;&nbsp;Set components URL <a href="/wp-admin/admin.php?page=rezfusion_components_config">here</a>.', 'rezfusion-components') ?></p>
+              </div>
+            <?php
+          } );
         }
 
         $remoteData = file($this->URL, FILE_SKIP_EMPTY_LINES);
