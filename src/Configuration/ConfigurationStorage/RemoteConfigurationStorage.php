@@ -49,7 +49,7 @@ class RemoteConfigurationStorage implements ConfigurationStorageInterface
           } );
         }
 
-        $remoteData = file($this->URL, FILE_SKIP_EMPTY_LINES);
+        $remoteData = !empty($this->URL) ? file($this->URL, FILE_SKIP_EMPTY_LINES) : NULL ;
         if (!@empty($remoteData[0])) {
             preg_match('/JSON.parse\(\'(.*)\'\);\n/', $remoteData[0], $match);
             if (!@empty($match[1])) {
