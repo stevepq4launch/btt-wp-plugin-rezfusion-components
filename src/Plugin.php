@@ -140,7 +140,7 @@ class Plugin
    * 
    * @return void
    */
-  protected function enqueueRezfusionHTML_Components(): void
+  public function enqueueRezfusionHTML_Components(): void
   {
     $this->Registerer->handleStyle('rezfusion-stars-rating.css');
     $this->Registerer->handleScript('rezfusion-stars-rating.js');
