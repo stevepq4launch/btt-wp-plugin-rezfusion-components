@@ -5,3 +5,4 @@ import './vr-listing-avail-calendar';
 import './vr-favorite-toggle';
 import './vr-listing-favorites';
 import './vr-listing-search';
+import './vr-listing-sleeping-arrangement';
