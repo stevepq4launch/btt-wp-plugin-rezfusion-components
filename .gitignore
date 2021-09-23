@@ -6,3 +6,4 @@ build
 report
 node_modules
 .env
+dist/report.html

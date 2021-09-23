@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 // const exclude = (modulePath) => /node_modules/.test(modulePath)
 // && !/node_modules\/@propertybrands-btt-bluetent-components/.test(modulePath);
@@ -7,6 +8,10 @@ module.exports = {
   entry: './assets/js',
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+    }),
   ],
   module: {
     rules: [
