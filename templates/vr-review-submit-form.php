@@ -48,7 +48,7 @@
       let form = document.getElementById('rezfusion-review-submit__form');
       let formInstance = REZFUSION.reviewSubmitForm({
         form: form,
-        submitButton: form.querySelector('.rezfusion-review-submit__form__submit-button'),
+        submitButton: form.querySelector('.rezfusion-review-form__field--submit'),
         messageContainer: document.getElementById('rezfusion-review-submit__form__message-container'),
         postId: postId
       });

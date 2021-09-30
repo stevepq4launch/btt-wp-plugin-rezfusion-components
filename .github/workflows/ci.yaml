@@ -12,6 +12,7 @@ jobs:
       DOCKER_COMPOSE_FILE: ${{ secrets.DOCKER_COMPOSE_FILE }}
       WP_BASE_IMAGE: ${{ secrets.WP_BASE_IMAGE }}
       BLUEPRINT_CHANNEL: ${{ secrets.BLUEPRINT_CHANNEL }}
+      BLUEPRINT_URL: ${{ secrets.BLUEPRINT_URL }}
       BLUEPRINT_ENVIRONMENT: ${{ secrets.BLUEPRINT_ENVIRONMENT }}
       NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

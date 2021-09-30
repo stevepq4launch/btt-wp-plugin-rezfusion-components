@@ -11,7 +11,7 @@ class PluginConfiguration
     /**
      * @var string
      */
-    const REPOSITORY_URL = "https://github.com:PropertyBrands/btt-wp-plugin-rezfusion-components.git";
+    const REPOSITORY_URL = "https://github.com/PropertyBrands/btt-wp-plugin-rezfusion-components.git";
 
     /**
      * @var object

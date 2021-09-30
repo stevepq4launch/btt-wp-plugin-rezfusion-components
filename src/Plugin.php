@@ -132,7 +132,7 @@ class Plugin
 
   public function initializeSession()
   {
-    (!$this->SessionHandler->getSessionId()) && $this->SessionHandler->startSession();
+    (!headers_sent() && !$this->SessionHandler->getSessionId()) && $this->SessionHandler->startSession();
   }
 
   /**
