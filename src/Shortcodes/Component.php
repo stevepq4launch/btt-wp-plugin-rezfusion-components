@@ -6,6 +6,7 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Options;
 
 class Component extends Shortcode
 {
@@ -17,8 +18,8 @@ class Component extends Shortcode
     $a = shortcode_atts([
       'element' => 'search',
       'id' => 'app',
-      'channel' => get_option('rezfusion_hub_channel'),
-      'url' => get_option('rezfusion_hub_folder'),
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
+      'url' => get_rezfusion_option(Options::componentsURL()),
     ], $atts);
 
     if (!$a['channel'] || !$a['url']) {
@@ -32,7 +33,7 @@ class Component extends Shortcode
       $a['url']
     );
 
-    $favoritesEnabled = isset(get_option('rezfusion_hub_enable_favorites')['1']) ? true : false;
+    $favoritesEnabled = get_rezfusion_option(Options::enableFavorites());
 
     if ($a['element'] == 'search') {
       wp_localize_script(

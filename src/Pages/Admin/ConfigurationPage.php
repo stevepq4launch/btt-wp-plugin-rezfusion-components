@@ -53,20 +53,16 @@ class ConfigurationPage extends Page {
   protected function save($values) {
     switch ($_SESSION['savetab']) {
       case 'general':
-        $keys = [
-          'rezfusion_hub_channel',
+        $keys = [          
           'rezfusion_hub_folder',
           'rezfusion_hub_env',
-          'rezfusion_hub_sps_domain',
-          'rezfusion_hub_conf_page',
           'rezfusion_hub_redirect_urls',
           'rezfusion_hub_sync_items',
           'rezfusion_hub_sync_items_post_type',
-          'rezfusion_hub_enable_favorites',
-          'rezfusion_hub_google_maps_api_key',
           'rezfusion_hub_custom_listing_slug',
           'rezfusion_hub_custom_promo_slug',
-          'rezfusion_hub_promo_code_flag_text'
+          'rezfusion_hub_promo_code_flag_text',
+          Options::repositoryToken()
         ];
         break;
       case 'policies':
@@ -92,6 +88,16 @@ class ConfigurationPage extends Page {
           'rezfusion_hub_review_form',
           'rezfusion_hub_inquiry_btn_text',
           'rezfusion_hub_inquiry_form',
+        ];
+        break;
+      case 'urgency-alert':
+        $keyPrefix = 'rezfusion_hub_urgency_alert_';
+        $keys = [
+          $keyPrefix . 'enabled',
+          $keyPrefix . 'days_threshold',
+          $keyPrefix . 'minimum_visitors',
+          $keyPrefix . 'highlighted_text',
+          $keyPrefix . "text"
         ];
         break;
       case 'featured-properties':
@@ -121,41 +127,7 @@ class ConfigurationPage extends Page {
         update_option($key, NULL);
       }
     }
-    
-    if (!empty(get_option( 'rezfusion_hub_folder' ))) {
-      $themeUrl = null;
-      $bundle = file(get_option( 'rezfusion_hub_folder' ), FILE_SKIP_EMPTY_LINES);
-      foreach ($bundle as $key => $value) {
-        preg_match('~https://rezfusion-components-storage.*\.css~', $value, $match);
-        if (!empty($match)) {
-          $themeUrl .= $match[0];
-        }
-      }
-      
-      update_option('rezfusion_hub_theme', $themeUrl);
-    } else {
-      update_option( 'rezfusion_hub_theme', NULL );
-    }
 
-    if (!empty($values['rezfusion_hub_fetch_data'])) {
-      try {
-        Plugin::refreshData();
-        add_action( 'admin_notices', function ()
-        { ?>
-          <div class="notice notice-success is-dismissible">
-            <p><?php echo 'Item data refreshed.'; ?></p>
-          </div>
-        <?php } );
-      } catch (\Exception $e) {
-        add_action( 'admin_notices', function ()
-        { ?>
-          <div class="notice notice-error is-dismissible">
-            <p><?php echo 'Item data not refreshed.'; ?></p>
-          </div>
-        <?php } );
-      }
-    }
-    
     update_option('rezfusion_trigger_rewrite_flush', 1);
 
     add_action('admin_notices', function ()

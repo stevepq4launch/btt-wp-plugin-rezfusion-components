@@ -5,6 +5,7 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Options;
 use Rezfusion\Plugin;
 
 class LodgingItemPhotos extends Shortcode {
@@ -18,7 +19,7 @@ class LodgingItemPhotos extends Shortcode {
    */
   public function render($atts = []): string {
     $a = shortcode_atts([
-      'channel' => get_option('rezfusion_hub_channel'),
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
       'itemid' => $atts['itemid']
     ], $atts );
 

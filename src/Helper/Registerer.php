@@ -102,7 +102,7 @@ class Registerer
             wp_register_style($name, $path);
             wp_enqueue_style($name, $path);
         } else if ($type === static::script()) {
-            wp_register_script($name, $path);
+            wp_register_script($name, $path, "", "", true);
             wp_enqueue_script($name);
         }
     }
