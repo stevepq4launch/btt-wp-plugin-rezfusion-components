@@ -23,7 +23,7 @@ class Reviews extends Shortcode
     public function render($atts = []): string
     {
         $atts = shortcode_atts([
-            'postid' => get_the_ID(  )
+            'postid' => get_the_ID()
         ], $atts);
 
         if (empty($atts['postid']))
@@ -47,7 +47,8 @@ class Reviews extends Shortcode
             $hubReviews = $HubReviewRepository->getReviews([$propertyKey]);
         }
 
-        (new ReviewsSorter)->sortByStayDate($reviewsCollection = $localReviews + $hubReviews);
+        $reviewsCollection = array_merge($localReviews, $hubReviews);
+        (new ReviewsSorter)->sortByStayDate($reviewsCollection);
 
         foreach ($reviewsCollection as $Review) {
             $reviews[] = $Review->toArray();
