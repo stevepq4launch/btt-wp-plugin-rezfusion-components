@@ -27,8 +27,6 @@ class LodgingItemPhotos extends Shortcode {
       return "Rezfusion Lodging Item: A 'channel' and an 'itemId' attribute are both required";
     }
 
-    wp_enqueue_style('rezfusion-photos', plugins_url('rezfusion-components/node_modules/@propertybrands/photos/dist/app.css'));
-
     $client = Plugin::apiClient();
     $result = $client->getItem($a['itemid'], $a['channel']);
 
