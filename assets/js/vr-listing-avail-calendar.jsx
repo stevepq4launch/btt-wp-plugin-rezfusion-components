@@ -7,7 +7,7 @@ if (el) {
   (async function () {
     const { ThemeProvider } = await import('styled-components');
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
-    const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts');
+    const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts.ts');
     const { wrapDates } = await import('@propertybrands/btt-availability');
     const { default: AvailabilityPicker } = await import('@propertybrands/btt-bluetent-components/components/AvailabilityPicker/AvailabilityPicker');
     const avail = JSON.parse(el.dataset.rezfusionAvailability.toString());
