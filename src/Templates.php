@@ -59,6 +59,11 @@ class Templates
     const HUB_CONFIGURATION_TEMPLATE = 'hub-configuration.php';
 
     /**
+     * @var string
+     */
+    const QUICK_SEARCH_TEMPLATE = 'vr-quick-search.php';
+
+    /**
      * @return string
      */
     public static function featuredPropertiesTemplate(): string
@@ -136,5 +141,13 @@ class Templates
     public static function hubConfigurationTemplate(): string
     {
         return static::HUB_CONFIGURATION_TEMPLATE;
+    }
+
+    /**
+     * @return string
+     */
+    public static function quickSearch(): string
+    {
+        return static::QUICK_SEARCH_TEMPLATE;
     }
 }

@@ -125,6 +125,22 @@ class HubConfiguration
     /**
      * @return string
      */
+    public static function componentsBundleURL_Key(): string
+    {
+        return 'componentsBundleURL';
+    }
+
+    /**
+     * @return string
+     */
+    public static function componentsCSS_URL_Key(): string
+    {
+        return 'componentsCSS_URL';
+    }
+
+    /**
+     * @return string
+     */
     public function getConfigurationURL(): string
     {
         return $this->configurationURL;
@@ -288,5 +304,21 @@ class HubConfiguration
     public function getMaxReviewRating(): int
     {
         return static::MAX_REVIEW_RATING;
+    }
+
+    /**
+     * @return string
+     */
+    public function getComponentsBundleURL(): string
+    {
+        return $this->getValue(static::componentsBundleURL_Key(), '');
+    }
+
+    /**
+     * @return string
+     */
+    public function getComponentsCSS_URL(): string
+    {
+        return $this->getValue(static::componentsCSS_URL_Key(), '');
     }
 }
