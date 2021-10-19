@@ -40,6 +40,7 @@ use Rezfusion\Shortcodes\FeaturedProperties;
 use Rezfusion\Shortcodes\Search;
 use Rezfusion\Shortcodes\UrgencyAlert;
 use Rezfusion\Shortcodes\PropertiesAd;
+use Rezfusion\Shortcodes\QuickSearch;
 use Rezfusion\Shortcodes\Reviews;
 use Rezfusion\Shortcodes\ReviewSubmitForm;
 use Rezfusion\Templates;
@@ -350,6 +351,7 @@ class Plugin
     new FeaturedProperties(new Template(Templates::featuredPropertiesTemplate()));
     new Reviews(new Template(Templates::reviewsTemplate()));
     new ReviewSubmitForm(new Template(Templates::reviewSubmitForm()));
+    new QuickSearch(new Template(Templates::quickSearch()));
   }
 
   /**
@@ -463,5 +465,38 @@ class Plugin
   public function getOption($option = '', $default = null)
   {
     return $this->OptionsHandler->getOption($option, $default);
+  }
+
+  /**
+   * Enqueues required scripts and styles for Rezfusion Components.
+   */
+  public function enqueueRezfusionComponentsBundle()
+  {
+    $HubConfiguration = HubConfigurationProvider::getInstance();
+
+    if (empty($componentsBundleURL = $HubConfiguration->getComponentsBundleURL())) {
+      throw new \Error("Components Bundle URL is required.");
+    }
+    if (empty($componentsCSS_URL = $HubConfiguration->getComponentsCSS_URL())) {
+      throw new \Error("Components CSS URL is required.");
+    }
+    if (empty($themeURL = $HubConfiguration->getThemeURL())) {
+      throw new \Error("Components Theme URL is required.");
+    }
+    if (empty($fontsURL = $HubConfiguration->getFontsURL())) {
+      throw new \Error("Fonts URL is required.");
+    }
+
+    wp_enqueue_style('components-bundle-css', $componentsCSS_URL, []);
+    wp_enqueue_style('components-theme-css', $themeURL, []);
+    wp_enqueue_style('components-fonts', $fontsURL, []);
+    wp_enqueue_script('components-bundle-js', $componentsBundleURL, []);
+    $this->Registerer->handleStyle('vr-quick-search.css');
+
+    wp_localize_script(
+      'components-bundle-js',
+      'REZFUSION_COMPONENTS_BUNDLE_CONF',
+      $HubConfiguration->getConfiguration()->hub_configuration
+    );
   }
 }
