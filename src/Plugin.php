@@ -477,19 +477,16 @@ class Plugin
     if (empty($componentsBundleURL = $HubConfiguration->getComponentsBundleURL())) {
       throw new \Error("Components Bundle URL is required.");
     }
-    if (empty($componentsCSS_URL = $HubConfiguration->getComponentsCSS_URL())) {
-      throw new \Error("Components CSS URL is required.");
+    if (!empty($componentsCSS_URL = $HubConfiguration->getComponentsCSS_URL())) {
+      wp_enqueue_style('components-bundle-css', $componentsCSS_URL, []);
     }
-    if (empty($themeURL = $HubConfiguration->getThemeURL())) {
-      throw new \Error("Components Theme URL is required.");
+    if (!empty($themeURL = $HubConfiguration->getThemeURL())) {
+      wp_enqueue_style('components-theme-css', $themeURL, []);
     }
-    if (empty($fontsURL = $HubConfiguration->getFontsURL())) {
-      throw new \Error("Fonts URL is required.");
+    if (!empty($fontsURL = $HubConfiguration->getFontsURL())) {
+      wp_enqueue_style('components-fonts', $fontsURL, []);
     }
 
-    wp_enqueue_style('components-bundle-css', $componentsCSS_URL, []);
-    wp_enqueue_style('components-theme-css', $themeURL, []);
-    wp_enqueue_style('components-fonts', $fontsURL, []);
     wp_enqueue_script('components-bundle-js', $componentsBundleURL, []);
     $this->Registerer->handleStyle('vr-quick-search.css');
 
