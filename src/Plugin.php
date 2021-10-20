@@ -499,4 +499,13 @@ class Plugin
       $HubConfiguration->getConfiguration()->hub_configuration
     );
   }
+
+  /**
+   * Returns instance of Registerer.
+   * @return Registerer
+   */
+  public function getRegisterer(): Registerer
+  {
+    return $this->Registerer;
+  }
 }

@@ -1,0 +1,4 @@
+div[class^="Photos__DetailsSlideshow"],
+.image-gallery-slide-wrapper {
+  transition: height 50ms ease-in-out;
+}
