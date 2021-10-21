@@ -30,6 +30,10 @@ class LodgingItemPhotos extends Shortcode {
     $client = Plugin::apiClient();
     $result = $client->getItem($a['itemid'], $a['channel']);
 
+    $Registerer = Plugin::getInstance()->getRegisterer();
+    $Registerer->handleScript('slideshow.js');
+    $Registerer->handleStyle('slideshow.css');
+
     return $this->template->render([
       'lodgingItem' => $result->data->lodgingProducts->results[0]
     ]);
