@@ -117,7 +117,7 @@ class ReviewController extends AbstractController
             try {
                 (new NewReviewCustomerNotificationService)->sendEmailNotification(
                     $Review,
-                    get_option(Options::newReviewNotificationRecipients())
+                    get_rezfusion_option(Options::newReviewNotificationRecipients())
                 );
             } catch (Exception $Exception) {
                 // Do nothing, just continue.

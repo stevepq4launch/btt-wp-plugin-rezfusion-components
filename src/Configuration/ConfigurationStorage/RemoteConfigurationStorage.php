@@ -2,7 +2,7 @@
 
 namespace Rezfusion\Configuration\ConfigurationStorage;
 
-use Error;
+use Rezfusion\Actions;
 use stdClass;
 
 /**
@@ -76,7 +76,7 @@ class RemoteConfigurationStorage implements ConfigurationStorageInterface
         $configuration = new stdClass();
 
         if (empty($this->URL)) {
-            add_action('admin_notices', function () {
+            add_action(Actions::adminNotices(), function () {
 ?>
                 <div class="notice notice-error is-dismissible">
                     <p><?php _e('No hub configuration available.&nbsp;&nbsp;Set components URL <a href="/wp-admin/admin.php?page=rezfusion_components_config">here</a>.', 'rezfusion-components') ?></p>

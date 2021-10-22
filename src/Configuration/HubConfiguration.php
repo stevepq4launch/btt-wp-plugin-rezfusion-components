@@ -3,7 +3,9 @@
 namespace Rezfusion\Configuration;
 
 use Rezfusion\Configuration\ConfigurationStorage\ConfigurationStorageInterface;
+use Rezfusion\Helper\OptionManager;
 use Rezfusion\Options;
+use stdClass;
 
 /**
  * @file Container for configuration.
@@ -198,12 +200,13 @@ class HubConfiguration
     }
 
     /**
+     * Get value by path.
      * @param string $path
      * @param null $default
      *
      * @return mixed
      */
-    protected function getValue($path = '', $default = null)
+    public function getValue($path = '', $default = null)
     {
         $value = null;
         $parts = explode('.', $path);
@@ -220,6 +223,32 @@ class HubConfiguration
             }
         }
         return (!empty($value)) ? $value : $default;
+    }
+
+    /**
+     * Set value by path.
+     * @param string $path
+     * @param mixed $value
+     * 
+     * @return void
+     */
+    public function setValue($path = '', $value): void
+    {
+        $parts = explode('.', $path);
+        $source = $this->getConfiguration();
+        $total = count($parts);
+        for ($i = 0; $i < $total; $i++) {
+            $key = $parts[$i];
+            if (!isset($source->$key) && $i < $total) {
+                $source->$key = new stdClass();
+            }
+            if ($i + 1 == $total) {
+                $source->$key = $value;
+                break;
+            } else {
+                $source = $source->$key;
+            }
+        }
     }
 
     /**
@@ -291,7 +320,7 @@ class HubConfiguration
      */
     public function getEnvironment()
     {
-        return get_option(Options::environment(), static::developmentEnvironment(), static::productionEnvironment());
+        return OptionManager::get(Options::environment(), static::developmentEnvironment(), static::productionEnvironment());
     }
 
     /**
@@ -334,5 +363,13 @@ class HubConfiguration
     public function getComponentsCSS_URL(): string
     {
         return $this->getValue(static::componentsCSS_URL_Key(), '');
+    }
+
+    /**
+     * @return array
+     */
+    public function getHubConfigurationArray(): array
+    {
+        return (array) $this->getValue('hub_configuration', []);
     }
 }

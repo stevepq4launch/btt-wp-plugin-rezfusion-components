@@ -5,9 +5,12 @@
 
 namespace Rezfusion\PostTypes;
 
+use Rezfusion\Actions;
+use Rezfusion\Metas;
 use Rezfusion\Options;
 use Rezfusion\Repository\CategoryRepository;
 use Rezfusion\Plugin;
+use Rezfusion\PostTypes;
 
 /**
  * Class VRListing
@@ -18,12 +21,12 @@ class VRListing extends PostType {
 
   public function register(){
     parent::register();
-    $taxonomies = get_object_taxonomies('vr_listing', 'names');
+    $taxonomies = get_object_taxonomies(PostTypes::listing(), 'names');
     foreach($taxonomies as $taxonomy) {
-      add_action("{$taxonomy}_add_form_fields" , [$this, 'addIconPicker'], 10, 2);
-      add_action("created_{$taxonomy}" , [$this, 'saveIconPicker'], 10, 2);
-      add_action("{$taxonomy}_edit_form_fields" , [$this, 'editIconPicker'], 10, 2);
-      add_action("edited_{$taxonomy}" , [$this, 'updateIconPicker'], 10, 2);
+      add_action(Actions::taxonomyAddFormFields($taxonomy) , [$this, 'addIconPicker'], 10, 2);
+      add_action(Actions::createdTaxonomy($taxonomy) , [$this, 'saveIconPicker'], 10, 2);
+      add_action(Actions::taxonomyEditFormFields($taxonomy) , [$this, 'editIconPicker'], 10, 2);
+      add_action(Actions::editedTaxonomy($taxonomy) , [$this, 'updateIconPicker'], 10, 2);
     }
   }
 
@@ -131,7 +134,7 @@ class VRListing extends PostType {
       'publicly_queryable' => TRUE,
       'capability_type' => 'page',
       'show_in_rest' => true,
-      'rewrite' => array('with_front' => false, 'slug' => get_option( 'rezfusion_hub_custom_listing_slug') ?: 'vacation-rentals')
+      'rewrite' => array('with_front' => false, 'slug' => get_rezfusion_option(Options::customListingSlug()) ?: 'vacation-rentals')
     ];
   }
 
@@ -170,13 +173,13 @@ class VRListing extends PostType {
     $meta = get_post_meta($post_id);
     switch($column) {
       case 'beds':
-        print $meta['rezfusion_hub_beds'][0];
+        print $meta[Metas::beds()][0];
         break;
       case 'baths':
-        print $meta['rezfusion_hub_baths'][0];
+        print $meta[Metas::baths()][0];
         break;
       case 'item_id':
-        print $meta['rezfusion_hub_item_id'][0];
+        print $meta[Metas::itemId()][0];
         break;
     }
   }
@@ -185,23 +188,23 @@ class VRListing extends PostType {
    * Register post meta.
    */
   public function registerMetaFields() {
-    register_meta('post', 'rezfusion_hub_item_id', [
+    register_meta('post', Metas::itemId(), [
       'show_in_rest' => true,
       'single' => true,
       'type' => 'string',
-      'object_subtype' => Plugin::VR_LISTING_NAME
+      'object_subtype' => PostTypes::listing()
     ]);
-    register_meta('post', 'rezfusion_hub_beds', [
+    register_meta('post', Metas::beds(), [
       'show_in_rest' => true,
       'single' => true,
       'type' => 'string',
-      'object_subtype' => Plugin::VR_LISTING_NAME
+      'object_subtype' => PostTypes::listing()
     ]);
-    register_meta('post', 'rezfusion_hub_baths', [
+    register_meta('post', Metas::baths(), [
       'show_in_rest' => true,
       'single' => true,
       'type' => 'string',
-      'object_subtype' => Plugin::VR_LISTING_NAME
+      'object_subtype' => PostTypes::listing()
     ]);
   }
 

@@ -2,16 +2,17 @@
 
 namespace Rezfusion\Helper;
 
-use Rezfusion\Plugin;
+use Rezfusion\Assets;
+use Rezfusion\Options;
 use Rezfusion\Repository\ItemRepository;
 
 class PromoCodePropertiesHelper
 {
 
     /**
-     * @var Plugin
+     * @var AssetsRegistererInterface
      */
-    protected $Plugin;
+    protected $AssetsRegisterer;
 
     /**
      * @var ItemRepository
@@ -19,12 +20,12 @@ class PromoCodePropertiesHelper
     protected $ItemRepository;
 
     /**
-     * @param Plugin $Plugin
+     * @param AssetsRegistererInterface $AssetsRegisterer
      * @param ItemRepository $ItemRepository
      */
-    public function __construct(Plugin $Plugin, ItemRepository $ItemRepository)
+    public function __construct(AssetsRegistererInterface $AssetsRegisterer, ItemRepository $ItemRepository)
     {
-        $this->Plugin = $Plugin;
+        $this->AssetsRegisterer = $AssetsRegisterer;
         $this->ItemRepository = $ItemRepository;
     }
 
@@ -33,9 +34,9 @@ class PromoCodePropertiesHelper
      */
     public function handle(&$attributes = [])
     {
-        wp_enqueue_style('property-card-badge-style', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/css/property-card-flag.css');
-        wp_enqueue_script('property-card-badge-script', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/property-card-flag.js');
+        $this->AssetsRegisterer->handleStyle(Assets::propertyCardFlagStyle());
+        $this->AssetsRegisterer->handleScript(Assets::propertyCardFlagScript());
         $attributes['promoCodePropertiesIds'] = $this->ItemRepository->getPromoCodePropertiesIds();
-        $attributes['promoCodeFlagText'] = (!empty($promoCodeFlagText = get_option('rezfusion_hub_promo_code_flag_text'))) ? $promoCodeFlagText : 'Special!';
+        $attributes['promoCodeFlagText'] = (!empty($promoCodeFlagText = get_rezfusion_option(Options::promoCodeFlagText()))) ? $promoCodeFlagText : 'Special!';
     }
 }

@@ -7,10 +7,11 @@
 namespace Rezfusion\Repository;
 
 use Rezfusion\Client\ClientInterface;
+use Rezfusion\Metas;
+use Rezfusion\Options;
+use Rezfusion\PostTypes;
 
 class ItemRepository {
-
-  const ITEM_META_KEY = "rezfusion_hub_item_id";
 
   /**
    * @var \Rezfusion\Client\ClientInterface
@@ -34,7 +35,7 @@ class ItemRepository {
     $items = $this->client->getItems($channel);
 
     // By default we will sync into the `vr_listing` post type.
-    $post_type = get_option('rezfusion_hub_sync_items_post_type', 'vr_listing');
+    $post_type = get_rezfusion_option(Options::syncItemsPostType(), PostTypes::listing());
 
     $args = [
       'post_type' => [$post_type],
@@ -46,8 +47,8 @@ class ItemRepository {
     $local_items = array_reduce($query->posts, function($carry, $item) {
       if(!empty($item->ID)) {
         $meta = get_post_meta($item->ID);
-        if(isset($meta['rezfusion_hub_item_id'][0])) {
-          $carry[$meta['rezfusion_hub_item_id'][0]] = $item;
+        if(isset($meta[Metas::itemId()][0])) {
+          $carry[$meta[Metas::itemId()][0]] = $item;
         }
       }
       return $carry;
@@ -62,9 +63,9 @@ class ItemRepository {
           'post_status' => 'publish',
           'post_title' => $result->item->name,
           'meta_input' => [
-            'rezfusion_hub_item_id' => $result->item->id,
-            'rezfusion_hub_beds' => $result->beds,
-            'rezfusion_hub_baths' => $result->baths,
+            Metas::itemId() => $result->item->id,
+            Metas::beds() => $result->beds,
+            Metas::baths() => $result->baths,
           ],
         ];
         if(!empty($local_items[$id])) {
@@ -88,7 +89,7 @@ class ItemRepository {
       }
 
       // Cache the URL map.
-      set_transient('rezfusion_hub_url_map', $urls);
+      set_transient(Options::URL_Map(), $urls);
 
       // These are missing from Blueprint.
       // So unpublish them.
@@ -127,7 +128,7 @@ class ItemRepository {
       'count' => TRUE,
       'meta_query' => [
         [
-          'key' => 'rezfusion_hub_category_value_id',
+          'key' => Metas::categoryValueId(),
           'value' => $values,
           'compare' => 'IN',
         ],
@@ -162,7 +163,7 @@ class ItemRepository {
    */
   public function getItemById($id) {
     global $wpdb;
-    return $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = 'rezfusion_hub_item_id' AND  meta_value = '$id' LIMIT 1", ARRAY_A);
+    return $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = '" . Metas::itemId() . "' AND  meta_value = '$id' LIMIT 1", ARRAY_A);
   }
 
   /**
@@ -173,7 +174,7 @@ class ItemRepository {
   public function getAllItems(){
     global $wpdb;
     return is_array(
-      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE pm.meta_key = '" . static::ITEM_META_KEY . "' AND pm.meta_value IS NOT NULL ORDER BY p.post_title ASC LIMIT 100", ARRAY_A)
+      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE pm.meta_key = '" . Metas::itemId() . "' AND pm.meta_value IS NOT NULL ORDER BY p.post_title ASC LIMIT 100", ARRAY_A)
     ) ? $items : [];
   }
 
@@ -185,7 +186,7 @@ class ItemRepository {
   public function getAllItemsIds(){
     global $wpdb;
     return is_array(
-      $items = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '" . static::ITEM_META_KEY . "' AND meta_value IS NOT NULL LIMIT 100", ARRAY_A)
+      $items = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '" . Metas::itemId() . "' AND meta_value IS NOT NULL LIMIT 100", ARRAY_A)
     ) ? array_column($items, 'meta_value') : [];
   }
 
@@ -199,7 +200,7 @@ class ItemRepository {
     $propertiesIds = [];
     $postsIds = [];
 
-    $results = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rzf_promo_listing_value' AND (meta_value IS NOT NULL AND meta_value != '') LIMIT 100", ARRAY_A);
+    $results = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '" . Metas::promoListingValue() . "' AND (meta_value IS NOT NULL AND meta_value != '') LIMIT 100", ARRAY_A);
     foreach($results as $result){
       $metaValues = unserialize($result['meta_value']);
       foreach($metaValues as $postId_){
@@ -209,7 +210,7 @@ class ItemRepository {
       }
     }
     if(count($postsIds)){
-      $results2 = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = 'rezfusion_hub_item_id' AND (meta_value IS NOT NULL AND meta_value != '') AND post_id IN (".join(',', $postsIds).") LIMIT 100", ARRAY_A);
+      $results2 = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '" . Metas::itemId() . "' AND (meta_value IS NOT NULL AND meta_value != '') AND post_id IN (".join(',', $postsIds).") LIMIT 100", ARRAY_A);
       foreach($results2 as $record){
         if(!empty($record['meta_value']))
           $propertiesIds[] = $record['meta_value'];
@@ -228,7 +229,7 @@ class ItemRepository {
    */
   public function getPropertyKeyByPostId($postId): string {
     global $wpdb;
-    return $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value IS NOT NULL AND post_id = %d LIMIT 1", [static::ITEM_META_KEY, $postId]));
+    return $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value IS NOT NULL AND post_id = %d LIMIT 1", [Metas::itemId(), $postId]));
   }
 
 }

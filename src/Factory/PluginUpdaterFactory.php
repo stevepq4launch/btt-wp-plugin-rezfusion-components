@@ -3,22 +3,23 @@
 namespace Rezfusion\Factory;
 
 use Puc_v4_Factory;
-use Rezfusion\PluginConfiguration;
+use Rezfusion\Options;
+use Rezfusion\OptionsHandler;
 
 class PluginUpdaterFactory
 {
 
     /**
-     * @var PluginConfiguration
+     * @var OptionsHandler
      */
-    protected $PluginConfiguration;
+    protected $OptionsHandler;
 
     /**
-     * @param PluginConfiguration $PluginConfiguration
+     * @param OptionsHandler $OptionsHandler
      */
-    public function __construct(PluginConfiguration $PluginConfiguration)
+    public function __construct(OptionsHandler $OptionsHandler)
     {
-        $this->PluginConfiguration = $PluginConfiguration;
+        $this->OptionsHandler = $OptionsHandler;
     }
 
     /**
@@ -28,8 +29,8 @@ class PluginUpdaterFactory
     {
         require REZFUSION_PLUGIN_PATH . '/vendor/autoload.php';
 
-        $repositoryURL = $this->PluginConfiguration->repositoryURL();
-        $repositoryToken = $this->PluginConfiguration->repositoryToken();
+        $repositoryURL = $this->OptionsHandler->getOption(Options::repositoryURL());
+        $repositoryToken = $this->OptionsHandler->getOption(Options::repositoryToken(), '');
 
         if (empty($repositoryURL) || empty($repositoryToken))
             return null;

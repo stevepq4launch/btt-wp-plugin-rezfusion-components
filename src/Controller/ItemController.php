@@ -3,6 +3,8 @@
 namespace Rezfusion\Controller;
 
 use Exception;
+use Rezfusion\Helper\OptionManager;
+use Rezfusion\Options;
 use Rezfusion\Plugin;
 use Rezfusion\UserRoles;
 use \WP_REST_Response;
@@ -41,7 +43,7 @@ class ItemController extends AbstractController
         $statusCode = 400;
         try {
             Plugin::getInstance()::refreshData();
-            update_option('rezfusion_trigger_rewrite_flush', 1);
+            OptionManager::update(Options::triggerRewriteFlush(), 1);
             $returnData = ['message' => 'Items data refreshed.'];
             $statusCode = 200;
         } catch (Exception $Exception) {

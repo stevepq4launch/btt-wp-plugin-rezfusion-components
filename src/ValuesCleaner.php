@@ -12,6 +12,9 @@ class ValuesCleaner
      */
     protected $Slugifier;
 
+    /**
+     * @param SlugifierInterface $Slugifier
+     */
     public function __construct(SlugifierInterface $Slugifier)
     {
         $this->Slugifier = $Slugifier;
@@ -32,16 +35,14 @@ class ValuesCleaner
      * 
      * @return array
      */
-    public function clean(array $values = [])
+    public function clean(array $values = []): array
     {
-        foreach (['rezfusion_hub_custom_listing_slug', 'rezfusion_hub_custom_promo_slug'] as $key) {
+        foreach ([Options::customListingSlug(), Options::customPromoSlug()] as $key) {
             if (array_key_exists($key, $values) && !empty($values[$key]))
                 $values[$key] = $this->Slugifier->slugify($values[$key]);
         }
 
-        foreach ([
-            'rezfusion_hub_folder'
-        ] as $key) {
+        foreach ([Options::componentsURL()] as $key) {
             if (array_key_exists($key, $values) && !empty($values[$key]))
                 $values[$key] = $this->trimSlashes($values[$key]);
         }

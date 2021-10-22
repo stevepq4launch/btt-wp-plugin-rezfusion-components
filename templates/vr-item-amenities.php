@@ -3,21 +3,23 @@
 /**
  * This template is used by the [rezfuison-item-amenities] shortcode.
  */
+
+use Rezfusion\Options;
 ?>
 
-<?php if (!empty(get_option('rezfusion_hub_amenities_featured')) || !empty(get_option('rezfusion_hub_amenities_general'))) : ?>
+<?php if (!empty(get_rezfusion_option(Options::amenitiesFeatured())) || !empty(get_rezfusion_option(Options::amenitiesGeneral()))) : ?>
 
 <h2 class="lodging-item-details__section-heading">Amenities</h2>
 
 <hr />
 
-<?php if (!empty(get_option('rezfusion_hub_amenities_featured'))) : ?>
+<?php if (!empty(get_rezfusion_option(Options::amenitiesFeatured()))) : ?>
 <div class="lodging-amenities lodging-amenities--featured">
   <h3 class="lodging-amenities__heading lodging-amenities__heading--featured">Property Highlights</h3>
   <div class="lodging-amenities__list lodging-amenities__list--featured">
     <?php
         $post_id = get_the_ID();
-        $featured_amenities = get_option('rezfusion_hub_amenities_featured');
+        $featured_amenities = get_rezfusion_option(Options::amenitiesFeatured());
         $property_amenities = get_the_taxonomies($post_id);
         $display_ameninites = array_diff($featured_amenities, $property_amenities);
         foreach ($display_ameninites as $key => $value) {
@@ -36,13 +38,13 @@
 </div>
 <?php endif; ?>
 
-<?php if (!empty(get_option('rezfusion_hub_amenities_general'))) : ?>
+<?php if (!empty(get_rezfusion_option(Options::amenitiesGeneral()))) : ?>
 <div class="lodging-amenities lodging-amenities--general">
   <h3 class="lodging-amenities__heading lodging-amenities__heading--general">Other Amenities</h3>
   <div class="lodging-amenities__list lodging-amenities__list--general">
     <?php
         $post_id = get_the_ID();
-        $general_amenities = get_option('rezfusion_hub_amenities_general');
+        $general_amenities = get_rezfusion_option(Options::amenitiesGeneral());
         $property_amenities = get_the_taxonomies($post_id);
         $display_ameninites = array_diff($general_amenities, $property_amenities);
         foreach ($display_ameninites as $key => $value) {

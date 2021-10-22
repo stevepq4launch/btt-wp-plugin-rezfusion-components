@@ -4,6 +4,9 @@
  */
 namespace Rezfusion\PostTypes;
 
+use Rezfusion\Actions;
+use Rezfusion\Filters;
+
 abstract class PostType {
 
   protected $postTypeName;
@@ -12,9 +15,9 @@ abstract class PostType {
 
   public function __construct($postTypeName) {
     $this->postTypeName = $postTypeName;
-    add_action('init', [$this, 'register']);
-    add_filter("manage_{$this->postTypeName}_posts_columns", [$this, 'getColumns']);
-    add_action( "manage_{$this->postTypeName}_posts_custom_column", [$this, 'getColumnContents'], 10, 2);
+    add_action(Actions::init(), [$this, 'register']);
+    add_filter(Filters::managePostTypePostsColumns($this->postTypeName), [$this, 'getColumns']);
+    add_action(Actions::managePostTypePostsCustomColumn($this->postTypeName), [$this, 'getColumnContents'], 10, 2);
     $this->icon_picker_options = include plugin_dir_path( __FILE__ ) . 'IconArray.php'; 
   }
 

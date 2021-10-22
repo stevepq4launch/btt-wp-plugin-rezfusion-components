@@ -7,6 +7,7 @@ namespace Rezfusion\Repository;
 
 
 use Rezfusion\Client\ClientInterface;
+use Rezfusion\Metas;
 use Rezfusion\Plugin;
 
 class CategoryRepository {
@@ -34,7 +35,7 @@ class CategoryRepository {
    * @return string
    */
   public static function categoryMachineName($category): string {
-    return Plugin::PREFIX . "_" . str_replace('-', '_', sanitize_title($category));
+    return Plugin::prefix() . "_" . str_replace('-', '_', sanitize_title($category));
   }
 
   /**
@@ -75,8 +76,8 @@ class CategoryRepository {
       $terms = array_reduce($query->terms, function ($carry, $item) {
         if (!empty($item->term_id)) {
           $meta = get_term_meta($item->term_id);
-          if (isset($meta['rezfusion_hub_category_value_id'][0])) {
-            $carry[$meta['rezfusion_hub_category_value_id'][0]] = $item;
+          if (isset($meta[Metas::categoryValueId()][0])) {
+            $carry[$meta[Metas::categoryValueId()][0]] = $item;
           }
         }
         return $carry;
@@ -97,13 +98,13 @@ class CategoryRepository {
       if (!empty($term)) {
         add_term_meta(
           $term['term_id'],
-          'rezfusion_hub_category_value_id',
+          Metas::categoryValueId(),
           $value->id,
           TRUE
         );
         add_term_meta(
           $term['term_id'],
-          'rezfusion_hub_category_id',
+          Metas::categoryId(),
           $value->category_id,
           FALSE
         );

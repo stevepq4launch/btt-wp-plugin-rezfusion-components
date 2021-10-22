@@ -2,6 +2,8 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Options;
+
 class ReviewSubmitForm extends Shortcode
 {
 
@@ -13,7 +15,7 @@ class ReviewSubmitForm extends Shortcode
     public function render($atts = []): string
     {
         $atts = shortcode_atts([
-            'addReviewButtonText' => __(get_option('rezfusion_hub_review_btn_text')) ?: "Add a Review",
+            'addReviewButtonText' => __(get_rezfusion_option(Options::reviewButtonText())) ?: "Add a Review",
             'postid' => ''
         ], $atts);
 

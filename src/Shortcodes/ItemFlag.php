@@ -5,20 +5,21 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Assets;
+use Rezfusion\Options;
+use Rezfusion\Plugin;
+
 class ItemFlag extends Shortcode {
 
   protected $shortcode = 'rezfusion-item-flag';
 
   public function render($atts = []): string {
     $a = shortcode_atts([
-      'namespace' => get_option('rezfusion_hub_favorites_namespace', 'rezfusion-favorites'),
+      'namespace' => get_rezfusion_option(Options::favoritesNamespace(), 'rezfusion-favorites'),
       'itemid' => $atts['itemid']
     ], $atts );
 
-    wp_enqueue_style(
-      'rezfusion_components_flag',
-      plugins_url('rezfusion-components/assets/css/favorites.css')
-    );
+    Plugin::getInstance()->getAssetsRegisterer()->handleStyle(Assets::favoritesStyle());
 
     return $this->template->render($a);
   }

@@ -2,6 +2,8 @@
 
 namespace Rezfusion\Configuration\ConfigurationStorage;
 
+use Rezfusion\Helper\OptionManager;
+
 /**
  * @file Provides configuration from database.
  */
@@ -22,7 +24,7 @@ class DatabaseConfigurationStorage implements ConfigurationStorageInterface
      */
     public function loadConfiguration()
     {
-        return (!empty($configuration = json_decode(get_option($this->optionName))))
+        return (!empty($configuration = json_decode(get_rezfusion_option($this->optionName))))
             ? $configuration
             : [];
     }
@@ -32,6 +34,6 @@ class DatabaseConfigurationStorage implements ConfigurationStorageInterface
      */
     public function saveConfiguration($configuration)
     {
-        return update_option($this->optionName, json_encode($configuration));
+        return OptionManager::update($this->optionName, json_encode($configuration));
     }
 }

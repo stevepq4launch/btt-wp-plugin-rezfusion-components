@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file Tests for Plugin.
+ */
+
+namespace Rezfusion\Tests;
+
+use Rezfusion\Factory\API_ClientFactory;
+use Rezfusion\Factory\PluginFactory;
+use Rezfusion\Helper\AssetsRegisterer;
+use Rezfusion\Helper\AssetsRegistererInterface;
+use Rezfusion\Options;
+use Rezfusion\Plugin;
+use Rezfusion\Repository\ItemRepository;
+use Rezfusion\Service\DeleteDataService;
+
+class PluginTest extends BaseTestCase
+{
+    /**
+     * @var Plugin
+     */
+    private $Plugin;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->Plugin = (new PluginFactory)->make();
+    }
+
+    public function testInstance()
+    {
+        $this->assertInstanceOf(Plugin::class, $this->Plugin);
+    }
+
+    public function testPluginName()
+    {
+        $this->assertSame($this->Plugin->getPluginName(), 'Rezfusion');
+    }
+
+    public function testBundleScriptHandleName()
+    {
+        $componentsBundleURL = get_rezfusion_option(Options::componentsBundleURL());
+        $this->assertNotEmpty($componentsBundleURL);
+        $handle = $this->Plugin->getAssetsRegisterer()->handleScriptURL($componentsBundleURL);
+        $this->assertSame('assets-rezfusion-com-base-v1-bundle-js', $handle);
+    }
+
+    public function testRefreshData()
+    {
+        (new DeleteDataService)->run();
+        $ItemRepository = (new ItemRepository((new API_ClientFactory())->make()));
+        $this->assertCount(0, $ItemRepository->getAllItemsIds());
+        $this->Plugin->refreshData();
+        $this->assertGreaterThan(1, count($ItemRepository->getAllItemsIds()));
+    }
+
+    public function testGetAssetsRegisterer()
+    {
+        $this->assertInstanceOf(AssetsRegistererInterface::class, $this->Plugin->getAssetsRegisterer());
+        $this->assertInstanceOf(AssetsRegisterer::class, $this->Plugin->getAssetsRegisterer());
+    }
+}

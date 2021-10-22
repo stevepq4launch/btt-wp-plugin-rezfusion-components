@@ -9,6 +9,8 @@
  * @var $emptyStars
  * @var $stayDate
  */
+
+use Rezfusion\Options;
 ?>
 
 <?php if (!empty($lodgingItem->item->reviews)) : ?>
@@ -38,7 +40,7 @@
     <?php endfor ?>
   </div>
   <div class="lodging-item-review__stay-dates">
-    <?php print "Stayed on " . date_i18n(get_option('date_format'), strtotime($stayDate)); ?>
+    <?php print "Stayed on " . date_i18n(get_rezfusion_option(Options::dateFormat()), strtotime($stayDate)); ?>
   </div>
   <div class="lodging-item-review__guest-name">
     <?php print $currentReview->guest_name; ?>

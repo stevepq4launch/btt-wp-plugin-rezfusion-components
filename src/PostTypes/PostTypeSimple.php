@@ -6,6 +6,8 @@
 
 namespace Rezfusion\PostTypes;
 
+use Rezfusion\Actions;
+
 abstract class PostTypeSimple
 {
 
@@ -14,7 +16,7 @@ abstract class PostTypeSimple
   public function __construct($postTypeName)
   {
     $this->postTypeName = $postTypeName;
-    add_action('init', [$this, 'register']);
+    add_action(Actions::init(), [$this, 'register']);
   }
 
   /**

@@ -1,10 +1,16 @@
+<?php
+
+use Rezfusion\Options;
+use Rezfusion\PostTypes;
+
+?>
 <tr valign="top">
   <th scope="row">Featured Amenities</th>
   <td>
     <?php
-    $checked_options_featured = get_option('rezfusion_hub_amenities_featured') ?: [];
+    $checked_options_featured = get_rezfusion_option(Options::amenitiesFeatured()) ?: [];
 
-    $vr_taxonomies_featured = get_object_taxonomies('vr_listing', 'objects');
+    $vr_taxonomies_featured = get_object_taxonomies(PostTypes::listing(), 'objects');
 
     foreach ($vr_taxonomies_featured as $key => $value) :
       $value = $vr_taxonomies_featured[$key]->name;
@@ -21,9 +27,9 @@
   <th scope="row">General Amenities</th>
   <td>
     <?php
-    $checked_options_general = get_option('rezfusion_hub_amenities_general') ?: [];
+    $checked_options_general = get_rezfusion_option(Options::amenitiesGeneral()) ?: [];
 
-    $vr_taxonomies_general = get_object_taxonomies('vr_listing', 'objects');
+    $vr_taxonomies_general = get_object_taxonomies(PostTypes::listing(), 'objects');
 
     foreach ($vr_taxonomies_general as $key => $value) :
       $value = $vr_taxonomies_general[$key]->name;

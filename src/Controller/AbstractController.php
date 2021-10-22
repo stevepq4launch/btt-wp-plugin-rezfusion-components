@@ -2,6 +2,7 @@
 
 namespace Rezfusion\Controller;
 
+use Rezfusion\Actions;
 use \WP_REST_Response;
 
 abstract class AbstractController
@@ -31,7 +32,7 @@ abstract class AbstractController
     {
         $Instance = new static();
         foreach ($routes as $route => $routeParameters) {
-            add_action('rest_api_init', function () use ($route, $routeParameters, $Instance) {
+            add_action(Actions::restAPI_Init(), function () use ($route, $routeParameters, $Instance) {
                 register_rest_route(static::API_URL, $route, [
                     'methods' => $routeParameters['methods'],
                     'callback' => function ($request) use ($routeParameters, $route, $Instance) {

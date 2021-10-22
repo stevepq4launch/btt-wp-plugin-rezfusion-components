@@ -6,7 +6,11 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Exception\ComponentsBundleURL_RequiredException;
+use Rezfusion\Metas;
 use Rezfusion\Options;
+use Rezfusion\PostTypes;
+use Rezfusion\Registerer\ComponentsBundleRegisterer;
 
 class Component extends Shortcode
 {
@@ -26,19 +30,18 @@ class Component extends Shortcode
       return "Rezfusion Component: A 'channel' and a 'URL' attribute are both required";
     }
 
-    $handle = "{$a['channel']}-{$a['element']}";
+    if (empty($componentsBundleURL = get_rezfusion_option(Options::componentsBundleURL()))) {
+      throw new ComponentsBundleURL_RequiredException();
+    }
 
-    wp_enqueue_script(
-      $handle,
-      $a['url']
-    );
+    $handle = $this->AssetsRegisterer->handleScriptURL($componentsBundleURL);
 
     $favoritesEnabled = get_rezfusion_option(Options::enableFavorites());
 
     if ($a['element'] == 'search') {
       wp_localize_script(
         $handle,
-        'REZFUSION_COMPONENTS_CONF',
+        ComponentsBundleRegisterer::userDefinedConfigurationVariableName(),
         [
           'settings' => [
             'favorites' => [
@@ -51,15 +54,15 @@ class Component extends Shortcode
 
     if ($a['element'] === 'details-page' && $post = get_post()) {
       $meta = get_post_meta($post->ID);
-      if ($meta['rezfusion_hub_item_id']) {
+      if ($meta[Metas::itemId()]) {
         wp_localize_script(
           $handle,
-          'REZFUSION_COMPONENTS_CONF',
+          ComponentsBundleRegisterer::userDefinedConfigurationVariableName(),
           [
             'settings' => [
               'components' => [
                 'DetailsPage' => [
-                  'id' => $meta['rezfusion_hub_item_id'][0],
+                  'id' => $meta[Metas::itemId()][0],
                 ],
               ],
             ],
@@ -73,7 +76,7 @@ class Component extends Shortcode
       $meta = get_term_meta($object->term_id);
       wp_localize_script(
         $handle,
-        'REZFUSION_COMPONENTS_CONF',
+        ComponentsBundleRegisterer::userDefinedConfigurationVariableName(),
         [
           'settings' => [
             'favorites' => [
@@ -85,8 +88,10 @@ class Component extends Shortcode
                   'categoryFilter' => [
                     'categories' => [
                       [
-                        'cat_id' => $meta['rezfusion_hub_category_id'][0],
-                        'values' => $meta['rezfusion_hub_category_value_id'],
+                        'cat_id' => intval($meta[Metas::categoryId()][0]),
+                        'values' => array_map(function ($value) {
+                          return intval($value);
+                        }, $meta[Metas::categoryValueId()]),
                         'operator' => 'AND',
                       ],
                     ],
@@ -99,15 +104,15 @@ class Component extends Shortcode
       );
     }
 
-    if (get_post_type() == 'vr_promo') {
+    if (get_post_type() === PostTypes::promo()) {
       $promoIds = [];
-      foreach (get_post_meta(get_post()->ID, 'rzf_promo_listing_value')[0] as $listing) {
+      foreach (get_post_meta(get_post()->ID, Metas::promoListingValue())[0] as $listing) {
         $meta = get_post_meta($listing);
-        array_push($promoIds, $meta['rezfusion_hub_item_id'][0]);
+        array_push($promoIds, $meta[Metas::itemId()][0]);
       }
       wp_localize_script(
         $handle,
-        'REZFUSION_COMPONENTS_CONF',
+        ComponentsBundleRegisterer::userDefinedConfigurationVariableName(),
         [
           'settings' => [
             'favorites' => [

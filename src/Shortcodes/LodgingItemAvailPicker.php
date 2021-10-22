@@ -26,9 +26,8 @@ class LodgingItemAvailPicker extends Shortcode {
       return "Rezfusion Lodging Item: A 'channel' and an 'itemId' attribute are both required";
     }
 
-    $themeUrl = get_rezfusion_option(Options::themeURL());
-    if ($themeUrl) {
-      wp_enqueue_style('rezfusion_hub_theme', $themeUrl);
+    if (!empty($themeUrl = get_rezfusion_option(Options::themeURL()))) {
+      Plugin::getInstance()->getAssetsRegisterer()->handleStyleURL($themeUrl);
     }
 
     $client = Plugin::apiClient();

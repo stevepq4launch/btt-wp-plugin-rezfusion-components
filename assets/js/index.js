@@ -7,3 +7,4 @@ import './vr-listing-favorites';
 import './vr-listing-search';
 import './vr-categories-display';
 import './vr-listing-sleeping-arrangement';
+import './vr-quick-search';

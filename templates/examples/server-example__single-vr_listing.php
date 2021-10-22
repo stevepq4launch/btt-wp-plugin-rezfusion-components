@@ -1,4 +1,8 @@
-<?php get_header(); ?>
+<?php
+
+use Rezfusion\Metas;
+
+get_header(); ?>
 
   <div class="wrap">
     <div id="primary" class="content-area">
@@ -8,7 +12,7 @@
         /* Start the Loop */
         while ( have_posts() ) : the_post();
           $meta = get_post_meta($post->ID);
-          echo do_shortcode("[rezfusion-lodging-item itemid=\"{$meta['rezfusion_hub_item_id'][0]}\"]");
+          echo do_shortcode("[rezfusion-lodging-item itemid=\"{$meta[Metas::itemId()][0]}\"]");
 
         endwhile; // End of the loop.
         ?>
