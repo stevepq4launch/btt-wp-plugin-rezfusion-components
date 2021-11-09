@@ -43,6 +43,7 @@ use Rezfusion\Shortcodes\PropertiesAd;
 use Rezfusion\Shortcodes\QuickSearch;
 use Rezfusion\Shortcodes\Reviews;
 use Rezfusion\Shortcodes\ReviewSubmitForm;
+use Rezfusion\Shortcodes\SleepingArrangements;
 use Rezfusion\Templates;
 
 class Plugin
@@ -105,7 +106,7 @@ class Plugin
    *
    * Private to enforce this class a singleton that binds
    * hooks only once.
-   * 
+   *
    * @param OptionsHandler $OptionsHandler
    */
   private function __construct(OptionsHandler $OptionsHandler)
@@ -138,7 +139,7 @@ class Plugin
 
   /**
    * Enqueue (and register) HTML components/widgets.
-   * 
+   *
    * @return void
    */
   public function enqueueRezfusionHTML_Components(): void
@@ -155,7 +156,7 @@ class Plugin
 
   /**
    * Enqueue scripts and styles for configuration page.
-   * 
+   *
    * @return void
    */
   protected function enqueueConfigurationPageScripts(): void
@@ -177,7 +178,7 @@ class Plugin
 
   /**
    * Enqueue required styles and scripts for "Featured Properties" component.
-   * 
+   *
    * @return void
    */
   protected function enqueueFeaturedPropertiesConfigurationScripts(): void
@@ -245,10 +246,10 @@ class Plugin
 
   /**
    * Prepares "Reviews List" menu item.
-   * 
+   *
    * If user is not an administrator then it adds separate menu item,
    * otherwise it will be added as sub-item.
-   * 
+   *
    * @param string $menuPageId
    */
   private function prepareReviewsMenuItem($menuPageId = ''): void
@@ -352,6 +353,7 @@ class Plugin
     new Reviews(new Template(Templates::reviewsTemplate()));
     new ReviewSubmitForm(new Template(Templates::reviewSubmitForm()));
     new QuickSearch(new Template(Templates::quickSearch()));
+    new SleepingArrangements(new Template(Templates::sleepingArrangements()));
   }
 
   /**
@@ -444,9 +446,9 @@ class Plugin
 
   /**
    * Returns plugin name.
-   * 
+   *
    * @todo Move to configuration object.
-   * 
+   *
    * @return string
    */
   public function getPluginName(): string
@@ -456,10 +458,10 @@ class Plugin
 
   /**
    * Return value for option.
-   * 
+   *
    * @param string $option
    * @param null $default
-   * 
+   *
    * @return mixed
    */
   public function getOption($option = '', $default = null)

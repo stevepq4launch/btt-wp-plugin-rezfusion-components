@@ -18,6 +18,10 @@
  * @var $lodgingItem
  */
 ?>
+<?php
+/* Export lodgingItem variable to template parts */
+set_query_var('lodgingItem', $lodgingItem);
+?>
 <?php get_header(); ?>
 <div class="lodging-item">
   <?php print do_shortcode("[rezfusion-item-photos itemid=\"{$lodgingItem->item->id}\"]"); ?>
