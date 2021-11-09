@@ -9,16 +9,22 @@ namespace Rezfusion;
 use Rezfusion\Client\Cache;
 use Rezfusion\Client\CurlClient;
 use Rezfusion\Client\TransientCache;
+use Rezfusion\Configuration\HubConfigurationProvider;
+use Rezfusion\Controller\ConfigurationController;
+use Rezfusion\Controller\ItemController;
 use Rezfusion\Controller\ReviewController;
 use Rezfusion\Helper\Registerer;
 use Rezfusion\Pages\Admin\ConfigurationPage;
 use Rezfusion\Pages\Admin\CategoryInfoPage;
+use Rezfusion\Pages\Admin\HubConfigurationPage;
 use Rezfusion\Pages\Admin\ItemInfoPage;
 use Rezfusion\Pages\Admin\ReviewsListPage;
 use Rezfusion\PostTypes\VRListing;
 use Rezfusion\PostTypes\VRPromo;
 use Rezfusion\Repository\CategoryRepository;
 use Rezfusion\Repository\ItemRepository;
+use Rezfusion\SessionHandler\SessionHandler;
+use Rezfusion\SessionHandler\SessionHandlerInterface;
 use Rezfusion\Shortcodes\Component;
 use Rezfusion\Shortcodes\ItemFlag;
 use Rezfusion\Shortcodes\LodgingItemAvailCalendar;
@@ -32,10 +38,11 @@ use Rezfusion\Shortcodes\LodgingItemFavoriteToggle;
 use Rezfusion\Shortcodes\Favorites;
 use Rezfusion\Shortcodes\FeaturedProperties;
 use Rezfusion\Shortcodes\Search;
+use Rezfusion\Shortcodes\UrgencyAlert;
 use Rezfusion\Shortcodes\PropertiesAd;
+use Rezfusion\Shortcodes\QuickSearch;
 use Rezfusion\Shortcodes\Reviews;
 use Rezfusion\Shortcodes\ReviewSubmitForm;
-use Rezfusion\Shortcodes\SleepingArrangements;
 use Rezfusion\Templates;
 
 class Plugin
@@ -52,6 +59,11 @@ class Plugin
    */
   const VR_LISTING_NAME = "vr_listing";
   const VR_PROMO_NAME = "vr_promo";
+
+  /**
+   * @var string
+   */
+  const PLUGIN_NAME = 'Rezfusion';
 
   /**
    * @var string
@@ -79,13 +91,27 @@ class Plugin
   protected $Registerer;
 
   /**
+   * @var SessionHandlerInterface
+   */
+  protected $SessionHandler;
+
+  /**
+   * @var OptionsHandler
+   */
+  protected $OptionsHandler;
+
+  /**
    * Plugin constructor.
    *
    * Private to enforce this class a singleton that binds
    * hooks only once.
+   *
+   * @param OptionsHandler $OptionsHandler
    */
-  private function __construct()
+  private function __construct(OptionsHandler $OptionsHandler)
   {
+    $this->OptionsHandler = $OptionsHandler;
+    $this->SessionHandler = SessionHandler::getInstance();
     $this->registerPostTypes();
     $this->Registerer = new Registerer();
     add_action('init', [$this, 'registerShortcodes']);
@@ -96,10 +122,18 @@ class Plugin
     add_action('template_redirect', [$this, 'templateRedirect']);
     add_action('wp_head', [$this, 'wpHead']);
     add_action('admin_enqueue_scripts', [$this, 'loadFontAwesomeIcons']);
+    add_action('init', [$this, 'initializeSession']);
     $this->enqueueConfigurationPageScripts();
     $this->enqueueFeaturedPropertiesConfigurationScripts();
     (new ReviewController)->initialize();
+    (new ConfigurationController)->initialize();
+    (new ItemController)->initialize();
     $this->enqueueRezfusionHTML_Components();
+  }
+
+  public function initializeSession()
+  {
+    (!headers_sent() && !$this->SessionHandler->getSessionId()) && $this->SessionHandler->startSession();
   }
 
   /**
@@ -107,7 +141,7 @@ class Plugin
    *
    * @return void
    */
-  protected function enqueueRezfusionHTML_Components(): void
+  public function enqueueRezfusionHTML_Components(): void
   {
     $this->Registerer->handleStyle('rezfusion-stars-rating.css');
     $this->Registerer->handleScript('rezfusion-stars-rating.js');
@@ -132,6 +166,7 @@ class Plugin
         $currentTab = @$_GET['tab'];
         if ($currentTab === ConfigurationPage::generalTabName() || empty($currentTab)) {
           $this->Registerer->handleScript('configuration-page-validation.js');
+          $this->Registerer->handleScript('configuration-general-handler.js');
         }
       } else if ($pageName === ReviewsListPage::pageName()) {
         $this->Registerer->handleScript('rezfusion-table.js');
@@ -164,7 +199,7 @@ class Plugin
   public static function getInstance()
   {
     if (!isset(self::$instance)) {
-      self::$instance = new static();
+      self::$instance = new static(new OptionsHandler(HubConfigurationProvider::getInstance()));
     }
     return self::$instance;
   }
@@ -192,12 +227,9 @@ class Plugin
    */
   public function registerSettings()
   {
-    register_setting('rezfusion-components', 'rezfusion_hub_channel');
     register_setting('rezfusion-components', 'rezfusion_hub_folder');
-    register_setting('rezfusion-components', 'rezfusion_hub_theme');
     register_setting('rezfusion-components', 'rezfusion_hub_env');
     register_setting('rezfusion-components', 'rezfusion_hub_sync_items_post_type');
-    register_setting('rezfusion-components', 'rezfusion_hub_sps_domain');
     register_setting('rezfusion-components', 'rezfusion_hub_policies_general');
     register_setting('rezfusion-components', 'rezfusion_hub_policies_pets');
     register_setting('rezfusion-components', 'rezfusion_hub_policies_payment');
@@ -208,6 +240,40 @@ class Plugin
     register_setting('rezfusion-components', 'rezfusion_hub_amenities_featured');
     register_setting('rezfusion-components', 'rezfusion_hub_amenities_general');
     register_setting('rezfusion-components', 'rezfusion_hub_enable_favorites');
+    register_setting('rezfusion-components', Options::repositoryToken());
+  }
+
+  /**
+   * Prepares "Reviews List" menu item.
+   *
+   * If user is not an administrator then it adds separate menu item,
+   * otherwise it will be added as sub-item.
+   *
+   * @param string $menuPageId
+   */
+  private function prepareReviewsMenuItem($menuPageId = ''): void
+  {
+    if (is_user_logged_in()) {
+      $currentUser = wp_get_current_user();
+      $allowedUserRoles = ReviewController::getAllowedUserRoles();
+      if (UserRoles::userHasAnyRole($currentUser, $allowedUserRoles)) {
+        $function = 'add_submenu_page';
+        $name = 'Reviews List';
+        $parameters = [
+          !UserRoles::userHasRoles($currentUser, [UserRoles::administrator()]) ? '' : $menuPageId,
+          $name,
+          $name,
+          UserRoles::userHasRoles($currentUser, [UserRoles::administrator()]) ? UserRoles::administrator() : $currentUser->roles[0],
+          ReviewsListPage::pageName(),
+          [new ReviewsListPage(new Template(Templates::reviewsListPage(), REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin")), 'display']
+        ];
+        if (empty($parameters[0])) {
+          array_shift($parameters);
+          $function = 'add_menu_page';
+        }
+        call_user_func_array($function, $parameters);
+      }
+    }
   }
 
   /**
@@ -215,23 +281,36 @@ class Plugin
    */
   public function registerPages()
   {
+    $menuName = 'rezfusion_components_config';
+    $userRole = UserRoles::administrator();
+
     $configTemplate = new Template('configuration.php', REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin");
     $configPage = new ConfigurationPage($configTemplate);
     add_menu_page(
-      'Rezfusion Components',
-      'Rezfusion',
-      'administrator',
-      'rezfusion_components_config',
+      $this->getPluginName() . ' Components',
+      $this->getPluginName(),
+      $userRole,
+      $menuName,
       [$configPage, 'display']
+    );
+
+    // Rezfusion Hub Configuration page.
+    add_submenu_page(
+      'rezfusion_components_config',
+      'Hub Configuration',
+      'Hub Configuration',
+      'administrator',
+      'rezfusion_components_hub_configuration',
+      [new HubConfigurationPage(new Template(Templates::hubConfigurationTemplate(), REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin")), 'display']
     );
 
     $itemInfoTemplate = new Template('lodging-item.php', REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin");
     $itemInfoPage = new ItemInfoPage($itemInfoTemplate);
     add_submenu_page(
-      'rezfusion_components_config',
+      $menuName,
       'Items',
       'Items',
-      'administrator',
+      $userRole,
       'rezfusion_components_items',
       [$itemInfoPage, 'display']
     );
@@ -239,22 +318,15 @@ class Plugin
     $categoryInfoTemplate = new Template('category-info.php', REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin");
     $categoryInfoPage = new CategoryInfoPage($categoryInfoTemplate);
     add_submenu_page(
-      'rezfusion_components_config',
+      $menuName,
       'Categories',
       'Categories',
-      'administrator',
+      $userRole,
       'rezfusion_components_categories',
       [$categoryInfoPage, 'display']
     );
 
-    add_submenu_page(
-      'rezfusion_components_config',
-      'Reviews List',
-      'Reviews List',
-      'administrator',
-      ReviewsListPage::pageName(),
-      [new ReviewsListPage(new Template(Templates::reviewsListPage(), REZFUSION_PLUGIN_TEMPLATES_PATH . "/admin")), 'display']
-    );
+    $this->prepareReviewsMenuItem($menuName);
   }
 
   /**
@@ -274,11 +346,12 @@ class Plugin
     new LodgingItemFavoriteToggle(new Template('vr-favorite-toggle.php'));
     new Favorites(new Template('vr-favorites.php'));
     new Search(new Template('vr-search.php'));
+    new UrgencyAlert(new Template('vr-urgency-alert.php'));
     new PropertiesAd(new Template('vr-properties-ad.php'));
     new FeaturedProperties(new Template(Templates::featuredPropertiesTemplate()));
     new Reviews(new Template(Templates::reviewsTemplate()));
     new ReviewSubmitForm(new Template(Templates::reviewSubmitForm()));
-    new SleepingArrangements(new Template('property-sleeping-arrangements.php'));
+    new QuickSearch(new Template(Templates::quickSearch()));
   }
 
   /**
@@ -315,35 +388,6 @@ class Plugin
   }
 
   /**
-   * Get the configured environment.
-   *
-   * @return string
-   */
-  public static function env()
-  {
-    $env = get_option('rezfusion_hub_env', 'prd');
-    if (empty($env)) {
-      return 'prd';
-    }
-
-    return $env;
-  }
-
-  /**
-   * Get the blueprint URL.
-   *
-   * @return string
-   */
-  public static function blueprint()
-  {
-    $env = self::env();
-    if ($env === 'prd') {
-      return "https://blueprint.rezfusion.com/graphql";
-    }
-    return "https://blueprint.hub-stg.rezfusion.com/graphql";
-  }
-
-  /**
    * Provide a factory method for the api client instance for the
    * application.
    *
@@ -354,7 +398,7 @@ class Plugin
    */
   public static function apiClient()
   {
-    return new CurlClient(REZFUSION_PLUGIN_QUERIES_PATH, self::blueprint(), new TransientCache());
+    return new CurlClient(REZFUSION_PLUGIN_QUERIES_PATH, self::getInstance()->getOption(Options::blueprintURL()), new TransientCache());
   }
 
   /**
@@ -368,7 +412,7 @@ class Plugin
     $cache = $client->getCache();
     $mode = $cache->getMode();
     $cache->setMode(Cache::MODE_WRITE);
-    $channel = get_option('rezfusion_hub_channel');
+    $channel = get_rezfusion_option(Options::hubChannelURL());
     $repository = new ItemRepository($client);
     $categoryRepository = new CategoryRepository($client);
     // Prioritize category updates so that taxonomy IDs/information is
@@ -396,5 +440,69 @@ class Plugin
       flush_rewrite_rules();
       delete_option('rezfusion_trigger_rewrite_flush');
     }
+  }
+
+  /**
+   * Returns plugin name.
+   *
+   * @todo Move to configuration object.
+   *
+   * @return string
+   */
+  public function getPluginName(): string
+  {
+    return apply_filters('rezfusion_plugin_name', static::PLUGIN_NAME);
+  }
+
+  /**
+   * Return value for option.
+   *
+   * @param string $option
+   * @param null $default
+   *
+   * @return mixed
+   */
+  public function getOption($option = '', $default = null)
+  {
+    return $this->OptionsHandler->getOption($option, $default);
+  }
+
+  /**
+   * Enqueues required scripts and styles for Rezfusion Components.
+   */
+  public function enqueueRezfusionComponentsBundle()
+  {
+    $HubConfiguration = HubConfigurationProvider::getInstance();
+
+    if (empty($componentsBundleURL = $HubConfiguration->getComponentsBundleURL())) {
+      throw new \Error("Components Bundle URL is required.");
+    }
+    if (!empty($componentsCSS_URL = $HubConfiguration->getComponentsCSS_URL())) {
+      wp_enqueue_style('components-bundle-css', $componentsCSS_URL, []);
+    }
+    if (!empty($themeURL = $HubConfiguration->getThemeURL())) {
+      wp_enqueue_style('components-theme-css', $themeURL, []);
+    }
+    if (!empty($fontsURL = $HubConfiguration->getFontsURL())) {
+      wp_enqueue_style('components-fonts', $fontsURL, []);
+    }
+
+    wp_enqueue_script('components-bundle-js', $componentsBundleURL, []);
+    $this->Registerer->handleStyle('vr-quick-search.css');
+
+    wp_localize_script(
+      'components-bundle-js',
+      'REZFUSION_COMPONENTS_BUNDLE_CONF',
+      $HubConfiguration->getConfiguration()->hub_configuration
+    );
+  }
+
+  /**
+   * Returns instance of Registerer.
+   * @return Registerer
+   */
+  public function getRegisterer(): Registerer
+  {
+    return $this->Registerer;
   }
 }

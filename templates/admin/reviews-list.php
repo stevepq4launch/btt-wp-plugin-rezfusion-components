@@ -12,14 +12,16 @@
 <script>
     (function() {
         const wordpressNonce = <?php echo json_encode(wp_create_nonce('wp_rest')); ?>;
-        const viewReviewModalElement = document.getElementById('rezfusion-reviews__review-preview');
-        ConfigurationReviewsListViewHandler(
-            wordpressNonce,
-            REZFUSION.modal({
-                element: viewReviewModalElement,
-                contentElement: viewReviewModalElement.querySelector('#rezfusion-reviews__review-preview__content'),
-                closeElement: viewReviewModalElement.querySelector('.rezfusion-modal__close')
-            })
-        );
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewReviewModalElement = document.getElementById('rezfusion-reviews__review-preview');
+            ConfigurationReviewsListViewHandler(
+                wordpressNonce,
+                REZFUSION.modal({
+                    element: viewReviewModalElement,
+                    contentElement: viewReviewModalElement.querySelector('#rezfusion-reviews__review-preview__content'),
+                    closeElement: viewReviewModalElement.querySelector('.rezfusion-modal__close')
+                })
+            );
+        });
     })();
 </script>

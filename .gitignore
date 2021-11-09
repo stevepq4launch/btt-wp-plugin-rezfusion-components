@@ -1,9 +1,11 @@
 .phpunit.*
 .idea
 .DS_Store
-vendor
+/vendor
 build
 report
 node_modules
 .env
-dist/report.html
+release-temp-dir
+release.zip
+release-*.zip

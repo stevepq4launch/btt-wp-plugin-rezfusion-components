@@ -1,14 +1,10 @@
-<tr valign="top">
-  <th scope="row">Channel Domain/URL</th>
-  <td><input type="text" name="rezfusion_hub_channel" value="<?php echo esc_attr(get_option('rezfusion_hub_channel')); ?>" /><br />
-    <label for="rezfusion_hub_channel">You can find the value for this field in the
-      <a href="https://hub.rezfusion.com/">Rezfusion Hub</a> UI by visiting
-      your company dashboard and selecting the proper channel.</label>
-  </td>
-</tr>
+<?php
+
+use Rezfusion\Options;
+?>
 <tr valign="top">
   <th scope="row">Components URL</th>
-  <td><input type="text" name="rezfusion_hub_folder" value="<?php echo esc_attr(get_option('rezfusion_hub_folder')); ?>" />
+  <td><input type="text" name="rezfusion_hub_folder" value="<?php echo $rezfusion_hub_folder_value; ?>" />
     <br />
     <label for="rezfusion_hub_folder">Provide the full URL to the components script bundle.
     </label>
@@ -18,31 +14,13 @@
   <th scope="row">Environment</th>
   <td>
     <select name="rezfusion_hub_env">
-      <option value="dev" <?php print(get_option('rezfusion_hub_env', 'prd') === 'dev' ? 'selected' : ''); ?>>
+      <option value="dev" <?php print($isDevEnv ? 'selected' : ''); ?>>
         Development
       </option>
-      <option value="prd" <?php print(get_option('rezfusion_hub_env', 'prd') === 'prd' ? 'selected' : ''); ?>>
+      <option value="prd" <?php print($isProdEnv ? 'selected' : ''); ?>>
         Production
       </option>
     </select>
-  </td>
-</tr>
-<tr valign="top">
-  <th scope="row">SPS Domain</th>
-  <td>
-    <input type="text" name="rezfusion_hub_sps_domain" value="<?php echo esc_attr(get_option('rezfusion_hub_sps_domain')); ?>" />
-    <br />
-    <label for="rezfusion_hub_sps_domain">Provide the hostname/domain to use for SPS. This option is only configurable
-      during development.
-    </label>
-  </td>
-</tr>
-<tr valign="top">
-  <th scope="row">Booking Confirmation URL</th>
-  <td><input type="text" name="rezfusion_hub_conf_page" value="<?php echo esc_attr(get_option('rezfusion_hub_conf_page')); ?>" />
-    <br />
-    <label for="rezfusion_hub_conf_page">Provide the full URL to the booking confirmation page.
-    </label>
   </td>
 </tr>
 <tr valign="top">
@@ -60,23 +38,13 @@
 <tr valign="top">
   <th scope="row">Refresh Item Data</th>
   <td>
-    <input type="checkbox" name="rezfusion_hub_fetch_data" value="1" /><label for="rezfusion_hub_fetch_data">
+    <input type="button" value="<?php _e("Refresh Data"); ?>" id="rezfusion-hub-fetch-data-button" class="button button-primary" />
+    <br />
+    <label for="rezfusion_hub_fetch_data">
       Use this option to refresh data if you've added new properties.
     </label>
+    <div id="rezfusion-hub-fetch-data-message" class="hidden"></div>
   </td>
-</tr>
-<tr valign="top">
-  <th scope="row">Enable Favorites</th>
-  <td>
-    <?php $rzfFavoritesValue = get_option('rezfusion_hub_enable_favorites') ?>
-    <input type="checkbox" name="rezfusion_hub_enable_favorites[1]" value="1" <?php checked(isset($rzfFavoritesValue['1'])); ?> /><label for="rezfusion_hub_enable_favorites">
-      Check this option to enable favorites functionality.
-    </label>
-  </td>
-</tr>
-<tr valign="top">
-  <th scope="row">Google Maps API Key</th>
-  <td><input type="text" name="rezfusion_hub_google_maps_api_key" value="<?php echo esc_attr(get_option('rezfusion_hub_google_maps_api_key')); ?>" /> </td>
 </tr>
 <tr valign="top">
   <th scope="row">Custom Listing Slug</th>
@@ -100,5 +68,13 @@
     <input type="text" name="rezfusion_hub_promo_code_flag_text" value="<?php echo esc_attr(get_option('rezfusion_hub_promo_code_flag_text')); ?>" />
     <br />
     <label for="rezfusion_hub_promo_code_flag_text">Text on flag for properties with active promo-codes (<i>Default: "Special!"</i>).</label>
+  </td>
+</tr>
+<tr valign="top">
+  <th scope="row">Repository Token</th>
+  <td>
+    <input type="text" name="<?php echo Options::repositoryToken(); ?>" value="<?php echo esc_attr(get_option(Options::repositoryToken())); ?>" />
+    <br />
+    <label for="<?php echo Options::repositoryToken(); ?>">Enter repository token to be able to use automatic plugin update feature.</label>
   </td>
 </tr>

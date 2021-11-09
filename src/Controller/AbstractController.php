@@ -49,13 +49,16 @@ abstract class AbstractController
      * 
      * @return bool
      */
-    protected function checkUserRoles($userRoles = []): bool
+    protected function checkUserRoles(array $userRoles = []): bool
     {
         $valid = true;
-        foreach ($userRoles as $role) {
-            if (!current_user_can($role)) {
-                $valid = false;
-                break;
+        if (count($userRoles)) {
+            $valid = false;
+            foreach ($userRoles as $role) {
+                if (current_user_can($role)) {
+                    $valid = true;
+                    break;
+                }
             }
         }
         return $valid;
@@ -72,7 +75,11 @@ abstract class AbstractController
      */
     protected function preCallback($route, $routeParameters, $request): object
     {
-        if ($this->checkUserRoles(@$routeParameters['allowedRoles']) === false)
+        if (
+            array_key_exists('allowedRoles', $routeParameters)
+            && is_array($routeParameters['allowedRoles'])
+            && $this->checkUserRoles($routeParameters['allowedRoles']) === false
+        )
             return new WP_REST_Response(array('error' => 'Access denied.'), 403);
         $callback = $routeParameters['callback'];
         return $this->$callback($request);

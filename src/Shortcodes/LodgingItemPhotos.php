@@ -5,6 +5,7 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Options;
 use Rezfusion\Plugin;
 
 class LodgingItemPhotos extends Shortcode {
@@ -18,7 +19,7 @@ class LodgingItemPhotos extends Shortcode {
    */
   public function render($atts = []): string {
     $a = shortcode_atts([
-      'channel' => get_option('rezfusion_hub_channel'),
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
       'itemid' => $atts['itemid']
     ], $atts );
 
@@ -26,10 +27,12 @@ class LodgingItemPhotos extends Shortcode {
       return "Rezfusion Lodging Item: A 'channel' and an 'itemId' attribute are both required";
     }
 
-    wp_enqueue_style('rezfusion-photos', plugins_url('rezfusion-components/node_modules/@propertybrands/photos/dist/app.css'));
-
     $client = Plugin::apiClient();
     $result = $client->getItem($a['itemid'], $a['channel']);
+
+    $Registerer = Plugin::getInstance()->getRegisterer();
+    $Registerer->handleScript('slideshow.js');
+    $Registerer->handleStyle('slideshow.css');
 
     return $this->template->render([
       'lodgingItem' => $result->data->lodgingProducts->results[0]

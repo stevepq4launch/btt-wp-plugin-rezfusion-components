@@ -23,7 +23,7 @@ class Reviews extends Shortcode
     public function render($atts = []): string
     {
         $atts = shortcode_atts([
-            'postid' => get_the_ID(  )
+            'postid' => get_the_ID()
         ], $atts);
 
         if (empty($atts['postid']))
@@ -43,11 +43,12 @@ class Reviews extends Shortcode
         /* Fetch reviews from hub. */
         $propertyKey = (new ItemRepository(Plugin::apiClient()))->getPropertyKeyByPostId($atts['postid']);
         if (!empty($propertyKey)) {
-            $HubReviewRepository = new HubReviewRepository(Plugin::apiClient(), get_option(Options::hubChannel()));
+            $HubReviewRepository = new HubReviewRepository(Plugin::apiClient(), get_rezfusion_option(Options::hubChannelURL()));
             $hubReviews = $HubReviewRepository->getReviews([$propertyKey]);
         }
 
-        (new ReviewsSorter)->sortByStayDate($reviewsCollection = $localReviews + $hubReviews);
+        $reviewsCollection = array_merge($localReviews, $hubReviews);
+        (new ReviewsSorter)->sortByStayDate($reviewsCollection);
 
         foreach ($reviewsCollection as $Review) {
             $reviews[] = $Review->toArray();

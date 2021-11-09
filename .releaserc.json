@@ -1,0 +1,52 @@
+{
+  "repositoryUrl": "https://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@github.com/ppokojowczyk-q4launch/rzf-test",
+  "tagFormat": "${version}",
+  "private": "true",
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        "changelogFile": "CHANGELOG.md"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "./bin/update-readme.sh ${nextRelease.version} `date +%Y--%m--%d`"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "./bin/update-plugin-version.sh ${nextRelease.version}"
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "./bin/make-release.sh ${nextRelease.version}"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "release-*.zip",
+            "label": "release-${nextRelease.version}.zip"
+          }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["README.md", "package.json", "CHANGELOG.md", "rezfusion-components.php"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
+  ],
+  "branches": ["main"]
+}

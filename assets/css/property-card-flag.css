@@ -1,5 +1,20 @@
 .bt-teaser__flag {
   position: absolute;
-  left: 0;
   top: 10px;
+  left: -0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #fff;
+  box-shadow: 1px 1px 3px #292929;
+  pointer-events: none;
+}
+
+.bt-teaser__flag::after {
+  position: absolute;
+  top: 104%;
+  left: 0;
+  width: 0;
+  height: 0;
+  line-height: 0;
+  border-top: 10px solid #9b9b9b;
+  border-left: 10px solid transparent;
 }

@@ -153,7 +153,7 @@ class FeaturedProperties extends Shortcode
     {
         $properties = [];
         if (count($propertiesIds)) {
-            $Repository = new LodgingProductRepository(Plugin::apiClient(), get_option('rezfusion_hub_channel'));
+            $Repository = new LodgingProductRepository(Plugin::apiClient(), get_rezfusion_option(Options::hubChannelURL()));
             $lodgingProducts = $Repository->findByIds($propertiesIds);
             $propertyIdAndPostIdMap = $this->makePropertyIdAndPostIdMap($propertiesIds);
             foreach ($lodgingProducts as $lodgingProduct) {

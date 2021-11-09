@@ -13,12 +13,12 @@ function rezfusionModal(options = {}) {
     /**
      * @var {HTMLElement}
      */
-    const _closeElement = options.closeElement || null;
+    let _closeElement = options.closeElement || null;
 
     /**
      * @var {HTMLElement}
      */
-    const _triggerElement = options.triggerElement || null;
+    let _triggerElement = options.triggerElement || null;
 
     /**
      * @var {HTMLElement}
@@ -81,6 +81,14 @@ function rezfusionModal(options = {}) {
      * @param {HTMLElement} closeElement 
      */
     const _initializeModal = function (modalElement, closeElement) {
+        _initializeCloseElement(closeElement);
+    };
+
+    /**
+     * Initialize close element.
+     * @param {HTMLElement} closeElement
+     */
+    const _initializeCloseElement = function (closeElement) {
         closeElement && closeElement.addEventListener('click', function (event) {
             _closeModal();
         });
@@ -147,6 +155,21 @@ function rezfusionModal(options = {}) {
         }
     }
 
+    /**
+     * Update selected options.
+     * @param {object} options 
+     */
+    const _updateOptions = function (options = {}) {
+        if (typeof options.triggerElement !== 'undefined') {
+            _triggerElement = options.triggerElement || null;
+            (_triggerElement) && _handleTrigger(_triggerElement, _modalElement);
+        }
+        if (typeof options.closeElement !== 'undefined') {
+            _closeElement = options.closeElement || null;
+            (_closeElement) && _initializeCloseElement(_closeElement);
+        }
+    };
+
     _initializeModal(_modalElement, _closeElement);
     (_triggerElement) && _handleTrigger(_triggerElement, _modalElement);
 
@@ -155,6 +178,7 @@ function rezfusionModal(options = {}) {
         close: _closeModal,
         show: _showModal,
         element: _element,
-        setContent: _setContent
+        setContent: _setContent,
+        updateOptions: _updateOptions
     };
 }
