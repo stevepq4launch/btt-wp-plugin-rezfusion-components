@@ -18,6 +18,7 @@
  * @var $lodgingItem
  */
 ?>
+<?php get_header(); ?>
 <div class="lodging-item">
   <?php print do_shortcode("[rezfusion-item-photos itemid=\"{$lodgingItem->item->id}\"]"); ?>
   <h1>
@@ -45,10 +46,10 @@
 
   <div class="lodging-item-details__sleeping_arrangements">
     <?php
-      if (!empty($lodgingItem->item->rooms)) {
-        $roomsData = json_encode($lodgingItem->item->rooms);
-        print do_shortcode("[rezfusion-sleeping-arrangements rooms=\"$roomsData\"]");
-      }
+    if (!empty($lodgingItem->item->rooms)) {
+      $roomsData = json_encode($lodgingItem->item->rooms);
+      print do_shortcode("[rezfusion-sleeping-arrangements rooms=\"$roomsData\"]");
+    }
     ?>
   </div>
 
@@ -67,3 +68,4 @@
   <?php print do_shortcode("[rezfusion-item-avail-calendar itemid=\"{$lodgingItem->item->id}\"]"); ?>
 
 </div>
+<?php get_footer(); ?>

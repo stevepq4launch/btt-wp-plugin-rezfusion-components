@@ -278,7 +278,7 @@ class Plugin
     new FeaturedProperties(new Template(Templates::featuredPropertiesTemplate()));
     new Reviews(new Template(Templates::reviewsTemplate()));
     new ReviewSubmitForm(new Template(Templates::reviewSubmitForm()));
-    new SleepingArrangements(new Template('vr-sleeping-arrangements.php'));
+    new SleepingArrangements(new Template('property-sleeping-arrangements.php'));
   }
 
   /**
