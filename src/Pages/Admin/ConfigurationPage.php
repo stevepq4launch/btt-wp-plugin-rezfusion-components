@@ -11,7 +11,9 @@ use Rezfusion\Factory\ValuesCleanerFactory;
 use Rezfusion\Pages\Page;
 use Rezfusion\Plugin;
 
-session_start();
+if (session_id() == "") {
+  session_start();
+}
 
 class ConfigurationPage extends Page {
 
@@ -24,7 +26,7 @@ class ConfigurationPage extends Page {
    * @var string
    */
   const GENERAL_TAB_NAME = 'general';
-  
+
   /**
    * @var string
    */
@@ -53,7 +55,7 @@ class ConfigurationPage extends Page {
   protected function save($values) {
     switch ($_SESSION['savetab']) {
       case 'general':
-        $keys = [          
+        $keys = [
           'rezfusion_hub_folder',
           'rezfusion_hub_env',
           'rezfusion_hub_redirect_urls',

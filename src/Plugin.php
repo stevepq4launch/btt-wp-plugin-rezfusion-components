@@ -129,7 +129,9 @@ class Plugin
     (new ReviewController)->initialize();
     (new ConfigurationController)->initialize();
     (new ItemController)->initialize();
-    $this->enqueueRezfusionHTML_Components();
+    add_action( 'wp_enqueue_scripts', function() {
+      $this->enqueueRezfusionHTML_Components();
+    });
   }
 
   public function initializeSession()
