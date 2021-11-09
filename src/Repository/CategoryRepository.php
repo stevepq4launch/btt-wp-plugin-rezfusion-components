@@ -90,6 +90,10 @@ class CategoryRepository {
         $term = wp_insert_term($value->name, $value->wp_taxonomy_name);
       }
 
+      if(is_wp_error($term)) {
+        do_action('is_wp_error_instance', $term);
+      }
+
       if (!empty($term)) {
         add_term_meta(
           $term['term_id'],
