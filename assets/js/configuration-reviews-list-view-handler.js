@@ -27,6 +27,8 @@ function ConfigurationReviewsListViewHandler(wordpressNonce, viewModal) {
             return result.json();
         }).then(function (json) {
             table.setData(json).refresh();
+        }).catch(function(){
+            table.setData([]).refresh();
         });
     }
 

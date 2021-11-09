@@ -1,0 +1,47 @@
+name: Build, test and release
+
+on:
+  workflow_dispatch:
+    branches:
+      - master
+
+jobs:
+  build_test_and_release:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_COMPOSE_FILE: ${{ secrets.DOCKER_COMPOSE_FILE }}
+      WP_BASE_IMAGE: ${{ secrets.WP_BASE_IMAGE }}
+      BLUEPRINT_CHANNEL: ${{ secrets.BLUEPRINT_CHANNEL }}
+      BLUEPRINT_URL: ${{ secrets.BLUEPRINT_URL }}
+      BLUEPRINT_ENVIRONMENT: ${{ secrets.BLUEPRINT_ENVIRONMENT }}
+      NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+
+      - name: Wordpress and database Docker containers build
+        run: ./bin/build.sh
+
+      - name: PHP tests
+        run: ./bin/test.sh
+
+      - name: Prepare node.js environment
+        run: |
+          touch ~/.npmrc
+          echo -en "@PropertyBrands:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" > ~/.npmrc
+          sed -i 's/git+ssh:\/\/git@github.com\//https:\/\/'${GITHUB_TOKEN}'@github.com\//' package-lock.json
+
+      - name: Node.js dependencies installation
+        run: npm ci
+
+      - name: JavaScript bundle
+        run: npm run build
+
+      - name: Remove dev Composer packages
+        run: docker-compose exec -T wordpress bash -c "cd /var/www/html/wp-content/plugins/rezfusion-components && composer install --no-dev"
+
+      - name: Semantic release
+        run: npx semantic-release

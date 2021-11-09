@@ -86,6 +86,11 @@ const REZFUSION = (function () {
             if (instance === null) {
                 instance = rezfusionComponent(options);
                 _cache.push(_makeCached(instance, componentType));
+            } else if (instance) {
+                /* Update existing instance options. */
+                if (typeof instance.updateOptions === 'function') {
+                    instance.updateOptions(options);
+                }
             }
             return instance;
         }

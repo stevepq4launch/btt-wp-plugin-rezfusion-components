@@ -2,19 +2,19 @@
 
 namespace Rezfusion\Shortcodes;
 
-use Rezfusion\Plugin;
+use Rezfusion\Options;
 
 class Favorites extends Shortcode {
   protected $shortcode = 'rezfusion-favorites';
 
   public function render($atts = []): string {
     $a = shortcode_atts([
-      'channel' => get_option('rezfusion_hub_channel'),
-      'mapApiKey' => get_option( 'rezfusion_hub_google_maps_api_key'),
-      'endPoint' => 'https://blueprint.rezfusion.com/graphql',
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
+      'mapApiKey' => get_rezfusion_option(Options::mapAPI_Key()),
+      'endPoint' => get_rezfusion_option(Options::blueprintURL()),
     ], $atts);
 
-    $favoritesEnabled = isset(get_option('rezfusion_hub_enable_favorites')['1']) ? true : false;
+    $favoritesEnabled = get_rezfusion_option(Options::enableFavorites());
     $favoritesChannel = $a['channel'];
     $favoritesApiKey = $a['mapApiKey'];
     $favoritesEndPoint = $a['endPoint'];

@@ -1,3 +1,5 @@
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release) ![Last update](https://img.shields.io/badge/Last%20update-2021--08--16-yellow)
+
 # Rezfusion Hub Components
 
 Provides a shortcode for injecting Rezfusion Components on your WordPress website. Also offers the ability to sync data to your host application to empower advanced marketing and SEO capabilities.
@@ -52,9 +54,7 @@ Provides a button to toggle an item as favorite on/off.
 `[rezfusion-search]`
 
 Requires the following Rezfusion plugin settings:
-- `rezfusion_hub_channel`
-- `rezfusion_hub_google_maps_api_key`
-- `rezfusion_hub_sps_domain`
+- `rezfusion_hub_folder`
 
 #### Provide a favorites page (deprecated)
 `[rezfusion-favorites]`
