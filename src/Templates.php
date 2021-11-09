@@ -64,6 +64,12 @@ class Templates
     const QUICK_SEARCH_TEMPLATE = 'vr-quick-search.php';
 
     /**
+     * Default template name of Sleeping Arrangements partial.
+     * @var string
+     */
+    const SLEEPING_ARRANGEMENTS_TEMPLATE = 'property-sleeping-arrangements.php';
+
+    /**
      * @return string
      */
     public static function featuredPropertiesTemplate(): string
@@ -149,5 +155,14 @@ class Templates
     public static function quickSearch(): string
     {
         return static::QUICK_SEARCH_TEMPLATE;
+    }
+
+    /**
+     * Returns sleeping arrangements template name.
+     * @return string
+     */
+    public static function sleepingArrangements(): string
+    {
+      return static::SLEEPING_ARRANGEMENTS_TEMPLATE;
     }
 }
