@@ -4,6 +4,7 @@
  */
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Options;
 use Rezfusion\Plugin;
 
 class LodgingItemAvailPicker extends Shortcode {
@@ -17,7 +18,7 @@ class LodgingItemAvailPicker extends Shortcode {
    */
   public function render($atts = []): string {
     $a = shortcode_atts([
-      'channel' => get_option('rezfusion_hub_channel'),
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
       'itemid' => $atts['itemid'],
     ], $atts );
 
@@ -25,7 +26,7 @@ class LodgingItemAvailPicker extends Shortcode {
       return "Rezfusion Lodging Item: A 'channel' and an 'itemId' attribute are both required";
     }
 
-    $themeUrl = get_option('rezfusion_hub_theme');
+    $themeUrl = get_rezfusion_option(Options::themeURL());
     if ($themeUrl) {
       wp_enqueue_style('rezfusion_hub_theme', $themeUrl);
     }
@@ -36,9 +37,9 @@ class LodgingItemAvailPicker extends Shortcode {
     return $this->template->render([
       'lodgingItem' => $result->data->lodgingProducts->results[0],
       'channel' => $a['channel'],
-      'sps_domain' => get_option('rezfusion_hub_sps_domain', 'https://checkout.rezfusion.com'),
-      'endpoint' => Plugin::blueprint(),
-      'conf_page' => get_option('rezfusion_hub_conf_page', ''),
+      'sps_domain' => get_rezfusion_option(Options::SPS_Domain()),
+      'endpoint' => get_rezfusion_option(Options::blueprintURL()),
+      'conf_page' => get_rezfusion_option(Options::bookingConfirmationURL(), '')
     ]);
   }
 }

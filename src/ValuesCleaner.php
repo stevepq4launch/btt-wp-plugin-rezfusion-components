@@ -40,10 +40,7 @@ class ValuesCleaner
         }
 
         foreach ([
-            'rezfusion_hub_channel',
-            'rezfusion_hub_folder',
-            'rezfusion_hub_sps_domain',
-            'rezfusion_hub_conf_page'
+            'rezfusion_hub_folder'
         ] as $key) {
             if (array_key_exists($key, $values) && !empty($values[$key]))
                 $values[$key] = $this->trimSlashes($values[$key]);

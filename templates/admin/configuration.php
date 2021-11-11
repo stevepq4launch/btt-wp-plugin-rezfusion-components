@@ -6,11 +6,14 @@
  */
 
 use Rezfusion\Factory\FeaturedPropertiesConfigurationTemplateVariablesFactory;
+use Rezfusion\Configuration\HubConfigurationProvider;
 use Rezfusion\Options;
 use Rezfusion\Pages\Admin\ConfigurationPage;
+use Rezfusion\PostRecentVisits;
+use Rezfusion\Shortcodes\UrgencyAlert;
+use Rezfusion\Plugin;
 use Rezfusion\Template;
 use Rezfusion\Templates;
-
 if (isset($_GET['tab'])) {
   $_SESSION['savetab'] = $_GET['tab'];
 } else {
@@ -26,6 +29,7 @@ function rezfusion_admin_tabs($current = 'general')
     'policies'  => 'Policies',
     'amenities' => 'Amenities',
     'forms'     => 'Forms',
+    'urgency-alert' => 'Urgency Alert',
     'featured-properties' => 'Featured Properties',
     ConfigurationPage::REVIEWS_TAB_NAME => 'Reviews'
   );
@@ -41,13 +45,13 @@ function rezfusion_admin_tabs($current = 'general')
 ?>
 
 <div class="wrap">
-  <h1>Rezfusion Components</h1>
+  <h1><?php echo sprintf('%s %s', Plugin::getInstance()->getPluginName(), __('Components')); ?></h1>
 
   <?php do_action('admin_notices'); ?>
 
   <?php isset($_GET['tab']) ? rezfusion_admin_tabs($_GET['tab']) : rezfusion_admin_tabs('general'); ?>
 
-  <form method="post" action="/wp-admin/admin.php?page=rezfusion_components_config">
+  <form id="rezfusion-configuration-form" method="post" action="/wp-admin/admin.php?page=rezfusion_components_config" nonce="<?php echo esc_attr(wp_create_nonce('wp_rest')); ?>">
     <?php settings_fields('rezfusion-components'); ?>
     <?php do_settings_sections('rezfusion-components'); ?>
     <table class="form-table">
@@ -59,7 +63,11 @@ function rezfusion_admin_tabs($current = 'general')
 
       switch ($tab) {
         case 'general':
-          include plugin_dir_path(__FILE__) . 'configuration-general.php';
+          echo (new Template('configuration-general.php', plugin_dir_path(__FILE__)))->render([
+            'rezfusion_hub_folder_value' => esc_attr(get_rezfusion_option(Options::componentsURL())),
+            'isProdEnv' => get_rezfusion_option(Options::environment()) === HubConfigurationProvider::getInstance()->productionEnvironment(),
+            'isDevEnv' => get_rezfusion_option(Options::environment()) === HubConfigurationProvider::getInstance()->developmentEnvironment(),
+          ]);
           break;
         case 'policies':
           include plugin_dir_path(__FILE__) . 'configuration-policies.php';
@@ -69,6 +77,18 @@ function rezfusion_admin_tabs($current = 'general')
           break;
         case 'forms':
           include plugin_dir_path(__FILE__) . 'configuration-forms.php';
+          break;
+        case 'urgency-alert':
+          $Template = new Template('admin/configuration-urgency-alert.php', REZFUSION_PLUGIN_TEMPLATES_PATH);
+          $prefix = 'rezfusion_hub_urgency_alert_';
+          echo $Template->render([
+            'urgencyAlertEnabled' => $prefix . 'enabled',
+            'daysThreshold' => $prefix . 'days_threshold',
+            'minimumVisitors' => $prefix . 'minimum_visitors',
+            'highlightedText' => $prefix . 'highlighted_text',
+            'text' => $prefix . "text",
+            "defaultUrgencyText" => UrgencyAlert::defaultUrgencyText()
+          ]);
           break;
         case 'featured-properties': {
             echo (new Template('configuration-featured-properties.php', plugin_dir_path(__FILE__)))

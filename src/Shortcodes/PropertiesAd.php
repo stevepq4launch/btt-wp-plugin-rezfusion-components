@@ -2,6 +2,7 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Options;
 use Rezfusion\Plugin;
 
 class PropertiesAd extends Shortcode
@@ -48,7 +49,7 @@ class PropertiesAd extends Shortcode
     $includeDetails = false;
 
     $data = shortcode_atts([
-      'channel' => get_option('rezfusion_hub_channel'),
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
       'itemids' => '',
       'pids' => '',
       static::INCLUDE_DETAILS_ATTR_KEY => false

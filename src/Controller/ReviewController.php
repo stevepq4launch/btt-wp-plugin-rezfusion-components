@@ -8,6 +8,7 @@ use \WP_REST_Request;
 use \WP_REST_Server;
 use Rezfusion\Entity\Review;
 use Rezfusion\EntityManager\ReviewManager;
+use Rezfusion\Filters;
 use Rezfusion\Options;
 use Rezfusion\Query\FindPropertyNameByPostIdQuery;
 use Rezfusion\Repository\ReviewRepository;
@@ -34,22 +35,22 @@ class ReviewController extends AbstractController
             '/reviews' => [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => 'reviews',
-                'allowedRoles' => [UserRoles::administrator()]
+                'allowedRoles' => static::getAllowedUserRoles()
             ],
             '/approve-review/(?P<id>\d+)' => [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => 'approveReview',
-                'allowedRoles' => [UserRoles::administrator()]
+                'allowedRoles' => static::getAllowedUserRoles()
             ],
             '/disapprove-review/(?P<id>\d+)' => [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => 'disapproveReview',
-                'allowedRoles' => [UserRoles::administrator()]
+                'allowedRoles' => static::getAllowedUserRoles()
             ],
             '/delete-review/(?P<id>\d+)' => [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => 'deleteReview',
-                'allowedRoles' => [UserRoles::administrator()]
+                'allowedRoles' => static::getAllowedUserRoles()
             ],
         ];
     }
@@ -218,5 +219,17 @@ class ReviewController extends AbstractController
             $returnData['error'] = $Exception->getMessage();
         }
         return $this->returnJSON($returnData, $statusCode);
+    }
+
+    /**
+     * Get array of user roles that are allow to access reviews.
+     * 
+     * @todo This should be moved to Configuration class.
+     * 
+     * @return string[]
+     */
+    public static function getAllowedUserRoles()
+    {
+        return apply_filters(Filters::reviewsAllowedUserRoles(), [UserRoles::administrator(), UserRoles::editor()]);
     }
 }

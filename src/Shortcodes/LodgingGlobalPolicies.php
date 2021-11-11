@@ -6,6 +6,8 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Options;
+
 class LodgingGlobalPolicies extends Shortcode {
   protected $shortcode = 'rezfusion-global-policies';
 
@@ -17,7 +19,7 @@ class LodgingGlobalPolicies extends Shortcode {
 
   public function render($atts = []): string {
     $a = shortcode_atts([
-      'channel' => get_option('rezfusion_hub_channel'),
+      'channel' => get_rezfusion_option(Options::hubChannelURL()),
       'collapse' => 0,
     ], $atts);
 

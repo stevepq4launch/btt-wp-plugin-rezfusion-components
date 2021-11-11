@@ -29,6 +29,8 @@
 <script type="text/javascript">
   document.addEventListener("DOMContentLoaded", function() {
     var el = document.querySelector('.lodging-item-favorites--item__<?php print $itemid; ?> button');
-    new window.RezfusionItemFlag(el, '<?php print $namespace; ?>', '<?php print $itemid; ?>');
+    if(typeof window.RezfusionItemFlag !== undefined) {
+      new window.RezfusionItemFlag(el, '<?php print $namespace; ?>', '<?php print $itemid; ?>');
+    }
   });
 </script>

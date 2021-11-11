@@ -9,7 +9,7 @@
 use Rezfusion\Helper\StarsRatingRenderer;
 use Rezfusion\Options;
 
-$StarsRatingRenderer = new StarsRatingRenderer(Options::maxReviewRating());
+$StarsRatingRenderer = new StarsRatingRenderer(get_rezfusion_option(Options::maxReviewRating()));
 
 ?>
 <?php if (is_array($reviews) && count($reviews)) : ?>

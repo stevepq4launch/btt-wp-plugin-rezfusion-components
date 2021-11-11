@@ -54,6 +54,22 @@ class Templates
     const PROPERTY_DETAILS_PARTIAL = 'partials/property-details.php';
 
     /**
+     * @var string
+     */
+    const HUB_CONFIGURATION_TEMPLATE = 'hub-configuration.php';
+
+    /**
+     * @var string
+     */
+    const QUICK_SEARCH_TEMPLATE = 'vr-quick-search.php';
+
+    /**
+     * Default template name of Sleeping Arrangements partial.
+     * @var string
+     */
+    const SLEEPING_ARRANGEMENTS_TEMPLATE = 'property-sleeping-arrangements.php';
+
+    /**
      * @return string
      */
     public static function featuredPropertiesTemplate(): string
@@ -123,5 +139,30 @@ class Templates
     public static function propertyDetailsParial(): string
     {
         return static::PROPERTY_DETAILS_PARTIAL;
+    }
+
+    /**
+     * @return string
+     */
+    public static function hubConfigurationTemplate(): string
+    {
+        return static::HUB_CONFIGURATION_TEMPLATE;
+    }
+
+    /**
+     * @return string
+     */
+    public static function quickSearch(): string
+    {
+        return static::QUICK_SEARCH_TEMPLATE;
+    }
+
+    /**
+     * Returns sleeping arrangements template name.
+     * @return string
+     */
+    public static function sleepingArrangements(): string
+    {
+      return static::SLEEPING_ARRANGEMENTS_TEMPLATE;
     }
 }
