@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { SearchProvider } from '@propertybrands/btt-bluetent-components/components/SearchProvider';
-import { getConfigOption } from '@propertybrands/btt-bluetent-components/lib/opts';
+import { getConfigOption } from '@propertybrands/btt-bluetent-components/lib/opts.ts';
 
 /**
  *

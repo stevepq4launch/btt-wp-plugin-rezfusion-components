@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { getConfigOption } from '@propertybrands/btt-bluetent-components/lib/opts';
+import { getConfigOption } from '@propertybrands/btt-bluetent-components/lib/opts.ts';
 
 const element = document.querySelector('.favorite-toggle');
 const enableFavorites = getConfigOption(['settings', 'favorites', 'enable']);
@@ -8,7 +8,7 @@ if (element && enableFavorites) {
   (async function () {
     const { default: FavoriteToggle } = await import('@propertybrands/btt-bluetent-components/components/Flag/FavoriteFlag');
     const { default: FlaggableProvider } = await import('@propertybrands/btt-bluetent-components/components/Flag/context');
-    const { getItems } = await import('@propertybrands/btt-bluetent-components/lib/utils');
+    const { getItems } = await import('@propertybrands/btt-bluetent-components/lib/utils.ts');
     const namespace = getConfigOption(['settings', 'components', 'SearchProvider', 'channels']);
     const id = JSON.parse(element.dataset.rezfusionItemId.toString());
     const itemName = JSON.parse(element.dataset.rezfusionItemName.toString());

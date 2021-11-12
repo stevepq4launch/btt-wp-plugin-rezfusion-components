@@ -6,9 +6,9 @@ if (mainApp) {
   (async function () {
     const { ThemeProvider } = await import('styled-components');
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
-    const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts');
-    const { getItems } = await import('@propertybrands/btt-bluetent-components/lib/utils');
-    const { default: ConfigProvider } = await import('@propertybrands/btt-bluetent-components/components/ConfigContext/ConfigProvider');
+    const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts.ts');
+    const { getItems } = await import('@propertybrands/btt-bluetent-components/lib/utils.ts');
+    const { default: ConfigProvider } = await import('@propertybrands/btt-bluetent-components/components/ConfigContext/ConfigProvider.tsx');
     const { default: FlaggableProvider } = await import('@propertybrands/btt-bluetent-components/components/Flag/context');
     const { default: Modal } = await import('react-modal');
     const { default: SearchPage } = await import('@propertybrands/btt-bluetent-components/components/Search/Search');
