@@ -61,6 +61,10 @@ get_header();
     <?php print do_shortcode("[rezfusion-item-amenities]"); ?>
   </div>
 
+  <div class="lodging-item-details__category-display">
+    <?php print do_shortcode("[rezfusion-categories-display itemid=\"{$lodgingItem->item->id}\"]"); ?>
+  </div>
+
   <div class="lodging-item-details__policies">
     <?php print do_shortcode('[rezfusion-global-policies]'); ?>
   </div>
