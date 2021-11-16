@@ -7,9 +7,10 @@ if (el) {
     const { ThemeProvider } = await import('styled-components');
     const { default: ConfigProvider } = await import('@propertybrands/btt-bluetent-components/components/ConfigContext/ConfigProvider');
     const { default: DetailsProvider } = await import('@propertybrands/btt-bluetent-components/components/DetailsContext/DetailsProvider');
+    const { default: CategoriesDisplay } = await import('@propertybrands/btt-bluetent-components/components/DetailsPage/CategoriesDisplay');
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
 
-    const itemId = 'SXRlbTo5Nzc1';
+    const itemId = el.dataset.rezfusionItemId.toString();
     const config = {
       settings: {
         components: {
@@ -32,7 +33,7 @@ if (el) {
       <ConfigProvider userProvided={config}>
         <ThemeProvider theme={{ ...defaultTheme }}>
           <DetailsProvider itemId={itemId}>
-            <h1>Hello world!</h1>
+            <CategoriesDisplay />
           </DetailsProvider>
         </ThemeProvider>
       </ConfigProvider>
