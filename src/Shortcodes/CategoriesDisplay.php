@@ -28,8 +28,12 @@ class CategoriesDisplay extends Shortcode {
     $client = Plugin::apiClient();
     $result = $client->getItem($a['itemid'], $a['channel']);
 
+    // endpoint: get_rezfusion_option(Options::blueprintURL()),
     return $this->template->render([
       'lodgingItem' => $result->data->lodgingProducts->results[0],
+      'sps_domain' => get_rezfusion_option(Options::SPS_Domain()),
+      'endpoint' => 'http://host.docker.internal:3000/graphql',
+      'conf_page' => get_rezfusion_option(Options::bookingConfirmationURL(), '')
     ]);
     return $this->template->render();
   }
