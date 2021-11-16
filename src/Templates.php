@@ -64,6 +64,12 @@ class Templates
     const QUICK_SEARCH_TEMPLATE = 'vr-quick-search.php';
 
     /**
+     * Default Category Display partial.
+     * @var string
+     */
+    const CATEGORIES_DISPLAY_TEMPLATE = 'vr-categories-display.php';
+    
+    /**
      * Default template name of Sleeping Arrangements partial.
      * @var string
      */
@@ -155,6 +161,14 @@ class Templates
     public static function quickSearch(): string
     {
         return static::QUICK_SEARCH_TEMPLATE;
+    }
+
+    /**
+     * @return string
+     */
+    public static function categoriesDisplay(): string
+    {
+      return static::CATEGORIES_DISPLAY_TEMPLATE;
     }
 
     /**

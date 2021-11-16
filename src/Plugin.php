@@ -44,6 +44,7 @@ use Rezfusion\Shortcodes\QuickSearch;
 use Rezfusion\Shortcodes\Reviews;
 use Rezfusion\Shortcodes\ReviewSubmitForm;
 use Rezfusion\Shortcodes\SleepingArrangements;
+use Rezfusion\Shortcodes\CategoriesDisplay;
 use Rezfusion\Templates;
 
 class Plugin
@@ -356,6 +357,7 @@ class Plugin
     new ReviewSubmitForm(new Template(Templates::reviewSubmitForm()));
     new QuickSearch(new Template(Templates::quickSearch()));
     new SleepingArrangements(new Template(Templates::sleepingArrangements()));
+    new CategoriesDisplay(new Template(Templates::categoriesDisplay()));
   }
 
   /**
