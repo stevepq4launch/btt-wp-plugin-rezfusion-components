@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Modal from 'react-modal';
-import { getConfigOption } from '@propertybrands/btt-bluetent-components/lib/opts';
+import { getConfigOption } from '@propertybrands/btt-bluetent-components/lib/opts.ts';
 
 const favoritesPage = document.getElementById('favorites-page');
 if (favoritesPage) {
@@ -11,7 +11,7 @@ if (favoritesPage) {
     Modal.setAppElement('#favorites-page');
     (async function () {
       const { ThemeProvider } = await import('styled-components');
-      const { getItems } = await import('@propertybrands/btt-bluetent-components/lib/utils');
+      const { getItems } = await import('@propertybrands/btt-bluetent-components/lib/utils.ts');
       const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
       const { default: FlaggableProvider } = await import('@propertybrands/btt-bluetent-components/components/Flag/context');
       const { default: FavoritesPage } = await import('@propertybrands/btt-bluetent-components/components/Search/FavoritesPage');

@@ -37,6 +37,12 @@ class HubConfiguration
     const DEFAULT_SPS_DOMAIN = 'https://checkout.rezfusion.com';
 
     /**
+     * The default channel URL, if none is specified.
+     * @var string
+     */
+    const DEFAULT_CHANNEL_URL = 'https://www.rezfusionhubdemo.com';
+
+    /**
      * @var mixed
      */
     protected $configuration;
@@ -96,6 +102,15 @@ class HubConfiguration
     public static function defaultDevelopmentBlueprintURL(): string
     {
         return static::DEVELOPMENT_DEFAULT_BLUEPRINT_URL;
+    }
+
+    /**
+     * Returns the default Channel URL; useful for when none is specified in configuration.
+     * @return string
+     */
+    public static function defaultChannelURL(): string
+    {
+      return static::DEFAULT_CHANNEL_URL;
     }
 
     /**
@@ -164,7 +179,7 @@ class HubConfiguration
 
     /**
      * Load configuration.
-     * 
+     *
      * @return void
      */
     public function loadConfiguration(): void
@@ -174,7 +189,7 @@ class HubConfiguration
 
     /**
      * Save configuration.
-     * 
+     *
      * @return void
      */
     public function saveConfiguration(): void
@@ -185,7 +200,7 @@ class HubConfiguration
     /**
      * @param string $path
      * @param null $default
-     * 
+     *
      * @return mixed
      */
     protected function getValue($path = '', $default = null)
@@ -220,8 +235,7 @@ class HubConfiguration
      */
     public function getChannelURL()
     {
-
-        return $this->getValue('hub_configuration.settings.components.SearchProvider.channels', '');
+        return $this->getValue('hub_configuration.settings.components.SearchProvider.channels', static::defaultChannelURL());
     }
 
     /**

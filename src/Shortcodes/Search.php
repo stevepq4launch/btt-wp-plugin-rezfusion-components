@@ -76,8 +76,8 @@ class Search extends Shortcode
       $object = get_queried_object();
       $meta = get_term_meta($object->term_id);
       $catFilter = array(
-        'cat_id' => $meta['rezfusion_hub_category_id'][0],
-        'values' => $meta['rezfusion_hub_category_value_id'],
+        'cat_id' => intval($meta['rezfusion_hub_category_id'][0]),
+        'values' => intval($meta['rezfusion_hub_category_value_id'][0]),
         'operator' => 'AND',
       );
       $configJson['settings']['components']['SearchProvider']['filters']['categoryFilter']['categories'] = $catFilter;

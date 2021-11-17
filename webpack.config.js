@@ -1,4 +1,6 @@
 const webpack = require('webpack');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const path = require('path');
 
 // const exclude = (modulePath) => /node_modules/.test(modulePath)
 // && !/node_modules\/@propertybrands-btt-bluetent-components/.test(modulePath);
@@ -7,6 +9,10 @@ module.exports = {
   entry: './assets/js',
   plugins: [
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: false,
+    }),
   ],
   module: {
     rules: [
@@ -32,6 +38,11 @@ module.exports = {
         },
       },
       {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        options: { allowTsInNodeModules: true },
+      },
+      {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
       },
@@ -46,6 +57,10 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '@propertybrands/btt-bluetent-components': path.resolve(__dirname, 'node_modules/@propertybrands/btt-bluetent-components'),
+      '@propertybrands/btt-availability': path.resolve(__dirname, 'node_modules/@propertybrands/btt-availability'),
+    },
   },
 };

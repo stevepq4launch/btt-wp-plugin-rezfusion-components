@@ -7,7 +7,7 @@ if (el) {
     const { default: Photos } = await import('@propertybrands/btt-bluetent-components/components/photos');
     const { ThemeProvider } = await import('styled-components');
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
-    const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts');
+    const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts.ts');
     const images = JSON.parse(el.dataset.rezfusionPhotos.toString());
     const itemName = JSON.parse(el.dataset.rezfusionItemName.toString());
     ReactDOM.render(
