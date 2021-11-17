@@ -28,6 +28,7 @@ class CategoriesDisplay extends Shortcode {
     $result = $client->getItem($a['itemid'], $a['channel']);
 
     return $this->template->render([
+      'channel' => $a['channel'],
       'lodgingItem' => $result->data->lodgingProducts->results[0],
       'sps_domain' => get_rezfusion_option(Options::SPS_Domain()),
       'endpoint' => get_rezfusion_option(Options::blueprintURL()),
