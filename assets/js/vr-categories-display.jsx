@@ -11,16 +11,21 @@ if (el) {
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
 
     const itemId = el.dataset.rezfusionItemId.toString();
+    const channels = el.dataset.rezfusionChannel.toString();
+    const endpoint = el.dataset.rezfusionEndpoint.toString();
+    const confirmationPage = el.dataset.rezfusionConfPage.toString();
+    const spsDomain = el.dataset.rezfusionSpsDomain.toString();
+
     const config = {
       settings: {
         components: {
           SearchProvider: {
-            channels: 'https://easternshorevacations.com',
-            endpoint: 'http://host.docker.internal:3000/graphql',
+            channels,
+            endpoint,
           },
           AvailabilitySearchConsumer: {
-            spsDomain: 'https://checkout.rezfusion.com',
-            confirmationPageL: '',
+            spsDomain,
+            confirmationPage,
           },
           Checkout: {
             options: {},
