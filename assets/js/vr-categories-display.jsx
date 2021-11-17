@@ -5,7 +5,7 @@ const el = document.querySelector('#lodging-item-details_categories-display');
 if (el) {
   (async function () {
     const { ThemeProvider } = await import('styled-components');
-    const { default: ConfigProvider } = await import('@propertybrands/btt-bluetent-components/components/ConfigContext/ConfigProvider');
+    const { default: ConfigProvider } = await import('@propertybrands/btt-bluetent-components/components/ConfigContext/ConfigProvider.tsx');
     const { default: DetailsProvider } = await import('@propertybrands/btt-bluetent-components/components/DetailsContext/DetailsProvider');
     const { default: CategoriesDisplay } = await import('@propertybrands/btt-bluetent-components/components/DetailsPage/CategoriesDisplay');
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
