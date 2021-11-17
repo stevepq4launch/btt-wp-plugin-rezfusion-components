@@ -10,6 +10,7 @@ if (el) {
     const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts.ts');
     const { wrapDates } = await import('@propertybrands/btt-availability');
     const { default: ConfigProvider } = await import('@propertybrands/btt-bluetent-components/components/ConfigContext/ConfigProvider.tsx');
+    const { default: DetailsProvider } = await import('@propertybrands/btt-bluetent-components/components/DetailsContext/DetailsProvider');
     const { default: SearchForms } = await import('@propertybrands/btt-bluetent-components/components/DetailsPage/SearchForms');
     const { default: QuoteProvider } = await import('@propertybrands/btt-bluetent-components/components/QuoteContext/QuoteProvider');
 
@@ -48,16 +49,18 @@ if (el) {
       (
         <ConfigProvider userProvided={config}>
           <ThemeProvider theme={{ ...defaultTheme, ...appTheme }}>
-            <QuoteProvider
-              itemId={itemId}
-              type={type}
-            >
-              <SearchForms
-                anchorDirection="right"
-                availOptions={{ avail, restrictions, prices }}
-                remoteId={itemPmsId}
-              />
-            </QuoteProvider>
+            <DetailsProvider itemId={itemId}>
+              <QuoteProvider
+                itemId={itemId}
+                type={type}
+              >
+                <SearchForms
+                  anchorDirection="right"
+                  availOptions={{ avail, restrictions, prices }}
+                  remoteId={itemPmsId}
+                />
+              </QuoteProvider>
+            </DetailsProvider>
           </ThemeProvider>
         </ConfigProvider>
       ),
