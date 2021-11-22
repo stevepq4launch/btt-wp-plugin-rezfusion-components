@@ -15,6 +15,7 @@ use Rezfusion\Repository\ItemRepository;
 use Rezfusion\Plugin;
 use Rezfusion\PostTypes;
 use Rezfusion\Service\DeleteDataService;
+use Rezfusion\Service\FilterCategoriesDuplicatesService;
 
 /**
  * Test that we can still retrieve the various pieces of API data needed for the
@@ -22,33 +23,6 @@ use Rezfusion\Service\DeleteDataService;
  */
 class SyncTest extends BaseTestCase
 {
-  /**
-   * Fix array with categories ids.
-   * 
-   * (i) There are duplicates which makes tests invalid - "Washer / Dryer"
-   * (i) and "Washer/Dryer", both gets the same slug "washer-dryer",
-   * (i) so term_exists method returns true for either cases and in result
-   * (i) only one category is saved.
-   * 
-   * @todo This should be removed as it was introduced only to pass test.
-   * 
-   * @param array $categoriesIds
-   * 
-   * @return array
-   */
-  private function fixCategoriesIds(array $categoriesIds = [])
-  {
-    /* Washer/Dryer. */
-    if (($index = array_search(3681, $categoriesIds)) !== false) {
-      array_splice($categoriesIds, $index, 1);
-    }
-    /* Hot Tub. */
-    if (($index = array_search(4029, $categoriesIds)) !== false) {
-      array_splice($categoriesIds, $index, 1);
-    }
-    return $categoriesIds;
-  }
-
   /**
    * Verify the client bootstraps.
    *
@@ -95,6 +69,7 @@ class SyncTest extends BaseTestCase
 
       // Verify that the terms are set correctly.
       $categories = $client->getCategories($channel);
+      $categories = (new FilterCategoriesDuplicatesService)->run($categories);
       if (isset($categories->data->categoryInfo->categories) && !empty($categories->data->categoryInfo->categories)) {
         foreach ($categories->data->categoryInfo->categories as $category) {
 
@@ -114,7 +89,7 @@ class SyncTest extends BaseTestCase
               return intval($value->value->id);
             }, $result->item->category_values);
             // Assert that this item has the right number of items tagged locally.
-            $this->assertEquals(count($this->fixCategoriesIds(array_intersect($values, $taxonomies[$name]))), count($terms));
+            $this->assertEquals(count(array_intersect($values, $taxonomies[$name])), count($terms));
           }
         }
       }

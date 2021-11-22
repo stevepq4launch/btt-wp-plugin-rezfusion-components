@@ -43,6 +43,13 @@ class DataRefreshService implements RunableInterface
         // available during item updates.
         $categoryRepository->updateCategories($channel);
         $repository->updateItems($channel);
+
+        (new RemoveRedundantCategoriesService)->run(
+            $categoryRepository,
+            $categoryRepository->getCategories(),
+            $this->API_Client->getCategories($channel)
+        );
+
         // Restore the cache mode to the previous setting
         // just in case processing will continue after this step.
         $cache->setMode($mode);

@@ -15,6 +15,11 @@ class Taxonomies
     const LOCATION = 'rzf_location';
 
     /**
+     * @var string
+     */
+    const TYPE = 'rzf_type';
+
+    /**
      * @return string
      */
     public static function amenities(): string
@@ -28,5 +33,13 @@ class Taxonomies
     public static function location(): string
     {
         return static::LOCATION;
+    }
+
+    /**
+     * @return string
+     */
+    public static function type(): string
+    {
+        return static::TYPE;
     }
 }
