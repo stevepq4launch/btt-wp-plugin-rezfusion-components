@@ -9,6 +9,9 @@ use InvalidArgumentException;
 use Rezfusion\Client\ClientInterface;
 use Rezfusion\Metas;
 use Rezfusion\Plugin;
+use Rezfusion\Service\CategoriesSlugsFixService;
+use RuntimeException;
+use SebastianBergmann\Environment\Runtime;
 
 class CategoryRepository {
 
@@ -39,6 +42,28 @@ class CategoryRepository {
   }
 
   /**
+   * Find category (term) by external ID.
+   * @param string $externalID
+   * @param string $taxonomy
+   * 
+   * @return object|null
+   */
+  public function findCategory($externalID = '', $taxonomy = ''){
+    $terms = get_terms([
+      'hide_empty' => false,
+      'meta_query' => [
+          [
+             'key' => Metas::categoryValueId(),
+             'value' => $externalID,
+             'compare' => '='
+          ]
+        ],
+      'taxonomy'  => $taxonomy,
+    ]);
+    return isset($terms[0]) ? $terms[0] : null;
+  }
+
+  /**
    * @param $channel
    */
   public function updateCategories($channel) {
@@ -63,47 +88,49 @@ class CategoryRepository {
       return;
     }
 
-    $args = [
-      'taxonomy' => $taxonomies,
-      'hide_empty' => FALSE,
-      'fields' => 'all',
-      'count' => TRUE,
-    ];
+    $category_values = (new CategoriesSlugsFixService)->fix($category_values);
 
-    $terms = [];
-    $query = new \WP_Term_Query($args);
-    if (!empty($query->terms)) {
-      $terms = array_reduce($query->terms, function ($carry, $item) {
-        if (!empty($item->term_id)) {
-          $meta = get_term_meta($item->term_id);
-          if (isset($meta[Metas::categoryValueId()][0])) {
-            $carry[$meta[Metas::categoryValueId()][0]] = $item;
-          }
-        }
-        return $carry;
-      }, []);
-    }
+    foreach ($category_values as $value) {
 
-    $to_create = array_diff_key($category_values, $terms);
+      if(empty(@$value->wp_taxonomy_name))
+        throw new RuntimeException("Taxonomy is not defined.");
+      if(empty(@$value->slug))
+        throw new RuntimeException("Category slug is not defined.");
 
-    foreach ($to_create as $value) {
-      if (!term_exists( $value->name, $value->wp_taxonomy_name )) {
-        $term = wp_insert_term($value->name, $value->wp_taxonomy_name);
+      $term = $this->findCategory($value->id, $value->wp_taxonomy_name);
+
+      if (!$term) {
+        $term = wp_insert_term($value->name, $value->wp_taxonomy_name, [
+          'slug' => $value->slug
+        ]);
+      } else {
+        $updatedTerm = wp_update_term($term->term_id, $value->wp_taxonomy_name, [
+          'name' => $value->name,
+          'slug' => $value->slug
+        ]);
+        if(is_wp_error($updatedTerm))
+          do_action('is_wp_error_instance', $updatedTerm);
       }
 
       if(is_wp_error($term)) {
         do_action('is_wp_error_instance', $term);
       }
 
+      if(!$term)
+        throw new RuntimeException("Category (term) not found.");
+
       if (!empty($term)) {
+        $termID = is_array($term) ? @$term['term_id'] : @$term->term_id;
+        if(empty($termID))
+          throw new RuntimeException("Invalid category (term) ID.");
         add_term_meta(
-          $term['term_id'],
+          $termID,
           Metas::categoryValueId(),
           $value->id,
           TRUE
         );
         add_term_meta(
-          $term['term_id'],
+          $termID,
           Metas::categoryId(),
           $value->category_id,
           FALSE
