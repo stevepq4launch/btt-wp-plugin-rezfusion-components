@@ -5,7 +5,7 @@
 
 namespace Rezfusion\Repository;
 
-
+use InvalidArgumentException;
 use Rezfusion\Client\ClientInterface;
 use Rezfusion\Metas;
 use Rezfusion\Plugin;
@@ -110,5 +110,53 @@ class CategoryRepository {
         );
       }
     }
+  }
+
+  /**
+   * Deletes category by it's ID and taxonomy.
+   * @param int|string|null $categoryId
+   * @param string $taxonomy
+   * 
+   * @return bool
+   */
+  public function deleteCategory($categoryId = null, $taxonomy = ''): bool {
+    if(empty($categoryId))
+      throw new InvalidArgumentException('Invalid category ID.');
+    if(empty($taxonomy))
+      throw new InvalidArgumentException('Invalid taxonomy.');
+    return wp_delete_term($categoryId, $taxonomy);
+  }
+
+  /**
+   * Returns array of taxonomies names.
+   * 
+   * @return string[]
+   */
+  public function getAllTaxonomies(): array {
+    global $wpdb;
+    return array_reduce(
+      $wpdb->get_results($wpdb->prepare("SELECT DISTINCT taxonomy FROM $wpdb->term_taxonomy WHERE taxonomy LIKE %s", ['%rzf_%']), ARRAY_A),
+      function($taxonomies, $item){
+        if(!empty($item['taxonomy']))
+          $taxonomies[] = $item['taxonomy'];
+        return $taxonomies;
+      }, []
+    );
+  }
+
+  /**
+   * Gets all categories items.
+   * 
+   * @return object
+   */
+  public function getCategories() {
+    $args = [
+      'taxonomy' => $this->getAllTaxonomies(),
+      'hide_empty' => FALSE,
+      'fields' => 'all',
+      'count' => TRUE,
+    ];
+    $query = new \WP_Term_Query($args);
+    return $query->terms;
   }
 }
