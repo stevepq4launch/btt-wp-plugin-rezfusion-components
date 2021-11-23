@@ -56,7 +56,7 @@ class Template implements Renderable {
    * @return string
    */
   public function render($variables = [], $multiple = ''): string {
-    $variables = apply_filters("variables_{$this->locateTemplate()}", $variables);
+    $variables = apply_filters(Filters::variables($this->locateTemplate()), $variables);
     extract($variables);
     ob_start();
     if ($multiple == true) {

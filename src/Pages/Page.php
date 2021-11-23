@@ -16,6 +16,9 @@ abstract class Page
    */
   const PAGE_NAME = '';
 
+  /**
+   * @var Template
+   */
   protected $template;
 
   /**
@@ -34,14 +37,14 @@ abstract class Page
   /**
    * Handle the display of an individual page.
    *
-   * @return mixed
+   * @return void
    */
-  abstract public function display();
+  abstract public function display(): void;
 
   /**
    * @return string
    */
-  public static function pageName()
+  public static function pageName(): string
   {
     return static::PAGE_NAME;
   }

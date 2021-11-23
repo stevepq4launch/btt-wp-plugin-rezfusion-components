@@ -3,7 +3,6 @@
 namespace Rezfusion;
 
 use InvalidArgumentException;
-use Rezfusion\SessionHandler\SessionHandler;
 use Rezfusion\SessionHandler\SessionHandlerInterface;
 
 class PostRecentVisits
@@ -52,10 +51,11 @@ class PostRecentVisits
 
     /**
      * @param int $daysThreshold
+     * @param SessionHandlerInterface $SessionHandler
      */
-    public function __construct($daysThreshold)
+    public function __construct($daysThreshold, SessionHandlerInterface $SessionHandler)
     {
-        $this->SessionHandler = SessionHandler::getInstance();
+        $this->SessionHandler = $SessionHandler;
         $this->daysThreshold = $daysThreshold;
     }
 
@@ -122,7 +122,7 @@ class PostRecentVisits
      * 
      * @param int|null $postId
      */
-    protected function resetCache($postId = null)
+    public function resetCache($postId = null)
     {
         if (!empty($postId)) {
             if (isset($this->cache[$postId]))

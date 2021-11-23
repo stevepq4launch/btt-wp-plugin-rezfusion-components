@@ -15,7 +15,7 @@ class TransientCache extends Cache {
    * @return string
    */
   private function key($key) {
-    return Plugin::PREFIX . "_$key";
+    return Plugin::prefix() . "_$key";
   }
 
   /**

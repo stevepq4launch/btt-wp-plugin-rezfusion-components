@@ -2,8 +2,6 @@
 
 namespace Rezfusion\Shortcodes;
 
-use Rezfusion\Configuration\HubConfigurationProvider;
-use Rezfusion\Options;
 use Rezfusion\Plugin;
 
 class QuickSearch extends Shortcode
@@ -35,8 +33,6 @@ class QuickSearch extends Shortcode
     if (!empty($atts[$containerClassAttribute])) {
       $containerClass .= ' ' . $atts[$containerClassAttribute];
     }
-
-    Plugin::getInstance()->enqueueRezfusionComponentsBundle();
 
     return $this->template->render([
       'containerId' => 'rezfusion-quicksearch',

@@ -2,6 +2,8 @@
 
 namespace Rezfusion;
 
+use Rezfusion\Helper\OptionManager;
+
 /**
  * @file Class keeps configuration for plugin.
  */
@@ -23,7 +25,7 @@ class PluginConfiguration
      */
     protected static $Instance;
 
-    public function __construct()
+    private function __construct()
     {
     }
 
@@ -50,6 +52,6 @@ class PluginConfiguration
      */
     public function repositoryToken(): string
     {
-        return !empty($repositoryToken = get_option(Options::repositoryToken())) ? $repositoryToken : "";
+        return !empty($repositoryToken = OptionManager::get(Options::repositoryToken())) ? $repositoryToken : "";
     }
 }

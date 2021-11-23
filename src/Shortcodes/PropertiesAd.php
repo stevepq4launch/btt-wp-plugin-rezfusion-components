@@ -2,8 +2,10 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Metas;
 use Rezfusion\Options;
 use Rezfusion\Plugin;
+use Rezfusion\PostTypes;
 
 class PropertiesAd extends Shortcode
 {
@@ -60,16 +62,16 @@ class PropertiesAd extends Shortcode
     if (!empty($data['pids'])) {
       $postIds = explode(',', $data['pids']);
       foreach ($postIds as $postId) {
-        if ($postId && get_post_type($postId) == 'vr_listing' && get_post_status($postId) != 'trash') {
-          $itemIds[] = get_post_meta($postId, 'rezfusion_hub_item_id')[0];
+        if ($postId && get_post_type($postId) == PostTypes::listing() && get_post_status($postId) != 'trash') {
+          $itemIds[] = get_post_meta($postId, Metas::itemId())[0];
         }
       }
     } elseif (!empty($data['itemids'])) {
       $itemIds = explode(',', $data['itemids']);
     } else {
-      $propertyArray = get_posts(array('numberposts' => 3, 'post_type' => 'vr_listing', 'orderby' => 'rand'));
+      $propertyArray = get_posts(array('numberposts' => 3, 'post_type' => PostTypes::listing(), 'orderby' => 'rand'));
       foreach ($propertyArray as $property) {
-        $itemIds[] = get_post_meta($property->ID, 'rezfusion_hub_item_id')[0];
+        $itemIds[] = get_post_meta($property->ID, Metas::itemId())[0];
       }
     }
 
@@ -88,7 +90,7 @@ class PropertiesAd extends Shortcode
       $results[$resultIndex]['image'] = $derivativeImage->url;
       $results[$resultIndex]['name'] = $item->name;
       $results[$resultIndex]['url'] = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($item->name)));
-      $results[$resultIndex]['slug'] = (get_option('rezfusion_hub_custom_listing_slug')) ?: 'vacation-rentals';
+      $results[$resultIndex]['slug'] = (get_rezfusion_option(Options::customListingSlug())) ?: 'vacation-rentals';
       ($includeDetails === true) && $this->mergeInDetails($results[$resultIndex], $lodgingProduct);
       $resultIndex++;
     }

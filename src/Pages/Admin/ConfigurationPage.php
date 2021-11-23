@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file - Render a page for entering rezfusion
  * configuration options.
@@ -6,16 +7,17 @@
 
 namespace Rezfusion\Pages\Admin;
 
+use Rezfusion\Actions;
 use Rezfusion\Options;
 use Rezfusion\Factory\ValuesCleanerFactory;
+use Rezfusion\Helper\OptionManager;
 use Rezfusion\Pages\Page;
 use Rezfusion\Plugin;
 
-if (session_id() == "") {
-  session_start();
-}
+Plugin::getInstance()->initializeSession();
 
-class ConfigurationPage extends Page {
+class ConfigurationPage extends Page
+{
 
   /**
    * @var string
@@ -33,14 +35,114 @@ class ConfigurationPage extends Page {
   const REVIEWS_TAB_NAME = 'reviews';
 
   /**
+   * @var string
+   */
+  const POLICIES_TAB_NAME = 'policies';
+
+  /**
+   * @var string
+   */
+  const AMENITIES_TAB_NAME = 'amenities';
+
+  /**
+   * @var string
+   */
+  const FORMS_TAB_NAME = 'forms';
+
+  /**
+   * @var string
+   */
+  const URGENCY_ALERT_TAB_NAME = 'urgency-alert';
+
+  /**
+   * @var string
+   */
+  const FEATURED_PROPERTIES_TAB_NAME = 'featured-properties';
+
+  /**
+   * @var string
+   */
+  const SAVE_TAB_SESSION_VARIABLE_NAME = 'savetab';
+
+  /**
+   * @var string
+   */
+  const TAB_GET_PARAMETER_NAME = 'tab';
+
+  /**
+   * @return string
+   */
+  public static function generalTabName(): string
+  {
+    return static::GENERAL_TAB_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function reviewsTabName(): string
+  {
+    return static::REVIEWS_TAB_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function policiesTabName(): string
+  {
+    return static::POLICIES_TAB_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function amenitiesTabName(): string
+  {
+    return static::AMENITIES_TAB_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function formsTabName(): string
+  {
+    return static::FORMS_TAB_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function urgencyAlertTabName(): string
+  {
+    return static::URGENCY_ALERT_TAB_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function featuredPropertiesTabName(): string
+  {
+    return static::FEATURED_PROPERTIES_TAB_NAME;
+  }
+
+  /**
+   * @return string
+   */
+  public static function saveTabSessionVariableName(): string
+  {
+    return static::SAVE_TAB_SESSION_VARIABLE_NAME;
+  }
+
+  /**
    * This will display a settings form.
    *
-   * @see \Rezfusion\Plugin::registerPages()
-   * @see \Rezfusion\Plugin::registerSettings()
+   * @see \Rezfusion\Registerer\PagesRegisterer
+   * @see \Rezfusion\Registerer\SettingsRegisterer
    *
-   * @return mixed|void
+   * @return void
    */
-  public function display() {
+  public function display(): void
+  {
     if (!empty($_POST)) {
       $this->save($_POST);
     }
@@ -48,61 +150,70 @@ class ConfigurationPage extends Page {
   }
 
   /**
-   * Save the form we displayed on the page.
-   *
-   * @param $values
+   * @return string
    */
-  protected function save($values) {
-    switch ($_SESSION['savetab']) {
-      case 'general':
+  public static function tabGetParameterName(): string
+  {
+    return static::TAB_GET_PARAMETER_NAME;
+  }
+
+  /**
+   * Save the form we displayed on the page.
+   * @param array $values
+   * 
+   * @return void
+   */
+  protected function save(array $values = []): void
+  {
+    switch ($_SESSION[static::saveTabSessionVariableName()]) {
+      case static::generalTabName():
         $keys = [
-          'rezfusion_hub_folder',
-          'rezfusion_hub_env',
-          'rezfusion_hub_redirect_urls',
-          'rezfusion_hub_sync_items',
-          'rezfusion_hub_sync_items_post_type',
-          'rezfusion_hub_custom_listing_slug',
-          'rezfusion_hub_custom_promo_slug',
-          'rezfusion_hub_promo_code_flag_text',
+          Options::componentsURL(),
+          Options::environment(),
+          Options::redirectUrls(),
+          Options::syncItems(),
+          Options::syncItemsPostType(),
+          Options::customListingSlug(),
+          Options::customPromoSlug(),
+          Options::promoCodeFlagText(),
           Options::repositoryToken()
         ];
         break;
-      case 'policies':
+      case static::policiesTabName():
         $keys  = [
-          'rezfusion_hub_policies_general',
-          'rezfusion_hub_policies_pets',
-          'rezfusion_hub_policies_payment',
-          'rezfusion_hub_policies_cancellation',
-          'rezfusion_hub_policies_changing',
-          'rezfusion_hub_policies_insurance',
-          'rezfusion_hub_policies_cleaning',
+          Options::policiesGeneral(),
+          Options::policiesPets(),
+          Options::policiesPayment(),
+          Options::policiesCancellation(),
+          Options::policiesChanging(),
+          Options::policiesInsurance(),
+          Options::policiesCleaning()
         ];
         break;
-      case 'amenities':
+      case static::amenitiesTabName():
         $keys = [
-          'rezfusion_hub_amenities_featured',
-          'rezfusion_hub_amenities_general',
+          Options::amenitiesFeatured(),
+          Options::amenitiesGeneral()
         ];
         break;
-      case 'forms':
+      case static::formsTabName():
         $keys = [
-          'rezfusion_hub_review_btn_text',
-          'rezfusion_hub_review_form',
-          'rezfusion_hub_inquiry_btn_text',
-          'rezfusion_hub_inquiry_form',
+          Options::reviewButtonText(),
+          Options::reviewForm(),
+          Options::inquiryButtonText(),
+          Options::inquiryForm()
         ];
         break;
-      case 'urgency-alert':
-        $keyPrefix = 'rezfusion_hub_urgency_alert_';
+      case static::urgencyAlertTabName():
         $keys = [
-          $keyPrefix . 'enabled',
-          $keyPrefix . 'days_threshold',
-          $keyPrefix . 'minimum_visitors',
-          $keyPrefix . 'highlighted_text',
-          $keyPrefix . "text"
+          Options::urgencyAlertEnabled(),
+          Options::urgencyAlertDaysThreshold(),
+          Options::urgencyAlertMinimumVisitors(),
+          Options::urgencyAlertHighlightedText(),
+          Options::urgencyAlertText()
         ];
         break;
-      case 'featured-properties':
+      case static::featuredPropertiesTabName():
         $keys = [
           Options::featuredPropertiesUseIcons(),
           Options::featuredPropertiesBedsLabel(),
@@ -111,7 +222,7 @@ class ConfigurationPage extends Page {
           Options::featuredPropertiesIds()
         ];
         break;
-      case 'reviews':
+      case static::reviewsTabName():
         $keys = [
           Options::newReviewNotificationRecipients()
         ];
@@ -123,35 +234,15 @@ class ConfigurationPage extends Page {
     $values = (new ValuesCleanerFactory)->make()->clean($values);
 
     foreach ($keys as $key) {
-      if ( isset($_POST[$key]) && !empty($_POST[$key])) {
-        update_option($key, $values[$key]);
-      } else {
-        update_option($key, NULL);
-      }
+      OptionManager::update($key, (isset($_POST[$key]) && !empty($_POST[$key])) ? $values[$key] : NULL);
     }
 
-    update_option('rezfusion_trigger_rewrite_flush', 1);
+    OptionManager::update(Options::triggerRewriteFlush(), 1);
 
-    add_action('admin_notices', function ()
-    { ?>
+    add_action(Actions::adminNotices(), function () { ?>
       <div class="notice notice-success is-dismissible">
         <p><?php echo 'Settings saved.'; ?></p>
       </div>
-    <?php });
-
-  }
-
-  /**
-   * @return string
-   */
-  public static function generalTabName(){
-    return static::GENERAL_TAB_NAME;
-  }
-
-  /**
-   * @return string
-   */
-  public static function reviewsTabName(): string {
-    return static::REVIEWS_TAB_NAME;
+<?php });
   }
 }

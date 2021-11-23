@@ -9,7 +9,7 @@ class Partial extends Template
      */
     public function render($variables = [], $multiple = false): string
     {
-        $variables = apply_filters("variables_{$this->locateTemplate()}", $variables);
+        $variables = apply_filters(Filters::variables($this->locateTemplate()), $variables);
         extract($variables);
         ob_start();
         require($this->locateTemplate());

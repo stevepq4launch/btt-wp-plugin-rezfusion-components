@@ -2,12 +2,12 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Metas;
 use Rezfusion\Options;
 use Rezfusion\Partial;
 use Rezfusion\Plugin;
 use Rezfusion\Repository\ItemRepository;
 use Rezfusion\Repository\LodgingProductRepository;
-use Rezfusion\Template;
 use Rezfusion\Templates;
 
 class FeaturedProperties extends Shortcode
@@ -37,7 +37,7 @@ class FeaturedProperties extends Shortcode
     protected function getPropertiesIds()
     {
         $propertiesIds = [];
-        $optionValue = get_option(Options::featuredPropertiesIds(), 'rezfusion-featured-properties-ids');
+        $optionValue = get_rezfusion_option(Options::featuredPropertiesIds(), 'rezfusion-featured-properties-ids');
         if (is_string($optionValue) && !empty($optionValue))
             $propertiesIds = json_decode(str_replace("\\", "", $optionValue), true);
         if (count($propertiesIds) === 0)
@@ -73,10 +73,10 @@ class FeaturedProperties extends Shortcode
             'properties' => $this->preparePropertiesData(
                 $this->prepareRandomPropertiesIds($this->getPropertiesIds(), $this->maxPropertiesCount())
             ),
-            'useIcons' => filter_var(get_option(Options::featuredPropertiesUseIcons()), FILTER_VALIDATE_BOOLEAN),
-            'bathsLabel' => get_option(Options::featuredPropertiesBathsLabel()),
-            'bedsLabel' => get_option(Options::featuredPropertiesBedsLabel()),
-            'sleepsLabel' => get_option(Options::featuredPropertiesSleepsLabel()),
+            'useIcons' => filter_var(get_rezfusion_option(Options::featuredPropertiesUseIcons()), FILTER_VALIDATE_BOOLEAN),
+            'bathsLabel' => get_rezfusion_option(Options::featuredPropertiesBathsLabel()),
+            'bedsLabel' => get_rezfusion_option(Options::featuredPropertiesBedsLabel()),
+            'sleepsLabel' => get_rezfusion_option(Options::featuredPropertiesSleepsLabel()),
             'propertyDetailsPartial' => new Partial(Templates::propertyDetailsParial())
         ];
 
@@ -125,7 +125,7 @@ class FeaturedProperties extends Shortcode
     {
         global $wpdb;
         return is_array(
-            $items = $wpdb->get_results("SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = '" . ItemRepository::ITEM_META_KEY . "' AND meta_value IS NOT NULL AND meta_value IN (" . join(',', array_map(function ($item) {
+            $items = $wpdb->get_results("SELECT post_id, meta_value FROM $wpdb->postmeta WHERE meta_key = '" . Metas::itemId() . "' AND meta_value IS NOT NULL AND meta_value IN (" . join(',', array_map(function ($item) {
                 return "'$item'";
             }, $propertiesIds)) . ") LIMIT 100", ARRAY_A)
         ) ? $items : [];

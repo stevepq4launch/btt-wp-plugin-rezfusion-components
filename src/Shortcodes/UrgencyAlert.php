@@ -2,6 +2,8 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Factory\PostRecentVisitsFactory;
+use Rezfusion\Options;
 use Rezfusion\PostRecentVisits;
 
 class UrgencyAlert extends Shortcode
@@ -40,7 +42,7 @@ class UrgencyAlert extends Shortcode
      */
     protected function prepareHighlightedText()
     {
-        return !empty($text = get_option('rezfusion_hub_urgency_alert_highlighted_text')) ? $text : '';
+        return !empty($text = get_rezfusion_option(Options::urgencyAlertHighlightedText())) ? $text : '';
     }
 
     /**
@@ -48,7 +50,7 @@ class UrgencyAlert extends Shortcode
      */
     protected function getUrgencyText()
     {
-        return !empty($text = get_option('rezfusion_hub_urgency_alert_text')) ? $text : static::DEFAULT_URGENCY_TEXT;
+        return !empty($text = get_rezfusion_option(Options::urgencyAlertText())) ? $text : static::DEFAULT_URGENCY_TEXT;
     }
 
     /**
@@ -67,11 +69,10 @@ class UrgencyAlert extends Shortcode
      */
     public function render($atts = []): string
     {
-        $finalAttributes = shortcode_atts(['postid' => get_the_ID(  )], $atts);
+        $finalAttributes = shortcode_atts(['postid' => get_the_ID()], $atts);
         $postId = $finalAttributes['postid'];
-        $enabled = boolval(get_option('rezfusion_hub_urgency_alert_enabled', false));
-        $daysThreshold = intval(get_option('rezfusion_hub_urgency_alert_days_threshold'));
-        $minimumVisitors = intval(get_option('rezfusion_hub_urgency_alert_minimum_visitors'));
+        $enabled = boolval(get_rezfusion_option(Options::urgencyAlertEnabled(), false));
+        $minimumVisitors = intval(get_rezfusion_option(Options::urgencyAlertMinimumVisitors()));
 
         if ($enabled === false)
             return '';
@@ -79,10 +80,8 @@ class UrgencyAlert extends Shortcode
             return "Rezfusion Urgency Alert: Post ID is required";
         if ($minimumVisitors < 1)
             return 'Rezfusion Urgency Alert: Minimum visitors value must be greater than 0.';
-        if ($daysThreshold < 1)
-            return 'Rezfusion Urgency Alert: Days threshold value must be greater than 0.';
 
-        $PostRecentVisits = new PostRecentVisits($daysThreshold);
+        $PostRecentVisits = (new PostRecentVisitsFactory())->make();
         $PostRecentVisits->update($postId);
         $visitorsCount = $PostRecentVisits->getRecentVisitsCount($postId) - 1;
 

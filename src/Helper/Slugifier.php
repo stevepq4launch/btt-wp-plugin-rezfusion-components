@@ -9,7 +9,7 @@ class Slugifier implements SlugifierInterface
      * 
      * @return string
      */
-    public function slugify($slug = '')
+    public function slugify($slug = ''): string
     {
         return trim(strtolower(preg_replace('~[^-\w]+~', '', $slug)));
     }

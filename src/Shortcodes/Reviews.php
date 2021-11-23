@@ -2,6 +2,7 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Assets;
 use Rezfusion\Helper\ReviewsSorter;
 use Rezfusion\Options;
 use Rezfusion\Plugin;
@@ -29,8 +30,7 @@ class Reviews extends Shortcode
         if (empty($atts['postid']))
             return "Post ID is required to show reviews.";
 
-        wp_register_script('rezfusion-reviews-modal-handler-js', plugin_dir_url(REZFUSION_PLUGIN) . '/assets/js/rezfusion-reviews-modal-handler.js');
-        wp_enqueue_script('rezfusion-reviews-modal-handler-js');
+        Plugin::getInstance()->getAssetsRegisterer()->handleScript(Assets::reviewsModalHandlerScript());
 
         $reviewsCollection = [];
         $localReviews = [];
