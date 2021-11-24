@@ -67,8 +67,8 @@
     "webpack-cli": "^4.8.0"
   },
   "dependencies": {
-    "@propertybrands/btt-availability": "^3.0.0",
-    "@propertybrands/btt-bluetent-components": "^1.0.2",
+    "@propertybrands/btt-availability": "^4.0.0-1",
+    "@propertybrands/btt-bluetent-components": "^2.0.0-0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0"
   }

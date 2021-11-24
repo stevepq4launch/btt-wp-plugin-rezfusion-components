@@ -9,7 +9,7 @@ if (el) {
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
     const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts.ts');
     const { wrapDates } = await import('@propertybrands/btt-availability');
-    const { default: AvailabilityPicker } = await import('@propertybrands/btt-bluetent-components/components/AvailabilityPicker/AvailabilityPicker');
+    const { default: AvailabilityPicker } = await import('@propertybrands/btt-bluetent-components/components/AvailabilityPicker/AvailabilityPicker.tsx');
     const avail = JSON.parse(el.dataset.rezfusionAvailability.toString());
     const restrictions = JSON.parse(el.dataset.rezfusionRestrictions.toString());
     const prices = JSON.parse(el.dataset.rezfusionPrices.toString());
