@@ -17,7 +17,7 @@ class OptionManagerTest extends BaseTestCase
 
     public function testGet()
     {
-        $this->assertSame(OptionManager::get(Options::hubChannelURL()), 'https://www.rezfusionhubdemo.com');
+        $this->assertSame(OptionManager::get(Options::componentsURL()), 'https://assets.rezfusion.com/bluetent/channels/httpswwwrezfusionhubdemocom/bundle.js');
     }
 
     public function testUpdate()

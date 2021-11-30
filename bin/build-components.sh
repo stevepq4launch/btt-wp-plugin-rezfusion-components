@@ -9,7 +9,7 @@ docker run \
     --env GITHUB_TOKEN=${GITHUB_TOKEN} \
     -v $(pwd):/app/ \
     -w /app/ \
-    -it \
+    -t \
     -u node \
     node:10.24.1 \
     bin/build-components-init.sh

@@ -10,5 +10,5 @@ echo "StrictHostKeyChecking no" >>~/.ssh/ssh_config
 touch ~/.npmrc
 echo -e "@PropertyBrands:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >~/.npmrc
 git config --global url."https://${GITHUB_TOKEN}@github.com/PropertyBrands/".insteadOf ssh://git@github.com/PropertyBrands/
-npm install
+npm ci
 npm run build
