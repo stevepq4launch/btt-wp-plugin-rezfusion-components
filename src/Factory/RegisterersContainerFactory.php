@@ -13,6 +13,7 @@ use Rezfusion\Registerer\FunctionsRegisterer;
 use Rezfusion\Registerer\PagesRegisterer;
 use Rezfusion\Registerer\PluginUpdateRegisterer;
 use Rezfusion\Registerer\PostTypesRegisterer;
+use Rezfusion\Registerer\PropertyPage404FixRegisterer;
 use Rezfusion\Registerer\RegisterersContainer;
 use Rezfusion\Registerer\RewriteTagsRegisterer;
 use Rezfusion\Registerer\RezfusionHTML_ComponentsRegisterer;
@@ -64,7 +65,8 @@ class RegisterersContainerFactory
             new SessionRegisterer(),
             new FeaturedPropertiesConfigurationScriptsRegisterer($this->AssetsRegisterer),
             new ControllersRegisterer(),
-            new PluginUpdateRegisterer($this->OptionsHandler)
+            new PluginUpdateRegisterer($this->OptionsHandler),
+            new PropertyPage404FixRegisterer()
         ]);
     }
 }

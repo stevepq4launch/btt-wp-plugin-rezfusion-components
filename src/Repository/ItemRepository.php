@@ -10,6 +10,7 @@ use Rezfusion\Client\ClientInterface;
 use Rezfusion\Metas;
 use Rezfusion\Options;
 use Rezfusion\PostTypes;
+use Rezfusion\Service\PropertiesPermalinksMapRebuildService;
 
 class ItemRepository {
 
@@ -55,7 +56,8 @@ class ItemRepository {
     }, []);
 
     if (isset($items->data->lodgingProducts->results) && !empty($items->data->lodgingProducts->results)) {
-      $urls = [];
+      $PropertiesPermalinksMapRebuildService = new PropertiesPermalinksMapRebuildService($items->data->lodgingProducts->results, $this);
+      
       foreach($items->data->lodgingProducts->results as $result) {
         $id = $result->item->id;
         $data = [
@@ -83,13 +85,9 @@ class ItemRepository {
 
         // Add tags to items.
         $this->processItemCategories($result->item, $post_id);
-
-        // Add item to the URL map.
-        $urls[$result->item->id] = get_permalink($post_id);
       }
 
-      // Cache the URL map.
-      set_transient(Options::URL_Map(), $urls);
+      $PropertiesPermalinksMapRebuildService->run();
 
       // These are missing from Blueprint.
       // So unpublish them.
