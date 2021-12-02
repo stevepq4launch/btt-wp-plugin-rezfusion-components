@@ -9,6 +9,7 @@ if (el) {
     const { defaultTheme } = await import('@propertybrands/btt-bluetent-components/lib/styles');
     const { default: ConfigProvider } = await import('@propertybrands/btt-bluetent-components/components/ConfigContext/ConfigProvider.tsx');
     const { default: ConfigContext } = await import('@propertybrands/btt-bluetent-components/components/ConfigContext/ConfigContext.ts');
+    const { default: DetailsProvider } = await import('@propertybrands/btt-bluetent-components/components/DetailsContext/DetailsProvider');
     const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts.ts');
     const { wrapDates } = await import('@propertybrands/btt-availability');
     const { default: AvailabilityPicker } = await import('@propertybrands/btt-bluetent-components/components/AvailabilityPicker/AvailabilityPicker.tsx');
@@ -23,7 +24,7 @@ if (el) {
     const avail = dateWrapper(JSON.parse(el.dataset.rezfusionAvailability.toString()));
     const restrictions = dateWrapper(JSON.parse(el.dataset.rezfusionRestrictions.toString()));
     const prices = dateWrapper(JSON.parse(el.dataset.rezfusionPrices.toString()));
-    // const itemId = el.dataset.rezfusionItemId.toString();
+    const itemId = el.dataset.rezfusionItemId.toString();
     // const itemPmsId = el.dataset.rezfusionItemPmsId.toString();
     // const type = parseInt(el.dataset.rezfusionItemType, 10);
 
@@ -107,7 +108,9 @@ if (el) {
     ReactDOM.render(
       <ConfigProvider userProvided={config}>
         <ThemeProvider theme={{ ...defaultTheme, ...appTheme }}>
-          <PickerWrapper />
+          <DetailsProvider itemId={itemId}>
+            <PickerWrapper />
+          </DetailsProvider>
         </ThemeProvider>
       </ConfigProvider>, el,
     );
