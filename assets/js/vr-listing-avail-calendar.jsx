@@ -25,6 +25,7 @@ if (el) {
     const restrictions = dateWrapper(JSON.parse(el.dataset.rezfusionRestrictions.toString()));
     const prices = dateWrapper(JSON.parse(el.dataset.rezfusionPrices.toString()));
     const itemId = el.dataset.rezfusionItemId.toString();
+    const singleCalendar = window.innerWidth < 1100;
     // const itemPmsId = el.dataset.rezfusionItemPmsId.toString();
     // const type = parseInt(el.dataset.rezfusionItemType, 10);
 
@@ -82,7 +83,7 @@ if (el) {
         <AvailabilityPicker
           rcav={{ begin: dates.begin, end: dates.end }}
           type="DayPickerRangeController"
-          numberOfMonths={2}
+          numberOfMonths={singleCalendar ? 1: 2}
           options={{
             avail,
             restrictions,
