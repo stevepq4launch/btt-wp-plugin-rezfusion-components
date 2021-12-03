@@ -6,6 +6,7 @@ use Exception;
 use Rezfusion\Helper\OptionManager;
 use Rezfusion\Options;
 use Rezfusion\Plugin;
+use Rezfusion\Provider\HubDataSynchronizationLogEntryCollectionProvider;
 use Rezfusion\UserRoles;
 use \WP_REST_Response;
 use \WP_REST_Request;
@@ -25,6 +26,11 @@ class ItemController extends AbstractController
             '/fetch-data' => [
                 'methods' => WP_REST_Server::READABLE,
                 'callback' => 'fetchData',
+                'allowedRoles' => [UserRoles::administrator()]
+            ],
+            '/data-sync-log-entries' => [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => 'dataSyncLogEntries',
                 'allowedRoles' => [UserRoles::administrator()]
             ]
         ];
@@ -49,6 +55,30 @@ class ItemController extends AbstractController
         } catch (Exception $Exception) {
             $returnData = ['error' => $Exception->getMessage()];
             $statusCode = 400;
+        }
+        return $this->returnJSON($returnData, $statusCode);
+    }
+
+    /**
+     * Fetch log entries for data synchronization.
+     * 
+     * @param WP_REST_Request
+     * 
+     * @return WP_REST_Response
+     */
+    public function dataSyncLogEntries(WP_REST_Request $request): WP_REST_Response
+    {
+        $returnData = [];
+        $statusCode = 400;
+        try {
+            $LogEntryCollection = HubDataSynchronizationLogEntryCollectionProvider::getInstance();
+            $entries = array_map(function ($LogEntry) {
+                return $LogEntry->toArray();
+            }, $LogEntryCollection->getEntries());
+            $returnData = ['entries' => $entries];
+            $statusCode = 200;
+        } catch (Exception $Exception) {
+            $returnData = ['error' => $Exception->getMessage()];
         }
         return $this->returnJSON($returnData, $statusCode);
     }

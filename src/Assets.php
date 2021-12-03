@@ -12,6 +12,11 @@ class Assets
     /**
      * @var string
      */
+    const REZFUSION_STYLE = 'rezfusion.css';
+
+    /**
+     * @var string
+     */
     const REZFUSION_STARS_RATING_STYLE = 'rezfusion-stars-rating.css';
 
     /**
@@ -90,6 +95,14 @@ class Assets
     public static function rezfusionScript(): string
     {
         return static::REZFUSION_SCRIPT;
+    }
+
+    /**
+     * @return string
+     */
+    public static function rezfusionStyle(): string
+    {
+        return static::REZFUSION_STYLE;
     }
 
     /**
