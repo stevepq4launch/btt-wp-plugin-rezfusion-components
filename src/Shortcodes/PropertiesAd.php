@@ -84,10 +84,13 @@ class PropertiesAd extends Shortcode
     foreach ($itemIds as $itemId) {
       $lodgingProduct = $client->getItem($itemId, $data['channel'])->data->lodgingProducts->results[0];
       $item = $lodgingProduct->item;
+      $derivativeImage = null;
       $itemDerivatives = $item->images[0]->derivatives;
-      $derivativeImage = $itemDerivatives[count($itemDerivatives) - 2];
+      if ($itemDerivatives) {
+        $derivativeImage = $itemDerivatives[count($itemDerivatives) - 2];
+      }
       $results[$resultIndex]['alt'] = !empty($item->images[0]->description) ? $item->images[0]->description : $item->images[0]->title;
-      $results[$resultIndex]['image'] = $derivativeImage->url;
+      $results[$resultIndex]['image'] = $itemDerivatives ? $derivativeImage->url : '';
       $results[$resultIndex]['name'] = $item->name;
       $results[$resultIndex]['url'] = preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', strtolower($item->name)));
       $results[$resultIndex]['slug'] = (get_rezfusion_option(Options::customListingSlug())) ?: 'vacation-rentals';

@@ -8,7 +8,7 @@ use Rezfusion\Client\TransientCache;
 use Rezfusion\Options;
 use Rezfusion\Plugin;
 
-class API_ClientFactory
+class API_ClientFactory implements MakeableInterface
 {
     /**
      * Creates a new instance of API client.

@@ -20,7 +20,7 @@ use Rezfusion\PostTypes;
 use Rezfusion\Service\DataRefreshService;
 use Rezfusion\Service\DeleteDataService;
 use Rezfusion\Tests\MockAPI_Client;
-use RuntimeException;
+use Rezfusion\Tests\TestHelper\TestHelper;
 
 /**
  * Test that we can still retrieve the various pieces of API data needed for the
@@ -47,8 +47,8 @@ class SyncTest extends BaseTestCase
    */
   public function testCreatesItemPosts()
   {
+    TestHelper::refreshData();
     $client = Plugin::apiClient();
-    Plugin::refreshData();
     $channel = get_rezfusion_option(Options::hubChannelURL());
     $data = $client->getItems($channel);
     $itemRepository = new ItemRepository($client);

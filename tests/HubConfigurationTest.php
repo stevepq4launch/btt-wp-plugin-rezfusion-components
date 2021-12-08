@@ -10,11 +10,11 @@ use Rezfusion\Configuration\HubConfiguration;
 use Rezfusion\Configuration\HubConfigurationProvider;
 use Rezfusion\ConfigurationProcessor;
 use Rezfusion\Factory\CustomHubConfigurationFactory;
-use Rezfusion\Metas;
-use Rezfusion\Plugin;
 use Rezfusion\PostTypes;
 use Rezfusion\Provider\CustomHubConfigurationProvider;
 use Rezfusion\Taxonomies;
+use Rezfusion\Tests\TestHelper\PostHelper;
+use Rezfusion\Tests\TestHelper\TestHelper;
 
 class HubConfigurationTest extends BaseTestCase
 {
@@ -23,10 +23,10 @@ class HubConfigurationTest extends BaseTestCase
      */
     private $HubConfiguration;
 
-    public static function setUpBeforeClass(): void
+    public static function doBefore(): void
     {
-        parent::setUpBeforeClass();
-        Plugin::refreshData();
+        parent::doBefore();
+        TestHelper::refreshData();
     }
 
     public function setUp(): void
@@ -39,17 +39,9 @@ class HubConfigurationTest extends BaseTestCase
     {
         global $wpdb;
         $unitPostId = $wpdb->get_var($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_type = %s LIMIT 1", [PostTypes::listing()]));
-        return wp_insert_post([
-            'post_type' => PostTypes::promo(),
-            'post_status' => 'publish',
-            'post_title' => 'PromoTest',
-            'meta_input' => [
-                Metas::promoCodeValue() => "TEST",
-                Metas::promoListingValue() => [
-                    $unitPostId
-                ]
-            ]
-        ]);
+        $this->assertNotEmpty($unitPostId);
+        $this->assertIsNumeric($unitPostId);
+        return PostHelper::insertPromoPost('TEST', [$unitPostId]);
     }
 
     public function testProviderGetInstance()
@@ -102,6 +94,10 @@ class HubConfigurationTest extends BaseTestCase
         $this->assertGreaterThan(0, $this->HubConfiguration->getMaxReviewRating());
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testSeparateConfigurationObjects()
     {
         $HubConfiguration = $this->HubConfiguration;
@@ -116,6 +112,10 @@ class HubConfigurationTest extends BaseTestCase
         $this->assertSame(5, $CustomHubConfiguration->getValue($optionPath));
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testPromoItemsIdsFilter()
     {
         $CustomHubConfigurationFactory = new CustomHubConfigurationFactory();
@@ -138,6 +138,10 @@ class HubConfigurationTest extends BaseTestCase
         $this->assertCount(1, $itemsIds);
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testCategoriesFilter()
     {
         $CustomHubConfigurationFactory = new CustomHubConfigurationFactory();

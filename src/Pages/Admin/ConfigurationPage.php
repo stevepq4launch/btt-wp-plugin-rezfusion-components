@@ -228,13 +228,16 @@ class ConfigurationPage extends Page
         ];
         break;
       default:
+        $keys = [];
         break;
     }
 
     $values = (new ValuesCleanerFactory)->make()->clean($values);
 
     foreach ($keys as $key) {
-      OptionManager::update($key, (isset($_POST[$key]) && !empty($_POST[$key])) ? $values[$key] : NULL);
+      if (array_key_exists($key, $_POST)) {
+        OptionManager::update($key, (isset($_POST[$key]) && !empty($_POST[$key])) ? $values[$key] : NULL);
+      }
     }
 
     OptionManager::update(Options::triggerRewriteFlush(), 1);

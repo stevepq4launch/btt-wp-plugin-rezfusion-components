@@ -11,7 +11,7 @@ use Rezfusion\Metas;
 use Rezfusion\Plugin;
 use Rezfusion\Service\CategoriesSlugsFixService;
 use RuntimeException;
-use SebastianBergmann\Environment\Runtime;
+use Rezfusion\Helper\ExceptionHelper;
 
 class CategoryRepository {
 
@@ -60,16 +60,32 @@ class CategoryRepository {
         ],
       'taxonomy'  => $taxonomy,
     ]);
+    ExceptionHelper::handleWordpressError($terms);
     return isset($terms[0]) ? $terms[0] : null;
   }
 
   /**
-   * @param $channel
+   * @param string $name
+   * @param string $mainCategory
+   * @param string $slug
+   * 
+   * @return array|WP_Error
    */
-  public function updateCategories($channel) {
-    $categories = $this->client->getCategories($channel);
-    $taxonomies = [];
+  public function saveCategory($name = '', $mainCategory = '', $slug = '')
+  {
+    if(empty($name) || empty($mainCategory) || empty($slug)){
+      throw new InvalidArgumentException('Invalid parameter(s).');
+    }
+    $term = wp_insert_term($name, $mainCategory, [
+      'slug' => $slug
+    ]);
+    ExceptionHelper::handleWordpressError($term);
+    return $term;
+  }
+
+  protected function prepareCategoriesDataForUpdate($categories) {
     $category_values = [];
+    $taxonomies = [];
     if (isset($categories->data->categoryInfo->categories) && !empty($categories->data->categoryInfo->categories)) {
       foreach ($categories->data->categoryInfo->categories as $category) {
         $name = self::categoryMachineName($category->name);
@@ -83,6 +99,21 @@ class CategoryRepository {
         }
       }
     }
+    return [
+      'category_values' => $category_values,
+      'taxonomies' => $taxonomies
+    ];
+  }
+
+  /**
+   * @param $channel
+   */
+  public function updateCategories($channel) {
+    $categories = $this->client->getCategories($channel);
+    $taxonomies = [];
+    $category_values = [];
+
+    extract($this->prepareCategoriesDataForUpdate($categories));
 
     if (empty($taxonomies) || empty($category_values)) {
       return;
@@ -100,9 +131,7 @@ class CategoryRepository {
       $term = $this->findCategory($value->id, $value->wp_taxonomy_name);
 
       if (!$term) {
-        $term = wp_insert_term($value->name, $value->wp_taxonomy_name, [
-          'slug' => $value->slug
-        ]);
+        $term = $this->saveCategory($value->name, $value->wp_taxonomy_name, $value->slug);
       } else {
         $updatedTerm = wp_update_term($term->term_id, $value->wp_taxonomy_name, [
           'name' => $value->name,
@@ -114,6 +143,7 @@ class CategoryRepository {
 
       if(is_wp_error($term)) {
         do_action('is_wp_error_instance', $term);
+        ExceptionHelper::handleWordpressError($term);
       }
 
       if(!$term)

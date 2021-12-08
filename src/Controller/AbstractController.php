@@ -30,13 +30,12 @@ abstract class AbstractController
      */
     protected function registerRoutes($routes): void
     {
-        $Instance = new static();
         foreach ($routes as $route => $routeParameters) {
-            add_action(Actions::restAPI_Init(), function () use ($route, $routeParameters, $Instance) {
+            add_action(Actions::restAPI_Init(), function () use ($route, $routeParameters) {
                 register_rest_route(static::API_URL, $route, [
                     'methods' => $routeParameters['methods'],
-                    'callback' => function ($request) use ($routeParameters, $route, $Instance) {
-                        return $Instance->preCallback($route, $routeParameters, $request);
+                    'callback' => function ($request) use ($routeParameters, $route) {
+                        return static::preCallback($route, $routeParameters, $request);
                     }
                 ]);
             });
@@ -74,7 +73,7 @@ abstract class AbstractController
      * 
      * @return object
      */
-    protected function preCallback($route, $routeParameters, $request): object
+    public function preCallback($route, $routeParameters, $request): object
     {
         if (
             array_key_exists('allowedRoles', $routeParameters)

@@ -9,3 +9,6 @@ node_modules
 release-temp-dir
 release.zip
 release-*.zip
+test-api-cache.json
+json-storage-test.json
+file-cache-test.json

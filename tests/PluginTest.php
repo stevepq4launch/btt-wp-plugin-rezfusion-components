@@ -6,6 +6,7 @@
 
 namespace Rezfusion\Tests;
 
+use ReflectionClass;
 use Rezfusion\Factory\API_ClientFactory;
 use Rezfusion\Factory\PluginFactory;
 use Rezfusion\Helper\AssetsRegisterer;
@@ -26,6 +27,16 @@ class PluginTest extends BaseTestCase
     {
         parent::setUp();
         $this->Plugin = (new PluginFactory)->make();
+    }
+
+    public function testPluginCreation(): void
+    {
+        $PluginReflectionClass = new ReflectionClass(Plugin::class);
+        $InstanceProperty = $PluginReflectionClass->getProperty('instance');
+        $InstanceProperty->setAccessible(true);
+        $InstanceProperty->setValue(null);
+        $Plugin = Plugin::getInstance();
+        $this->assertInstanceOf(Plugin::class, $Plugin);
     }
 
     public function testInstance()

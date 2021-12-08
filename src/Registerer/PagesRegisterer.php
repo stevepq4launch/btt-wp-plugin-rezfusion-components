@@ -38,6 +38,7 @@ class PagesRegisterer implements RegistererInterface
     private function enqueueConfigurationPageScripts(): void
     {
         add_action(Actions::adminEnqueueScripts(), function () {
+            // @codeCoverageIgnoreStart
             $pageName = @$_GET['page'];
             if ($pageName === ConfigurationPage::pageName()) {
                 $currentTab = @$_GET['tab'];
@@ -49,6 +50,7 @@ class PagesRegisterer implements RegistererInterface
                 $this->AssetsRegisterer->handleScript('rezfusion-table.js', [], false, true);
                 $this->AssetsRegisterer->handleScript('configuration-reviews-list-view-handler.js', [], false, true);
             }
+            // @codeCoverageIgnoreEnd
         });
     }
 

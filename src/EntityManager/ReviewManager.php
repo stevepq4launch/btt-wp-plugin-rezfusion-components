@@ -18,7 +18,7 @@ class ReviewManager
     public function save(Review $Review)
     {
         $comment = [
-            'comment_approved' => 0,
+            'comment_approved' => intval($Review->getApproved()),
             'comment_author' => $Review->getGuestName(),
             'comment_content' => $Review->getReview(),
             'comment_type' => 'rezfusion-review',
@@ -31,9 +31,11 @@ class ReviewManager
             ]
         ];
         $newId = wp_insert_comment($comment);
+        // @codeCoverageIgnoreStart
         if (empty($newId)) {
             throw new RuntimeException("Review save failed.");
         }
+        // @codeCoverageIgnoreEnd
         $Review->setId($newId);
         return $Review;
     }
