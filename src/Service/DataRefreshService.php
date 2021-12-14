@@ -4,9 +4,11 @@ namespace Rezfusion\Service;
 
 use Rezfusion\Client\Cache;
 use Rezfusion\Client\ClientInterface;
+use Rezfusion\Exception\HubCategoriesValidationException;
 use Rezfusion\Options;
 use Rezfusion\Repository\CategoryRepository;
 use Rezfusion\Repository\ItemRepository;
+use Rezfusion\Validator\HubCategoriesValidator;
 
 class DataRefreshService implements RunableInterface
 {
@@ -39,17 +41,22 @@ class DataRefreshService implements RunableInterface
         $channel = get_rezfusion_option(Options::hubChannelURL());
         $repository = new ItemRepository($this->API_Client);
         $categoryRepository = new CategoryRepository($this->API_Client);
-        // Prioritize category updates so that taxonomy IDs/information is
-        // available during item updates.
-        $categoryRepository->updateCategories($channel);
-        $repository->updateItems($channel);
+
+        $categories = $this->API_Client->getCategories($channel);
+
+        if (($HubCategoriesValidator = new HubCategoriesValidator())->validate($categories->data->categoryInfo->categories) === false)
+            throw new HubCategoriesValidationException(join(" ", $HubCategoriesValidator->getErrors()));
 
         (new RemoveRedundantCategoriesService)->run(
             $categoryRepository,
             $categoryRepository->getCategories(),
-            $this->API_Client->getCategories($channel)
+            $categories
         );
 
+        // Prioritize category updates so that taxonomy IDs/information is
+        // available during item updates.
+        $categoryRepository->updateCategories($channel);
+        $repository->updateItems($channel);
         // Restore the cache mode to the previous setting
         // just in case processing will continue after this step.
         $cache->setMode($mode);

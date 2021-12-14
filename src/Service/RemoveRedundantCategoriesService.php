@@ -52,11 +52,13 @@ class RemoveRedundantCategoriesService
         $currentCategories,
         $sourceCategories
     ) {
-        foreach ($this->getCategoriesToBeRemoved(
-            $currentCategories,
-            $this->getKeysFromSourceCategories($sourceCategories)
-        ) as $categoryToRemove) {
-            $CategoryRepository->deleteCategory(...$categoryToRemove);
+        if ($currentCategories && $sourceCategories) {
+            foreach ($this->getCategoriesToBeRemoved(
+                $currentCategories,
+                $this->getKeysFromSourceCategories($sourceCategories)
+            ) as $categoryToRemove) {
+                $CategoryRepository->deleteCategory(...$categoryToRemove);
+            }
         }
     }
 }
