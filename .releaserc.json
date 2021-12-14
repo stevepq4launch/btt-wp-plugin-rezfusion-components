@@ -1,5 +1,5 @@
 {
-  "repositoryUrl": "https://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@github.com/ppokojowczyk-q4launch/rzf-test",
+  "repositoryUrl": "git@github.com:PropertyBrands/btt-wp-plugin-rezfusion-components.git",
   "tagFormat": "${version}",
   "private": "true",
   "plugins": [
@@ -48,5 +48,5 @@
       }
     ]
   ],
-  "branches": ["main"]
+  "branches": ["master"]
 }
