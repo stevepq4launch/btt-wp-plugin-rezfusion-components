@@ -9,6 +9,7 @@ namespace Rezfusion\Shortcodes;
 use Rezfusion\Exception\ComponentsBundleURL_RequiredException;
 use Rezfusion\Metas;
 use Rezfusion\Options;
+use Rezfusion\Plugin;
 use Rezfusion\PostTypes;
 use Rezfusion\Registerer\ComponentsBundleRegisterer;
 
@@ -34,7 +35,7 @@ class Component extends Shortcode
       throw new ComponentsBundleURL_RequiredException();
     }
 
-    $handle = $this->AssetsRegisterer->handleScriptURL($componentsBundleURL);
+    $handle = Plugin::getInstance()->getAssetsRegisterer()->handleScriptURL($componentsBundleURL);
 
     $favoritesEnabled = get_rezfusion_option(Options::enableFavorites());
 
