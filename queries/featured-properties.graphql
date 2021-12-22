@@ -3,6 +3,7 @@ query($channels:ChannelFilter!, $itemIds:[String]) {
         results {
             beds
             baths
+            half_baths
             occ_total
             item {
                 id,

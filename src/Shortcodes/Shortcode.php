@@ -5,6 +5,7 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Helper\LodgingProductHelper;
 use Rezfusion\Renderable;
 use Rezfusion\Template;
 
@@ -23,6 +24,11 @@ abstract class Shortcode implements Renderable {
   protected $template;
 
   /**
+   * @var LodgingProductHelper
+   */
+  protected $LodgingProductHelper;
+
+  /**
    * Shortcode constructor.
    *
    * @param \Rezfusion\Template $template
@@ -36,6 +42,7 @@ abstract class Shortcode implements Renderable {
       throw new \Exception("Invalid/missing shortcode in {$class}");
     }
     add_shortcode($this->shortcode, [$this, 'render']);
+    $this->LodgingProductHelper = new LodgingProductHelper();
   }
 
   /**

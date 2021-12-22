@@ -107,7 +107,7 @@ class FeaturedProperties extends Shortcode
             'id' => $lodgingProduct->item->id,
             'name' => $lodgingProduct->item->name,
             'url' => '',
-            'baths' => $lodgingProduct->baths,
+            'baths' => $this->LodgingProductHelper->getTotalBaths($lodgingProduct),
             'beds' => $lodgingProduct->beds,
             'sleeps' => $lodgingProduct->occ_total,
             'image_url' => $imageUrl,
