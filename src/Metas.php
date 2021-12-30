@@ -40,6 +40,11 @@ class Metas
     const PROMO_CODE_VALUE = 'rzf_promo_code_value';
 
     /**
+     * @var string
+     */
+    const POST_FLOOR_PLAN_URL = 'rezfusion_floor_plan_url';
+
+    /**
      * @return string
      */
     public static function beds(): string
@@ -90,5 +95,13 @@ class Metas
     public static function promoCodeValue(): string
     {
         return static::PROMO_CODE_VALUE;
+    }
+
+    /**
+     * @return string
+     */
+    public static function postFloorPlanURL(): string
+    {
+        return static::POST_FLOOR_PLAN_URL;
     }
 }

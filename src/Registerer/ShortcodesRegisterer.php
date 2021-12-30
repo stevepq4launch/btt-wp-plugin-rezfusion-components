@@ -7,6 +7,7 @@ use Rezfusion\Shortcodes\CategoriesDisplay;
 use Rezfusion\Shortcodes\Component;
 use Rezfusion\Shortcodes\Favorites;
 use Rezfusion\Shortcodes\FeaturedProperties;
+use Rezfusion\Shortcodes\FloorPlan;
 use Rezfusion\Shortcodes\ItemFlag;
 use Rezfusion\Shortcodes\LodgingGlobalPolicies;
 use Rezfusion\Shortcodes\LodgingItemAmenities;
@@ -54,6 +55,7 @@ class ShortcodesRegisterer implements RegistererInterface
             new QuickSearch(new Template(Templates::quickSearchTemplate()));
             new SleepingArrangements(new Template(Templates::sleepingArrangementsTemplate()));
             new CategoriesDisplay(new Template(Templates::categoriesDisplayTemplate()));
+            new FloorPlan(new Template(Templates::floorPlanTemplate()));
         });
     }
 }

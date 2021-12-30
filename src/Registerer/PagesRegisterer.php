@@ -44,6 +44,8 @@ class PagesRegisterer implements RegistererInterface
                 if ($currentTab === ConfigurationPage::generalTabName() || empty($currentTab)) {
                     $this->AssetsRegisterer->handleScript('configuration-page-validation.js', [], false, true);
                     $this->AssetsRegisterer->handleScript('configuration-general-handler.js', [], false, true);
+                } else if ($currentTab === ConfigurationPage::floorPlanTabName()) {
+                    $this->AssetsRegisterer->handleStyle('rezfusion.css', [], false, false);
                 }
             } else if ($pageName === ReviewsListPage::pageName()) {
                 $this->AssetsRegisterer->handleScript('rezfusion-table.js', [], false, true);

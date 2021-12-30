@@ -191,6 +191,16 @@ class Templates
     const SLEEPING_ARRANGEMENTS_TEMPLATE = 'property-sleeping-arrangements.php';
 
     /**
+     * @var string
+     */
+    const FLOOR_PLANS_CONFIGURATION_PAGE_TEMPLATE = 'admin/configuration-floor-plans.php';
+
+    /**
+     * @var string
+     */
+    const FLOOR_PLAN_TEMPLATE = 'vr-floor-plan.php';
+
+    /**
      * @return string
      */
     public static function featuredPropertiesTemplate(): string
@@ -477,5 +487,21 @@ class Templates
     public static function sleepingArrangementsTemplate(): string
     {
       return static::SLEEPING_ARRANGEMENTS_TEMPLATE;
+    }
+
+    /**
+     * @return string
+     */
+    public static function floorPlansConfigurationPageTemplate(): string
+    {
+        return static::FLOOR_PLANS_CONFIGURATION_PAGE_TEMPLATE;
+    }
+
+    /**
+     * @return string
+     */
+    public static function floorPlanTemplate(): string
+    {
+        return static::FLOOR_PLAN_TEMPLATE;
     }
 }

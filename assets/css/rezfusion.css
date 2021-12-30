@@ -1,0 +1,20 @@
+.rezfusion-floor-plans-configuration th,
+.rezfusion-floor-plans-configuration td {
+  padding: 5px;
+  vertical-align: middle;
+}
+
+.form-table.rezfusion-floor-plans-configuration td.rezfusion-floor-plans-configuration__header {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.rezfusion-floor-plans-configuration__row__label {
+  width: 250px;
+  text-align: right;
+  display: inline-block;
+}
+
+.rezfusion-floor-plans-configuration__row__url {
+  width: 100%;
+}
