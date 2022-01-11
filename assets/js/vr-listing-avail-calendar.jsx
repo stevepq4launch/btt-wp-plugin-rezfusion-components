@@ -83,7 +83,7 @@ if (el) {
         <AvailabilityPicker
           rcav={{ begin: dates.begin, end: dates.end }}
           type="DayPickerRangeController"
-          numberOfMonths={singleCalendar ? 1: 2}
+          numberOfMonths={singleCalendar ? 1 : 2}
           options={{
             avail,
             restrictions,
