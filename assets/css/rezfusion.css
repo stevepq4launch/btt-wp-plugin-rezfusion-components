@@ -18,3 +18,27 @@
 .rezfusion-floor-plans-configuration__row__url {
   width: 100%;
 }
+
+.rezfusion-log__title {
+  font-size: 1em;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.rezfusion-log__entries {
+  border: 1px solid #e0e0e0;
+  background: #f8f8f8;
+  padding: 10px;
+  font-size: 0.8em;
+  font-family: monospace;
+  overflow: auto;
+  height: 100px;
+}
+
+.rezfusion-log__entries__entry--success {
+  color: #080;
+}
+
+.rezfusion-log__entries__entry--fail {
+  color: #800;
+}

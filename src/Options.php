@@ -274,6 +274,19 @@ class Options
     const COMPONENTS_CSS_URL = 'components_css_url';
 
     /**
+     * @var string
+     */
+    const HUB_DATA_SYNCHRONIZATION_LOG = 'hub_data_synchronization_log';
+
+    /**
+     * @return string
+     */
+    public static function prefix(): string
+    {
+        return static::PREFIX;
+    }
+
+    /**
      * @return string
      */
     public static function featuredPropertiesUseIcons(): string
@@ -679,5 +692,13 @@ class Options
     public static function componentsCSS_URL(): string
     {
         return static::COMPONENTS_CSS_URL;
+    }
+
+    /**
+     * @return string
+     */
+    public static function hubDataSynchronizationLog(): string
+    {
+        return static::prefix() . static::HUB_DATA_SYNCHRONIZATION_LOG;
     }
 }

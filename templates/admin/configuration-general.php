@@ -46,6 +46,11 @@ use Rezfusion\PostTypes;
       Use this option to refresh data if you've added new properties.
     </label>
     <div id="rezfusion-hub-fetch-data-message" class="hidden"></div>
+    <hr />
+    <div id="rezfusion-data-refresh-log" class="rezfusion-log">
+      <h4 class="rezfusion-log__title">Data Synchronization Log</h4>
+      <div class="rezfusion-log__entries"></div>
+    </div>
   </td>
 </tr>
 <tr valign="top">

@@ -8,6 +8,7 @@
 namespace Rezfusion\Pages\Admin;
 
 use Rezfusion\Actions;
+use Rezfusion\Assets;
 use Rezfusion\Options;
 use Rezfusion\Factory\ValuesCleanerFactory;
 use Rezfusion\Helper\OptionManager;
@@ -156,6 +157,7 @@ class ConfigurationPage extends Page
    */
   public function display(): void
   {
+    Plugin::getInstance()->getAssetsRegisterer()->handleStyle(Assets::rezfusionStyle());
     if (!empty($_POST)) {
       $this->save($_POST);
     }

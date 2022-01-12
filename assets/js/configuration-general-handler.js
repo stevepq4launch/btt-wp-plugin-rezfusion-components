@@ -11,12 +11,30 @@
     const dataUpdateHandler = function ($, wordpressNonce, fetchDataButton, messageContainer) {
 
         /**
+         * @var {HTMLElement}
+         */
+        const dataSyncLogContainer = document.querySelector('#rezfusion-data-refresh-log');
+        const dataSyncLogEntriesContainer = dataSyncLogContainer.querySelector('.rezfusion-log__entries');
+
+        /**
          * Send data update request.
          * @returns {Promise}
          */
         const fetchData = function () {
+            return get('/wp-json/rezfusion/fetch-data');
+        };
+
+        /**
+         * Fetch log entries.
+         * @returns {Promise}
+         */
+        const fetchLogEntries = function () {
+            return get('/wp-json/rezfusion/data-sync-log-entries');
+        };
+
+        const get = function (url) {
             return $.get({
-                url: '/wp-json/rezfusion/fetch-data',
+                url: url,
                 headers: {
                     'X-WP-Nonce': wordpressNonce
                 }
@@ -51,6 +69,25 @@
                 ).show();
         };
 
+        const refreshLogEntries = function () {
+            if (!dataSyncLogEntriesContainer) {
+                return;
+            }
+            fetchLogEntries().then(function (response) {
+                if (typeof response.entries !== 'undefined') {
+                    dataSyncLogEntriesContainer.innerHTML = "";
+                    response.entries.reverse().forEach(function (logEntry) {
+                        const entryElement = document.createElement('div');
+                        entryElement.innerHTML = "&bull; " + logEntry.message;
+                        if (typeof logEntry.status !== 'undefined') {
+                            entryElement.classList.add('rezfusion-log__entries__entry--' + logEntry.status);
+                        }
+                        dataSyncLogEntriesContainer.append(entryElement);
+                    });
+                }
+            });
+        };
+
         /**
          * Handle button.
          */
@@ -63,8 +100,11 @@
                 setMessage('error', (typeof response.responseJSON !== 'undefined' && response.responseJSON.error) ? response.responseJSON.error : 'Update failed.');
             }).always(function () {
                 button.disabled = false;
+                refreshLogEntries();
             });
         };
+
+        refreshLogEntries();
     };
 
     jQuery(document).ready(function () {
