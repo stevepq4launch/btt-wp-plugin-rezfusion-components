@@ -111,7 +111,9 @@ class AssetsRegisterer implements AssetsRegistererInterface
             wp_register_script($handle, $source, $dependencies, $version, $inFooter);
             wp_enqueue_script($handle);
         } else {
+            // @codeCoverageIgnoreStart
             throw new \Error("Invalid source type.");
+            // @codeCoverageIgnoreEnd
         }
         return $handle;
     }

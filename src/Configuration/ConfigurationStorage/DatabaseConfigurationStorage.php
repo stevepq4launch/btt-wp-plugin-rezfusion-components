@@ -24,7 +24,7 @@ class DatabaseConfigurationStorage implements ConfigurationStorageInterface
      */
     public function loadConfiguration()
     {
-        return (!empty($configuration = json_decode(get_rezfusion_option($this->optionName))))
+        return (!empty($configuration = json_decode(OptionManager::get($this->optionName, null))))
             ? $configuration
             : [];
     }

@@ -2,16 +2,8 @@
 
 namespace Rezfusion\Shortcodes;
 
-use Rezfusion\Plugin;
-
 class QuickSearch extends Shortcode
 {
-
-  /**
-   * @var string
-   */
-  const INCLUDE_DETAILS_ATTR_KEY = "details";
-
   /**
    * @var string
    */

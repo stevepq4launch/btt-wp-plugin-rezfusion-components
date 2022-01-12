@@ -5,7 +5,6 @@ namespace Rezfusion\Controller;
 use Exception;
 use Rezfusion\Helper\OptionManager;
 use Rezfusion\Options;
-use Rezfusion\Plugin;
 use Rezfusion\Provider\HubDataSynchronizationLogEntryCollectionProvider;
 use Rezfusion\UserRoles;
 use \WP_REST_Response;
@@ -17,6 +16,16 @@ use \WP_REST_Server;
  */
 class ItemController extends AbstractController
 {
+    /**
+     * @var callable
+     */
+    private $refreshData;
+
+    public function __construct(callable $refreshData)
+    {
+        $this->refreshData = $refreshData;
+    }
+
     /**
      * @inheritdoc
      */
@@ -48,7 +57,7 @@ class ItemController extends AbstractController
         $returnData = [];
         $statusCode = 400;
         try {
-            Plugin::getInstance()::refreshData();
+            ($this->refreshData)();
             OptionManager::update(Options::triggerRewriteFlush(), 1);
             $returnData = ['message' => 'Items data refreshed.'];
             $statusCode = 200;

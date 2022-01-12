@@ -49,7 +49,10 @@ class ItemRepository {
       if(!empty($item->ID)) {
         $meta = get_post_meta($item->ID);
         if(isset($meta[Metas::itemId()][0])) {
-          $carry[$meta[Metas::itemId()][0]] = $item;
+          if(!isset($carry[$meta[Metas::itemId()][0]])){
+            $carry[$meta[Metas::itemId()][0]] = [];
+          }
+          $carry[$meta[Metas::itemId()][0]][] = $item;
         }
       }
       return $carry;
@@ -71,9 +74,11 @@ class ItemRepository {
           ],
         ];
         if(!empty($local_items[$id])) {
-          $post_id = wp_update_post([
-              'ID' => $local_items[$id]->ID,
-            ] + $data);
+          foreach($local_items[$id] as $post){
+            $post_id = wp_update_post([
+                'ID' => $post->ID,
+              ] + $data);
+          }
           // Remove from the list. This'll
           // let us know which items
           // need to unpublished.
@@ -96,9 +101,11 @@ class ItemRepository {
           'post_status' => 'draft',
         ];
         foreach($local_items as $local_item) {
-          wp_update_post([
-              'ID' => $local_item->ID,
-            ] + $data);
+          foreach($local_item as $post){
+            wp_update_post([
+                'ID' => $post->ID,
+              ] + $data);
+          }
         }
       }
     }

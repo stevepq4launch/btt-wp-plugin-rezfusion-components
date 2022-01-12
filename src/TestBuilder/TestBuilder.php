@@ -87,7 +87,7 @@ class TestBuilder
             if (is_string($argument)) {
                 $content[] = "'$argument'";
             } else {
-                $content = "null";
+                $content[] = "null";
             }
         }
         return join(', ', $content);
@@ -232,6 +232,9 @@ class TestBuilder
      */
     public function renderTestMethod($name = '', $content = ''): string
     {
+        if (is_array($content)) {
+            $content = join("\n        ", $content);
+        }
         return "    public function test" . $name . "()\n    {\n        $content\n    }\n\n";
     }
 }

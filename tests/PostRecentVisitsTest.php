@@ -7,15 +7,13 @@
 namespace Rezfusion\Tests;
 
 use InvalidArgumentException;
-use Rezfusion\Factory\API_ClientFactory;
 use Rezfusion\Factory\PostRecentVisitsFactory;
 use Rezfusion\Helper\OptionManager;
 use Rezfusion\Options;
-use Rezfusion\Plugin;
 use Rezfusion\PostRecentVisits;
-use Rezfusion\Provider\OptionsHandlerProvider;
-use Rezfusion\Repository\ItemRepository;
 use Rezfusion\SessionHandler\SessionHandlerInterface;
+use Rezfusion\Tests\TestHelper\PostHelper;
+use Rezfusion\Tests\TestHelper\TestHelper;
 
 class PostRecentVisitsTest extends BaseTestCase
 {
@@ -34,19 +32,19 @@ class PostRecentVisitsTest extends BaseTestCase
      */
     private $postId;
 
-    public static function setUpBeforeClass(): void
+    public static function doBefore(): void
     {
-        parent::setUpBeforeClass();
-        Plugin::refreshData();
+        parent::doBefore();
+        TestHelper::refreshData();
     }
 
     public function setUp(): void
     {
         parent::setUp();
-        /** Required for properly executing tests. */
-        $this->eraseData();
-        OptionsHandlerProvider::getInstance()->updateOption(Options::urgencyAlertDaysThreshold(), 1);
-        $this->postId = $this->findPostIdForTests();
+        OptionManager::update(Options::urgencyAlertEnabled(), true);
+        OptionManager::update(Options::urgencyAlertMinimumVisitors(), 3);
+        OptionManager::update(Options::urgencyAlertDaysThreshold(), 1);
+        $this->postId = PostHelper::getRecentPostId();
         if (empty($this->postId)) {
             throw new \Error("Invalid post id.");
         }
@@ -76,16 +74,14 @@ class PostRecentVisitsTest extends BaseTestCase
         return $SessionHandler;
     }
 
-    private function eraseData()
+    public function testRecentVisitsDataMetaKey(): void
     {
-        global $wpdb;
-        // $wpdb->query("DELETE FROM wp_postmeta WHERE meta_key = '" . PostRecentVisits::META_KEY . "';");
+        $this->assertSame('recent_visits_data', PostRecentVisits::META_KEY);
     }
 
-    private function findPostIdForTests(): int
+    public function testRecentVisitsCountMetaKey(): void
     {
-        $items = (new ItemRepository((new API_ClientFactory())->make()))->getAllItems();
-        return intval(@$items[0]['post_id']);
+        $this->assertSame('recent_visits_count', PostRecentVisits::RECENT_VISITS_COUNT_META_KEY);
     }
 
     public function testInvalidGetRecentVisitsCount()
@@ -97,6 +93,8 @@ class PostRecentVisitsTest extends BaseTestCase
     public function testUpdate()
     {
         $postId = $this->postId;
+        delete_post_meta($postId, PostRecentVisits::META_KEY);
+        delete_post_meta($postId, PostRecentVisits::RECENT_VISITS_COUNT_META_KEY);
 
         $this->PostRecentVisits->update($postId);
         $count = $this->PostRecentVisits->getRecentVisitsCount($postId);
@@ -130,10 +128,23 @@ class PostRecentVisitsTest extends BaseTestCase
 
     public function testFactory()
     {
-        OptionManager::update(Options::urgencyAlertDaysThreshold(), 1);
-        (new PostRecentVisitsFactory())->make();
-        OptionManager::update(Options::urgencyAlertDaysThreshold(), 0);
+        $urgencyAlertDaysThresholdOptionName = Options::urgencyAlertDaysThreshold();
+        OptionManager::delete($urgencyAlertDaysThresholdOptionName);
+        $PostRecentVisitsFactory = new PostRecentVisitsFactory();
+        $this->assertTrue(OptionManager::update($urgencyAlertDaysThresholdOptionName, 1));
+        $this->assertSame(1, OptionManager::get($urgencyAlertDaysThresholdOptionName));
+        $PostRecentVisits = $PostRecentVisitsFactory->make();
+        $this->assertInstanceOf(PostRecentVisits::class, $PostRecentVisits);
+    }
+
+    public function testFactoryWithInvalidAlertDaysThreshold(): void
+    {
         $this->expectException(\Exception::class);
-        (new PostRecentVisitsFactory())->make();
+        $this->expectExceptionMessage('Rezfusion Urgency Alert: Days threshold value must be greater than 0.');
+        $urgencyAlertDaysThresholdOptionName = Options::urgencyAlertDaysThreshold();
+        OptionManager::delete($urgencyAlertDaysThresholdOptionName);
+        $this->assertNull(OptionManager::get($urgencyAlertDaysThresholdOptionName));
+        $PostRecentVisitsFactory = new PostRecentVisitsFactory();
+        $PostRecentVisitsFactory->make();
     }
 }

@@ -42,11 +42,6 @@ class ComponentsBundleRegisterer implements RegistererInterface
     protected $OptionsHandler;
 
     /**
-     * @var string
-     */
-    private $handle = '';
-
-    /**
      * @param AssetsRegistererInterface $AssetsRegisterer
      * @param OptionsHandler $OptionsHandler
      */
@@ -98,14 +93,6 @@ class ComponentsBundleRegisterer implements RegistererInterface
         });
 
         static::$initialized = true;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHandle(): string
-    {
-        return $this->handle;
     }
 
     /**

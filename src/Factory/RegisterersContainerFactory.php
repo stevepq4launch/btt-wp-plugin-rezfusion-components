@@ -68,7 +68,7 @@ class RegisterersContainerFactory
             new FeaturedPropertiesConfigurationScriptsRegisterer($this->AssetsRegisterer),
             new ControllersRegisterer(),
             new PluginUpdateRegisterer($this->OptionsHandler),
-            new PropertyPage404FixRegisterer(),
+            new PropertyPage404FixRegisterer(new API_ClientFactory),
             new AutomaticHubDataSynchronizationRegisterer()
         ]);
     }
