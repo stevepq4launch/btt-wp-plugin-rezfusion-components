@@ -5,6 +5,7 @@
 
 namespace Rezfusion\Shortcodes;
 
+use Rezfusion\Factory\FloorPlanRepositoryFactory;
 use Rezfusion\Options;
 use Rezfusion\Plugin;
 
@@ -30,6 +31,8 @@ class LodgingItemDetails extends Shortcode {
 
     $client = Plugin::apiClient();
     $result = $client->getItem($a['itemid'], $a['channel']);
+    $FloorPlanRepository = (new FloorPlanRepositoryFactory)->make();
+    set_query_var('hasFloorPlan', $FloorPlanRepository->hasFloorPlan($a['itemid'], get_the_ID()));
 
     return $this->template->render([
       'categoryInfo' => $result->data->categoryInfo,

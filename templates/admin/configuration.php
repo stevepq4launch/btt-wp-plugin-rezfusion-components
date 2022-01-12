@@ -27,7 +27,8 @@ function rezfusion_admin_tabs($current = ConfigurationPage::GENERAL_TAB_NAME)
     ConfigurationPage::formsTabName()     => 'Forms',
     ConfigurationPage::urgencyAlertTabName() => 'Urgency Alert',
     ConfigurationPage::featuredPropertiesTabName() => 'Featured Properties',
-    ConfigurationPage::reviewsTabName() => 'Reviews'
+    ConfigurationPage::reviewsTabName() => 'Reviews',
+    ConfigurationPage::floorPlanTabName() => 'Floor Plans'
   );
 
   echo '<div id="icon-themes" class="icon32"><br></div>';
@@ -92,6 +93,11 @@ function rezfusion_admin_tabs($current = ConfigurationPage::GENERAL_TAB_NAME)
               'newReviewNotificationRecipientsOption' => $newReviewNotificationRecipientsOption,
               'newReviewNotificationRecipientsValue' => esc_attr(get_rezfusion_option($newReviewNotificationRecipientsOption))
             ]);
+            break;
+          }
+        case ConfigurationPage::floorPlanTabName(): {
+            echo (new Template(Templates::floorPlansConfigurationPageTemplate(), REZFUSION_PLUGIN_TEMPLATES_PATH))->render([]);
+            break;
           }
       }
       ?>
