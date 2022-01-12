@@ -29,7 +29,7 @@ class PropertiesAd extends Shortcode
   private function mergeInDetails(array &$item = [], object $lodgingProduct)
   {
     $item['beds'] = $lodgingProduct->beds;
-    $item['baths'] = $lodgingProduct->baths;
+    $item['baths'] = $this->LodgingProductHelper->getTotalBaths($lodgingProduct);
     $item['sleeps'] = $lodgingProduct->occ_total;
     return $item;
   }

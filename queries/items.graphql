@@ -3,6 +3,7 @@ query($channels:ChannelFilter!) {
         results {
             beds,
             baths,
+            half_baths,
             item {
                 id,
                 name,
