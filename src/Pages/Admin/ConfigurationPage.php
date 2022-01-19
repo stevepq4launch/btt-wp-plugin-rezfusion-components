@@ -71,11 +71,6 @@ class ConfigurationPage extends Page
   const TAB_GET_PARAMETER_NAME = 'tab';
 
   /**
-   * @var string
-   */
-  const FLOOR_PLAN_TAB_NAME = 'floor-plan';
-
-  /**
    * @return string
    */
   public static function generalTabName(): string
@@ -129,14 +124,6 @@ class ConfigurationPage extends Page
   public static function featuredPropertiesTabName(): string
   {
     return static::FEATURED_PROPERTIES_TAB_NAME;
-  }
-
-  /**
-   * @return string
-   */
-  public static function floorPlanTabName(): string
-  {
-    return static::FLOOR_PLAN_TAB_NAME;
   }
 
   /**
@@ -241,9 +228,6 @@ class ConfigurationPage extends Page
         $keys = [
           Options::newReviewNotificationRecipients()
         ];
-        break;
-      case static::floorPlanTabName():
-        $keys = [];
         break;
       default:
         $keys = [];

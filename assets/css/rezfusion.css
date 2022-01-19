@@ -42,3 +42,12 @@
 .rezfusion-log__entries__entry--fail {
   color: #800;
 }
+
+.floor-plan-url-input {
+  width: 100%;
+}
+
+.wp-list-table.table-view-list.posts td.column-floor_plan_url {
+  font-size: 1.2rem;
+  text-align: center;
+}

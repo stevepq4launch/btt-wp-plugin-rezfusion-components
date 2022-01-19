@@ -61,6 +61,7 @@ class VRListingTest extends BaseTestCase
             "baths" => "Baths",
             "taxonomy-test" => "test-value",
             "item_id" => "Item ID",
+            "floor_plan_url" => "Custom Floor Plan URL",
             "date" => "Date"
         ];
         $columns = $VR_Listing->getColumns(['taxonomy-test' => 'test-value']);
@@ -167,5 +168,15 @@ class VRListingTest extends BaseTestCase
         $_POST['term-icon-picker'] = $expected;
         $this->VR_Listing->updateIconPicker($termID, '');
         $this->assertIconMeta($termID, $expected);
+    }
+
+    public function testFloorPlanURL_PostParameter(): void
+    {
+        $this->assertSame('floor-plan-url', VRListing::floorPlanURL_PostParameter());
+    }
+
+    public function testFloorPlanColumnName(): void
+    {
+        $this->assertSame('floor_plan_url', VRListing::floorPlanColumnName());
     }
 }

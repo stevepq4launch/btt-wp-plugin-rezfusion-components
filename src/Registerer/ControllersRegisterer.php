@@ -6,7 +6,6 @@ use Rezfusion\Configuration\ConfigurationStorage\RemoteConfigurationStorage;
 use Rezfusion\Configuration\HubConfigurationProvider;
 use Rezfusion\Configuration\HubConfigurationUpdater;
 use Rezfusion\Controller\ConfigurationController;
-use Rezfusion\Controller\FloorPlanController;
 use Rezfusion\Controller\ItemController;
 use Rezfusion\Controller\ReviewController;
 use Rezfusion\Plugin;
@@ -30,8 +29,7 @@ class ControllersRegisterer implements RegistererInterface
             ),
             new ItemController(function () {
                 Plugin::getInstance()::refreshData();
-            }),
-            new FloorPlanController()
+            })
         ] as $Controller) {
             $Controller->initialize();
         }
