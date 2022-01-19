@@ -21,7 +21,7 @@ class FloorPlan extends Shortcode
         );
         $atts = shortcode_atts([
             'propertyid' => '',
-            'postid' => '',
+            'postid' => get_the_ID(),
             'elementselector' => ''
         ], $atts);
         $attributes = $FloorPlanHelper->prepareShortcodeAttributes(
