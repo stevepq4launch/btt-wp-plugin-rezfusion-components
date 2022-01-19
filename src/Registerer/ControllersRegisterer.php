@@ -3,7 +3,6 @@
 namespace Rezfusion\Registerer;
 
 use Rezfusion\Controller\ConfigurationController;
-use Rezfusion\Controller\FloorPlanController;
 use Rezfusion\Controller\ItemController;
 use Rezfusion\Controller\ReviewController;
 
@@ -17,8 +16,7 @@ class ControllersRegisterer implements RegistererInterface
         foreach ([
             new ReviewController(),
             new ConfigurationController(),
-            new ItemController(),
-            new FloorPlanController()
+            new ItemController()
         ] as $Controller) {
             $Controller->initialize();
         }

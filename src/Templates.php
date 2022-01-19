@@ -193,11 +193,6 @@ class Templates
     /**
      * @var string
      */
-    const FLOOR_PLANS_CONFIGURATION_PAGE_TEMPLATE = 'admin/configuration-floor-plans.php';
-
-    /**
-     * @var string
-     */
     const FLOOR_PLAN_TEMPLATE = 'vr-floor-plan.php';
 
     /**
@@ -487,14 +482,6 @@ class Templates
     public static function sleepingArrangementsTemplate(): string
     {
       return static::SLEEPING_ARRANGEMENTS_TEMPLATE;
-    }
-
-    /**
-     * @return string
-     */
-    public static function floorPlansConfigurationPageTemplate(): string
-    {
-        return static::FLOOR_PLANS_CONFIGURATION_PAGE_TEMPLATE;
     }
 
     /**

@@ -73,14 +73,14 @@ class FloorPlanRepository extends AbstractHubRepository
 
     /**
      * Saves single floor plan data.
-     * @param array $item
+     * 
+     * @param int $postID
+     * @param string $url
      * 
      * @return bool
      */
-    public function save(array $item = []): bool
+    public function save($postID = 0, $url = ''): bool
     {
-        $postID = $item['postID'];
-        $url = $item['url'];
         if (empty($postID)) {
             throw new InvalidArgumentException('Invalid post ID.');
         }
