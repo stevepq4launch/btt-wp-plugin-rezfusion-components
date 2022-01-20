@@ -11,7 +11,9 @@ use Rezfusion\Helper\FloorPlanHelper;
       <?php if ($provider === FloorPlanHelper::truplaceProvider()) : ?>
         <button class="btn rezfusion-floor-plan__btn" onclick="TourWidget('https://tour.truplace.com/<?php echo $url; ?>');">View Floor Plan</button>
       <?php else : ?>
+        <div class="rezfusion-floor-plan__frame">
         <iframe src="<?php echo $url; ?>" class="rezfusion-floor-plan__iframe"></iframe>
+        </div>
       <?php endif; ?>
     </div>
   </section>
