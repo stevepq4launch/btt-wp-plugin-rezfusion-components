@@ -60,7 +60,7 @@ class ReviewsTest extends BaseTestCase
             'rezfusion-review__stay-dates'
         ];
         foreach ($classesToCheck as $class) {
-            TestHelper::assertElementWithClassExists($this, $DOMXPath, $class);
+            TestHelper::assertElementContainingClassExists($this, $DOMXPath, $class);
         }
         TestHelper::assertClassesCount($this, $DOMXPath, 'rezfusion-review', $reviewsCount);
     }
