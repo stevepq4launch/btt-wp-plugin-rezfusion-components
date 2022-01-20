@@ -78,9 +78,9 @@ class FloorPlanHelper
         if (empty($url)) {
             throw new InvalidArgumentException('URL is invalid.');
         }
-        if (strpos($url, static::truplaceProvider())) {
+        if (stripos($url, static::truplaceProvider())) {
             return static::truplaceProvider();
-        } elseif (strpos($url, static::matterportProvider())) {
+        } elseif (stripos($url, static::matterportProvider())) {
             return static::matterportProvider();
         }
         return static::otherProvider();
@@ -149,15 +149,13 @@ class FloorPlanHelper
     /**
      * @param string $propertyKey
      * @param int $postID
-     * @param string $elementSelector
      * 
      * @return array
      */
-    public function prepareShortcodeAttributes($propertyKey = '', $postID = 0, $elementSelector = ''): array
+    public function prepareShortcodeAttributes($propertyKey = '', $postID = 0): array
     {
         $url = '';
         $provider = '';
-        $attributes = [];
 
         if (empty($propertyKey) && empty($postID)) {
             throw new RuntimeException('Empty post ID and property key.');
@@ -175,16 +173,9 @@ class FloorPlanHelper
         $this->registerAssets($provider);
         $url = $this->parseURL($url, $provider);
 
-        $attributes['provider'] = $provider;
-        $attributes['url'] = $url;
-
-        if ($this->providerRequiresElementSelector($provider)) {
-            if (empty($elementSelector)) {
-                throw new RuntimeException(sprintf('Provider %s requires element selector.', $provider));
-            }
-            $attributes['elementSelector'] = $elementSelector;
-        }
-
-        return $attributes;
+        return [
+            'provider' => $provider,
+            'url' => $url
+        ];
     }
 }
