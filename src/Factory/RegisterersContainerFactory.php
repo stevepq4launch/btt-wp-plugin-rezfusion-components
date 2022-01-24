@@ -3,6 +3,7 @@
 namespace Rezfusion\Factory;
 
 use Rezfusion\Helper\AssetsRegistererInterface;
+use Rezfusion\Options;
 use Rezfusion\OptionsHandler;
 use Rezfusion\Provider\OptionsHandlerProvider;
 use Rezfusion\Registerer\AutomaticHubDataSynchronizationRegisterer;
@@ -12,6 +13,7 @@ use Rezfusion\Registerer\FeaturedPropertiesConfigurationScriptsRegisterer;
 use Rezfusion\Registerer\ComponentsBundleRegisterer;
 use Rezfusion\Registerer\FontsRegisterer;
 use Rezfusion\Registerer\FunctionsRegisterer;
+use Rezfusion\Registerer\GetOptionFiltersRegisterer;
 use Rezfusion\Registerer\PagesRegisterer;
 use Rezfusion\Registerer\PluginUpdateRegisterer;
 use Rezfusion\Registerer\PostTypesRegisterer;
@@ -69,7 +71,8 @@ class RegisterersContainerFactory
             new ControllersRegisterer(),
             new PluginUpdateRegisterer($this->OptionsHandler),
             new PropertyPage404FixRegisterer(new API_ClientFactory),
-            new AutomaticHubDataSynchronizationRegisterer()
+            new AutomaticHubDataSynchronizationRegisterer(),
+            new GetOptionFiltersRegisterer($this->OptionsHandler, Options::hubConfigurationOptions())
         ]);
     }
 }

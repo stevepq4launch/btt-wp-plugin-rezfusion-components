@@ -52,4 +52,12 @@ class Filters
     {
         return "variables_{$name}";
     }
+
+    /**
+     * @return string
+     */
+    public static function option($optionName = ''): string
+    {
+        return "option_{$optionName}";
+    }
 }
