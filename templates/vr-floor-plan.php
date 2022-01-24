@@ -10,7 +10,7 @@ use Rezfusion\Helper\FloorPlanHelper;
     <div class="rezfusion-floor-plan__display <?php echo 'rezfusion-floor-plan__display--' . $provider; ?>">
       <?php if ($provider === FloorPlanHelper::truplaceProvider()) : ?>
         <button class="btn rezfusion-floor-plan__btn" onclick="TourWidget('https://tour.truplace.com/<?php echo $url; ?>');">View Floor Plan</button>
-      <?php elseif ($provider === FloorPlanHelper::matterportProvider()) : ?>
+      <?php else : ?>
         <iframe src="<?php echo $url; ?>" class="rezfusion-floor-plan__iframe"></iframe>
       <?php endif; ?>
     </div>
