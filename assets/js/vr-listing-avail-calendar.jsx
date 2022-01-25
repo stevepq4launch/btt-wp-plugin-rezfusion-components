@@ -12,7 +12,7 @@ if (el) {
     const { default: DetailsProvider } = await import('@propertybrands/btt-bluetent-components/components/DetailsContext/DetailsProvider');
     const { getConfigOption } = await import('@propertybrands/btt-bluetent-components/lib/opts.ts');
     const { wrapDates } = await import('@propertybrands/btt-availability');
-    const { default: AvailabilityPicker } = await import('@propertybrands/btt-bluetent-components/components/AvailabilityPicker/AvailabilityPicker.tsx');
+    const { default: AvailabilityPicker } = await import('@propertybrands/btt-bluetent-components/components/AvailabilityPicker/AvailabilityPicker');
 
     const dateWrapper = (dates) => dates.map((dateBlock) => wrapDates(dateBlock));
 
