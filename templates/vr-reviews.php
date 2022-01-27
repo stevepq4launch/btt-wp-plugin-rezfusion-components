@@ -14,8 +14,8 @@ $StarsRatingRenderer = new StarsRatingRenderer(get_rezfusion_option(Options::max
 ?>
 <?php if (is_array($reviews) && count($reviews)) : ?>
   <section id="rezfusion-reviews" class="rezfusion-reviews">
-    <div class="rezfusion-reviews__section-title-wrap">
-      <h2 class="rezfusion-reviews__section-title"><?php _e('Reviews'); ?></h2>
+    <div class="rezfusion-property__section-title-wrap rezfusion-reviews__section-title-wrap">
+      <h2 class="rezfusion-property__section-title rezfusion-reviews__section-title"><?php _e('Reviews'); ?></h2>
     </div>
     <div class="rezfusion-reviews__list">
       <?php foreach ($reviews as $review) : ?>

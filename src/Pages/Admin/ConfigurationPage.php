@@ -8,6 +8,7 @@
 namespace Rezfusion\Pages\Admin;
 
 use Rezfusion\Actions;
+use Rezfusion\Assets;
 use Rezfusion\Options;
 use Rezfusion\Factory\ValuesCleanerFactory;
 use Rezfusion\Helper\OptionManager;
@@ -143,6 +144,7 @@ class ConfigurationPage extends Page
    */
   public function display(): void
   {
+    Plugin::getInstance()->getAssetsRegisterer()->handleStyle(Assets::rezfusionStyle());
     if (!empty($_POST)) {
       $this->save($_POST);
     }
@@ -228,13 +230,16 @@ class ConfigurationPage extends Page
         ];
         break;
       default:
+        $keys = [];
         break;
     }
 
     $values = (new ValuesCleanerFactory)->make()->clean($values);
 
     foreach ($keys as $key) {
-      OptionManager::update($key, (isset($_POST[$key]) && !empty($_POST[$key])) ? $values[$key] : NULL);
+      if (array_key_exists($key, $_POST)) {
+        OptionManager::update($key, (isset($_POST[$key]) && !empty($_POST[$key])) ? $values[$key] : NULL);
+      }
     }
 
     OptionManager::update(Options::triggerRewriteFlush(), 1);

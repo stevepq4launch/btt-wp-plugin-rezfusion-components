@@ -4,6 +4,8 @@ namespace Rezfusion\Factory;
 
 use Rezfusion\Helper\AssetsRegistererInterface;
 use Rezfusion\OptionsHandler;
+use Rezfusion\Provider\OptionsHandlerProvider;
+use Rezfusion\Registerer\AutomaticHubDataSynchronizationRegisterer;
 use Rezfusion\Registerer\ControllersRegisterer;
 use Rezfusion\Registerer\DelayedRewriteFlushRegisterer;
 use Rezfusion\Registerer\FeaturedPropertiesConfigurationScriptsRegisterer;
@@ -66,7 +68,8 @@ class RegisterersContainerFactory
             new FeaturedPropertiesConfigurationScriptsRegisterer($this->AssetsRegisterer),
             new ControllersRegisterer(),
             new PluginUpdateRegisterer($this->OptionsHandler),
-            new PropertyPage404FixRegisterer()
+            new PropertyPage404FixRegisterer(new API_ClientFactory),
+            new AutomaticHubDataSynchronizationRegisterer()
         ]);
     }
 }

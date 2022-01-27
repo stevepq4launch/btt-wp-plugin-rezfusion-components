@@ -6,6 +6,7 @@ use Rezfusion\Metas;
 use Rezfusion\PostRecentVisits;
 use Rezfusion\PostTypes;
 use Rezfusion\Taxonomies;
+use Rezfusion\Tests\TestHelper\TestHelper;
 
 /**
  * @file Deletes all synced data.
@@ -42,6 +43,23 @@ class DeleteDataService implements RunableInterface
     }
 
     /**
+     * @return int|bool
+     */
+    public function deleteReviews()
+    {
+        global $wpdb;
+        $field = 'comment_ID';
+        $ids = wp_list_pluck($wpdb->get_results(
+            $wpdb->prepare("SELECT $field FROM $wpdb->comments WHERE comment_type = '%s'", ['rezfusion-review'])
+        ), $field);
+        if (is_array($ids) && count($ids)) {
+            foreach ($ids as $id) {
+                wp_delete_comment($id, true);
+            }
+        }
+    }
+
+    /**
      * Delete all synced data.
      * 
      * @return void
@@ -57,7 +75,7 @@ class DeleteDataService implements RunableInterface
         /* Delete posts. */
         $query = new \WP_Query(array(
             'post_type' => [PostTypes::listing(), PostTypes::promo()],
-            'post_status' => 'publish',
+            'post_status' => ['publish', 'draft'],
             'posts_per_page' => -1,
         ));
         foreach ($query->get_posts() as $p) {
@@ -90,10 +108,22 @@ class DeleteDataService implements RunableInterface
         $wpdb->get_results("DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'rezfusion_hub_%'");
         $wpdb->get_results("DELETE FROM $wpdb->postmeta WHERE meta_key LIKE 'rzf_%'");
 
+        /* Delete reviews. */
+        $this->deleteReviews();
+
         /* Delete terms. */
         $wpdb->get_results("DELETE FROM $wpdb->terms");
 
         /* Delete options. */
-        // $wpdb->get_results("DELETE FROM $wpdb->options WHERE option_name LIKE '%rezfusion_hub_%'");
+        // $wpdb->get_results("DELETE FROM $wpdb->options WHERE option_name LIKE '%rezfusion%' AND option_name NOT IN (" .
+        //     join(', ', array_map(function ($option) {
+        //         return "'$option'";
+        //     }, [
+        //         'rezfusion_hub_repository_token',
+        //         'rezfusion_hub_env',
+        //         'rezfusion_hub_channel',
+        //         'rezfusion_hub_folder',
+        //         '_transient_rezfusion_hub_url_map'
+        //     ])) . ")");
     }
 }

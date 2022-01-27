@@ -1,0 +1,12 @@
+query($channels:ChannelFilter!, $itemIds:[String]) {
+    lodgingProducts(channels:$channels,itemIds:$itemIds){
+        results {
+            id,
+            item {
+                tour {
+                    url
+                }
+            }
+        }
+    }
+}

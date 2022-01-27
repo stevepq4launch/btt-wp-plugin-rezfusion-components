@@ -9,6 +9,8 @@ use Rezfusion\Repository\ItemRepository;
 
 class TemplateRedirectRegisterer implements RegistererInterface
 {
+    public static $exit = true;
+
     /**
      * Redirect users to the property details page.
      *
@@ -27,7 +29,11 @@ class TemplateRedirectRegisterer implements RegistererInterface
                 $posts = $repository->getItemById($id);
                 if (!empty($posts) && $link = get_permalink($posts[0]['post_id'])) {
                     wp_redirect($link, 301);
-                    exit();
+                    if (static::$exit === true) {
+                        // @codeCoverageIgnoreStart
+                        exit();
+                        // @codeCoverageIgnoreEnd
+                    }
                 }
             }
         });

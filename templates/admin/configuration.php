@@ -92,6 +92,7 @@ function rezfusion_admin_tabs($current = ConfigurationPage::GENERAL_TAB_NAME)
               'newReviewNotificationRecipientsOption' => $newReviewNotificationRecipientsOption,
               'newReviewNotificationRecipientsValue' => esc_attr(get_rezfusion_option($newReviewNotificationRecipientsOption))
             ]);
+            break;
           }
       }
       ?>

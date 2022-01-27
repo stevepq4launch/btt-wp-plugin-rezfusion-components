@@ -20,7 +20,7 @@ class CustomHubConfigurationFactory implements MakeableInterface
             get_rezfusion_option(Options::componentsURL()),
             new NullConfigurationStorage()
         );
-        /* Do not use existing configuration object, we wan't a copy. */
+        /* Do not use existing configuration object, we want a copy. */
         $CustomConfiguration->setConfiguration(unserialize(serialize(HubConfigurationProvider::getInstance()->getConfiguration())));
         return $CustomConfiguration;
     }

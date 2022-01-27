@@ -17,6 +17,9 @@
  * @var $categoryInfo
  * @var $lodgingItem
  */
+
+use Rezfusion\Helper\LodgingProductHelper;
+
 ?>
 <?php 
 /* Export lodgingItem variable to template parts */
@@ -37,7 +40,7 @@ get_header();
   </div>
 
   <div class="lodging-item-details__baths">
-    Baths: <?php print $lodgingItem->baths; ?>
+    Baths: <?php print (new LodgingProductHelper)->getTotalBaths($lodgingItem); ?>
   </div>
 
   <div class="lodging-item-details__occ">

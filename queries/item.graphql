@@ -23,6 +23,7 @@ query($channels:ChannelFilter!, $itemIds:[String]) {
             id,
             beds,
             baths,
+            half_baths,
             occ_total,
             item {
                 hasStays,

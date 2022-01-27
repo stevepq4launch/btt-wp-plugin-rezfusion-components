@@ -26,11 +26,19 @@ class LodgingItemAvailCalendar extends Shortcode {
       return "Rezfusion Lodging Item: A 'channel' and an 'itemId' attribute are both required";
     }
 
+    if (!empty($themeUrl = get_rezfusion_option(Options::themeURL()))) {
+      Plugin::getInstance()->getAssetsRegisterer()->handleStyleURL($themeUrl);
+    }
+
     $client = Plugin::apiClient();
     $result = $client->getItem($a['itemid'], $a['channel']);
 
     return $this->template->render([
       'lodgingItem' => $result->data->lodgingProducts->results[0],
+      'channel' => $a['channel'],
+      'sps_domain' => get_rezfusion_option(Options::SPS_Domain()),
+      'endpoint' => get_rezfusion_option(Options::blueprintURL()),
+      'conf_page' => get_rezfusion_option(Options::bookingConfirmationURL(), '')
     ]);
   }
 }

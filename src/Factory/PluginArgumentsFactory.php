@@ -5,6 +5,7 @@ namespace Rezfusion\Factory;
 use Rezfusion\Helper\AssetsRegisterer;
 use Rezfusion\Provider\OptionsHandlerProvider;
 use Rezfusion\SessionHandler\SessionHandler;
+use Rezfusion\Tests\TestHelper\API_TestClientFactory;
 
 class PluginArgumentsFactory
 {
@@ -20,7 +21,8 @@ class PluginArgumentsFactory
             $OptionsHandler,
             SessionHandler::getInstance(),
             $AssetsRegisterer,
-            (new RegisterersContainerFactory($AssetsRegisterer, $OptionsHandler))->make()
+            (new RegisterersContainerFactory($AssetsRegisterer, $OptionsHandler))->make(),
+            (defined('REZFUSION_TEST') && REZFUSION_TEST) ? new API_TestClientFactory() : new API_ClientFactory()
         ];
     }
 }

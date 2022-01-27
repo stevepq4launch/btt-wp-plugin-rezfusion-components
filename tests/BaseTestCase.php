@@ -11,13 +11,18 @@ use Rezfusion\Service\DeleteDataService;
 
 class BaseTestCase extends TestCase
 {
-
-  public function setUp(): void
+  public static function doBefore(): void
   {
-    parent::setUp();
+  }
+
+  public static function setUpBeforeClass(): void
+  {
+    parent::setUpBeforeClass();
     require_once(__DIR__ . "/../../../../wp-load.php");
     require_once(__DIR__ . "/../../../../wp-settings.php");
     DeleteDataService::unlock();
+    wp_cache_flush();
+    static::doBefore();
   }
 
   public function tearDown(): void

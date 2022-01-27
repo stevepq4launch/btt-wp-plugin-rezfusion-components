@@ -95,24 +95,31 @@ class FeaturedProperties extends Shortcode
      */
     protected function makePropertyDataFromLodgingProduct(object $lodgingProduct)
     {
-        $image = $lodgingProduct->item->images[0];
+        $image = null;
         $imageUrl = '';
-        foreach ($image->derivatives as $derivative) {
-            if ($derivative->dimensions[0] === 300) {
-                $imageUrl = $derivative->url;
-                break;
+
+        if (isset($lodgingProduct->item->images) && !empty($lodgingProduct->item->images[0])) {
+            $image = $lodgingProduct->item->images[0];
+            if (!empty($image)) {
+                foreach ($image->derivatives as $derivative) {
+                    if ($derivative->dimensions[0] === 300) {
+                        $imageUrl = $derivative->url;
+                        break;
+                    }
+                }
             }
         }
+
         return [
             'id' => $lodgingProduct->item->id,
             'name' => $lodgingProduct->item->name,
             'url' => '',
-            'baths' => $lodgingProduct->baths,
+            'baths' => $this->LodgingProductHelper->getTotalBaths($lodgingProduct),
             'beds' => $lodgingProduct->beds,
             'sleeps' => $lodgingProduct->occ_total,
             'image_url' => $imageUrl,
-            'image_title' => $image->title,
-            'image_description' => $image->description,
+            'image_title' => !empty($image) ? $image->title : '',
+            'image_description' => !empty($image) ? $image->description : '',
         ];
     }
 

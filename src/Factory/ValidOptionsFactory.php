@@ -3,6 +3,7 @@
 namespace Rezfusion\Factory;
 
 use Rezfusion\Options;
+use Rezfusion\Registerer\AutomaticHubDataSynchronizationRegisterer;
 
 use function PHPSTORM_META\map;
 
@@ -47,7 +48,8 @@ class ValidOptionsFactory implements MakeableInterface
             Options::policiesCancellation(),
             Options::policiesChanging(),
             Options::policiesInsurance(),
-            Options::policiesCleaning()
+            Options::policiesCleaning(),
+            Options::hubDataSynchronizationLog()
         ]);
     }
 }

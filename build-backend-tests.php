@@ -342,4 +342,18 @@ runBuilder($TestBuilder, 'ConfigurationPageLiteralsTest.php', [
     return $TestBuilder->renderTestMethod(ucfirst($method), "\$this->assertSame('${expected}', ConfigurationPage::${method}());");
 });
 
+runBuilder($TestBuilder, 'TaxonomiesLiteralsTest.php', [
+    'Rezfusion\Taxonomies'
+], 'TaxonomiesLiteralsTest', 'Tests for Taxonomies literals.', [
+    ['amenities', 'rzf_amenities'],
+    ['location', 'rzf_location'],
+    ['type', 'rzf_type'],
+], function ($method, $expected) use ($TestBuilder) {
+    return $TestBuilder->renderTestMethod(ucfirst($method), [
+        "\$this->assertNotEmpty('${expected}');",
+        "\$this->assertIsString('${expected}');",
+        "\$this->assertSame('${expected}', Taxonomies::${method}());"
+    ]);
+});
+
 echo "Done.\n\n";

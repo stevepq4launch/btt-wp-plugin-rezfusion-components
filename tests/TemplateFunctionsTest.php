@@ -6,6 +6,8 @@
 
 namespace Rezfusion\Tests;
 
+use Rezfusion\Templates;
+
 class TemplateFunctionsTest extends BaseTestCase
 {
     public function testRezfusionModalOpen()
@@ -29,5 +31,18 @@ HTML;
 </div>
 HTML;
         $this->assertSame($expected, $content);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testRezfusionLoadTemplate()
+    {
+        $this->setOutputCallback(function () {
+        });
+        rezfusion_load_template(Templates::favoritesTemplate());
+        $content = ob_get_contents();
+        $this->assertSame('<div id="favorites-page"></div>', $content);
     }
 }

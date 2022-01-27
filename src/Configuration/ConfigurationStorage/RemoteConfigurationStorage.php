@@ -35,7 +35,7 @@ class RemoteConfigurationStorage implements ConfigurationStorageInterface
      * @param array $remoteData
      * @param string $match
      * 
-     * @return [type]
+     * @return mixed
      */
     private function findByMatch(array $remoteData = [], $match = '')
     {
@@ -45,7 +45,9 @@ class RemoteConfigurationStorage implements ConfigurationStorageInterface
                 return $url[1];
             }
         }
+        // @codeCoverageIgnoreStart
         return '';
+        // @codeCoverageIgnoreEnd
     }
 
     /**

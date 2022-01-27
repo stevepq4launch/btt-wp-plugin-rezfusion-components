@@ -5,6 +5,7 @@ namespace Rezfusion\Controller;
 use Rezfusion\UserRoles;
 
 use Exception;
+use Rezfusion\Configuration\ConfigurationStorage\ConfigurationStorageInterface;
 use Rezfusion\Configuration\ConfigurationStorage\RemoteConfigurationStorage;
 use Rezfusion\Configuration\HubConfiguration;
 use Rezfusion\Configuration\HubConfigurationProvider;
@@ -37,6 +38,14 @@ class ConfigurationController extends AbstractController
         ];
     }
 
+    public function __construct(
+        HubConfiguration $HubConfiguration,
+        HubConfigurationUpdater $HubConfigurationUpdater
+    ) {
+        $this->HubConfiguration = $HubConfiguration;
+        $this->HubConfigurationUpdater = $HubConfigurationUpdater;
+    }
+
     /**
      * Reload configuration.
      * 
@@ -49,15 +58,15 @@ class ConfigurationController extends AbstractController
         $returnData = [];
         $statusCode = 400;
         try {
-            $Configuration = HubConfigurationProvider::getInstance();
-            $ConfigurationUpdater = new HubConfigurationUpdater(
-                $Configuration,
-                new RemoteConfigurationStorage($Configuration->getComponentsURL(), get_class($Configuration))
-            );
-            if ($ConfigurationUpdater->update() === false) {
+            // $Configuration = HubConfigurationProvider::getInstance();
+            // $ConfigurationUpdater = new HubConfigurationUpdater(
+            //     $Configuration,
+            //     new RemoteConfigurationStorage($Configuration->getComponentsURL(), get_class($Configuration))
+            // );
+            if ($this->HubConfigurationUpdater->update() === false) {
                 throw new Exception("Update failed.");
             }
-            $Configuration->saveConfiguration();
+            $this->HubConfiguration->saveConfiguration();
             $returnData = true;
             $statusCode = 200;
         } catch (Exception $Exception) {
@@ -79,8 +88,7 @@ class ConfigurationController extends AbstractController
         $returnData = [];
         $statusCode = 400;
         try {
-            $Configuration = HubConfigurationProvider::getInstance();
-            $returnData = $Configuration->getConfiguration();
+            $returnData = $this->HubConfiguration->getConfiguration();
             $statusCode = 200;
         } catch (Exception $Exception) {
             $returnData = $Exception->getMessage();

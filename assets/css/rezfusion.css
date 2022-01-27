@@ -1,0 +1,53 @@
+.rezfusion-floor-plans-configuration th,
+.rezfusion-floor-plans-configuration td {
+  padding: 5px;
+  vertical-align: middle;
+}
+
+.form-table.rezfusion-floor-plans-configuration td.rezfusion-floor-plans-configuration__header {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.rezfusion-floor-plans-configuration__row__label {
+  width: 250px;
+  text-align: right;
+  display: inline-block;
+}
+
+.rezfusion-floor-plans-configuration__row__url {
+  width: 100%;
+}
+
+.rezfusion-log__title {
+  font-size: 1em;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.rezfusion-log__entries {
+  border: 1px solid #e0e0e0;
+  background: #f8f8f8;
+  padding: 10px;
+  font-size: 0.8em;
+  font-family: monospace;
+  overflow: auto;
+  height: 100px;
+}
+
+.rezfusion-log__entries__entry--success {
+  color: #080;
+}
+
+.rezfusion-log__entries__entry--fail {
+  color: #800;
+}
+
+.floor-plan-url-input {
+  width: 100%;
+}
+
+.wp-list-table.table-view-list.posts td.column-floor_plan_url {
+  font-size: 1.2rem;
+  text-align: center;
+}

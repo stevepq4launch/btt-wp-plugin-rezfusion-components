@@ -23,6 +23,19 @@ use RuntimeException;
 class ReviewController extends AbstractController
 {
     /**
+     * @var ReviewRepository
+     */
+    private $ReviewRepository;
+
+    /**
+     * @param ReviewRepository $ReviewRepository
+     */
+    public function __construct(ReviewRepository $ReviewRepository)
+    {
+        $this->ReviewRepository = $ReviewRepository;
+    }
+
+    /**
      * @inheritdoc
      */
     protected function makeRoutes(): array
@@ -67,8 +80,7 @@ class ReviewController extends AbstractController
         $returnData = [];
         $statusCode = 400;
         try {
-            $ReviewRepository = new ReviewRepository();
-            $reviewsCollection = $ReviewRepository->getReviews();
+            $reviewsCollection = $this->ReviewRepository->getReviews();
             $reviews = [];
             foreach ($reviewsCollection as $Review) {
                 $reviews[] = $Review->toArray();
@@ -76,6 +88,7 @@ class ReviewController extends AbstractController
             $returnData = $reviews;
             $statusCode = 200;
         } catch (Exception $Exception) {
+            $returnData = ['error' => $Exception->getMessage()];
         }
         return $this->returnJSON($returnData, $statusCode);
     }
@@ -144,8 +157,7 @@ class ReviewController extends AbstractController
         try {
             if (empty($reviewId = $request->get_param('id')))
                 throw new RuntimeException("Invalid Review ID.");
-            $ReviewRepository = new ReviewRepository;
-            $Review = $ReviewRepository->getReview($reviewId);
+            $Review = $this->ReviewRepository->getReview($reviewId);
             if (!$Review)
                 throw new RuntimeException("Review not found.");
             if ($Review->getApproved() === true)
@@ -176,8 +188,7 @@ class ReviewController extends AbstractController
         try {
             if (empty($reviewId = $request->get_param('id')))
                 throw new RuntimeException("Invalid Review ID.");
-            $ReviewRepository = new ReviewRepository;
-            $Review = $ReviewRepository->getReview($reviewId);
+            $Review = $this->ReviewRepository->getReview($reviewId);
             if (!$Review)
                 throw new RuntimeException("Review not found.");
             if ($Review->getApproved() === false)
@@ -208,12 +219,11 @@ class ReviewController extends AbstractController
         try {
             if (empty($reviewId = $request->get_param('id')))
                 throw new RuntimeException("Invalid Review ID.");
-            $ReviewRepository = new ReviewRepository;
-            $Review = $ReviewRepository->getReview($reviewId);
+            $Review = $this->ReviewRepository->getReview($reviewId);
             if (!$Review)
                 throw new RuntimeException("Review not found.");
             $ReviewRepository = new ReviewRepository();
-            $ReviewRepository->deleteReview($Review->getId());
+            $this->ReviewRepository->deleteReview($Review->getId());
             $statusCode = 200;
         } catch (Exception $Exception) {
             $returnData['error'] = $Exception->getMessage();

@@ -9,6 +9,7 @@ namespace Rezfusion;
 use Error;
 use Rezfusion\Client\ClientInterface;
 use Rezfusion\Factory\API_ClientFactory;
+use Rezfusion\Factory\MakeableInterface;
 use Rezfusion\Factory\PluginArgumentsFactory;
 use Rezfusion\Helper\AssetsRegistererInterface;
 use Rezfusion\Registerer\ComponentsBundleRegisterer;
@@ -68,6 +69,8 @@ class Plugin
    */
   private $RegisterersContainer;
 
+  private static $API_ClientFactory;
+
   /**
    * Plugin constructor.
    *
@@ -78,17 +81,20 @@ class Plugin
    * @param SessionHandlerInterface $SessionHandler
    * @param AssetsRegistererInterface $AssetsRegisterer
    * @param RegisterersContainer $RegisterersContainer
+   * @param API_ClientFactory $API_ClientFactory
    */
   private function __construct(
     OptionsHandler $OptionsHandler,
     SessionHandlerInterface $SessionHandler,
     AssetsRegistererInterface $AssetsRegisterer,
-    RegisterersContainer $RegisterersContainer
+    RegisterersContainer $RegisterersContainer,
+    $API_ClientFactory
   ) {
     $this->OptionsHandler = $OptionsHandler;
     $this->SessionHandler = $SessionHandler;
     $this->AssetsRegisterer = $AssetsRegisterer;
     $this->RegisterersContainer = $RegisterersContainer;
+    static::$API_ClientFactory = $API_ClientFactory;
     $this->handleRegisterers($this->RegisterersContainer);
   }
 
@@ -140,7 +146,7 @@ class Plugin
    */
   public static function apiClient(): ClientInterface
   {
-    return (new API_ClientFactory)->make();
+    return static::$API_ClientFactory->make();
   }
 
   /**

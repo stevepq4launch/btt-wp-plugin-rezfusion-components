@@ -6,6 +6,7 @@
 namespace Rezfusion\PostTypes;
 
 use Rezfusion\Actions;
+use Rezfusion\Factory\FloorPlanRepositoryFactory;
 use Rezfusion\Metas;
 use Rezfusion\Options;
 use Rezfusion\Repository\CategoryRepository;
@@ -19,6 +20,56 @@ use Rezfusion\PostTypes;
  */
 class VRListing extends PostType {
 
+  public static function floorPlanURL_PostParameter(): string
+  {
+    return 'floor-plan-url';
+  }
+
+  public static function floorPlanColumnName(): string
+  {
+    return 'floor_plan_url';
+  }
+
+  private function floorPlanURL_MetaBoxHTML(object $post): string
+  {
+    return '<p><input type="text" name="' . static::floorPlanURL_PostParameter() . '" id="floor-plan-url-input" class="form-field floor-plan-url-input" value="' . esc_attr(get_post_meta($post->ID, Metas::postFloorPlanURL(), true)) . '"></p>';
+  }
+
+  private function addFloorPlanURL_MetaBox(): void
+  {
+    add_meta_box(
+      'rzf-listing-floor-plan-url',
+      'Custom Floor Plan URL',
+      function(object $post){
+        echo $this->floorPlanURL_MetaBoxHTML($post);
+      },
+      $this->getPostTypeName(),
+      'normal'
+    );
+  }
+
+  private function registerStyle(): void {
+    global $pagenow;
+    if (
+      $pagenow === 'post.php' && isset($_GET['post']) && $this->getPostTypeName() === get_post_type($_GET['post'])
+      || $pagenow === 'edit.php' && isset($_GET['post_type']) && $this->getPostTypeName() === $_GET['post_type']
+      ) {
+      Plugin::getInstance()->getAssetsRegisterer()->handleStyle('rezfusion.css');
+    }
+  }
+
+  private function handleFloorPlanURL_Save(int $post_id, object $post)
+  {
+    $post_type = get_post_type_object($post->post_type);
+    if (!current_user_can($post_type->cap->edit_post, $post_id)) {
+      return $post_id;
+    }
+    $postVariable = static::floorPlanURL_PostParameter();
+    $newURL = (isset($_POST[$postVariable]) ? $_POST[$postVariable] : '');
+    $FloorPlanRepository = (new FloorPlanRepositoryFactory())->make();
+    $FloorPlanRepository->save($post_id, $newURL);
+  }
+
   public function register(){
     parent::register();
     $taxonomies = get_object_taxonomies(PostTypes::listing(), 'names');
@@ -28,6 +79,15 @@ class VRListing extends PostType {
       add_action(Actions::taxonomyEditFormFields($taxonomy) , [$this, 'editIconPicker'], 10, 2);
       add_action(Actions::editedTaxonomy($taxonomy) , [$this, 'updateIconPicker'], 10, 2);
     }
+    add_action(Actions::addMetaBoxes(), function(){
+      $this->addFloorPlanURL_MetaBox();
+    });
+    add_action(Actions::savePost(), function($post_id, $post){
+      $this->handleFloorPlanURL_Save($post_id, $post);
+    }, 10, 2);
+    add_action(Actions::adminEnqueueScripts(), function(){
+      $this->registerStyle();
+    });
   }
 
   /**
@@ -158,6 +218,7 @@ class VRListing extends PostType {
     }
 
     $new_columns['item_id'] = __('Item ID');
+    $new_columns[static::floorPlanColumnName()] = __('Custom Floor Plan URL');
     $new_columns['date'] = __('Date');
 
     return $new_columns;
@@ -180,6 +241,9 @@ class VRListing extends PostType {
         break;
       case 'item_id':
         print $meta[Metas::itemId()][0];
+        break;
+      case static::floorPlanColumnName():
+        print !empty($meta[Metas::postFloorPlanURL()][0]) ? '&#10004;' : '';
         break;
     }
   }
