@@ -3,9 +3,9 @@
 namespace Rezfusion\Tests;
 
 use Rezfusion\Factory\API_ClientFactory;
-use Rezfusion\Plugin;
 use Rezfusion\Repository\ItemRepository;
 use Rezfusion\Service\DeleteDataService;
+use Rezfusion\Tests\TestHelper\PropertiesHelper;
 
 class DeleteDataServiceTest extends BaseTestCase
 {
@@ -18,10 +18,10 @@ class DeleteDataServiceTest extends BaseTestCase
 
     public function testRun()
     {
+        $this->refreshDatabaseDataAfterTest();
         DeleteDataService::unlock();
-        Plugin::refreshData();
         $ItemRepository = new ItemRepository((new API_ClientFactory())->make());
-        $this->assertGreaterThan(1, count($ItemRepository->getAllItemsIds()));
+        $this->assertGreaterThan(PropertiesHelper::minPropertiesCountInHub(), count($ItemRepository->getAllItemsIds()));
         (new DeleteDataService())->run();
         $this->assertCount(0, $ItemRepository->getAllItemsIds());
     }

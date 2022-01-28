@@ -4,14 +4,21 @@ namespace Rezfusion\Tests\Controller;
 
 use Rezfusion\Configuration\ConfigurationStorage\NullConfigurationStorage;
 use Rezfusion\Configuration\HubConfiguration;
-use Rezfusion\Configuration\HubConfigurationProvider;
 use Rezfusion\Configuration\HubConfigurationUpdater;
 use Rezfusion\Controller\ConfigurationController;
+use Rezfusion\Helper\OptionManager;
+use Rezfusion\Options;
 use Rezfusion\Tests\BaseTestCase;
 use Rezfusion\Tests\TestHelper\REST_Helper;
 
 class ConfigurationControllerTest extends BaseTestCase
 {
+    /**
+     * @param HubConfiguration $HubConfiguration
+     * @param HubConfigurationUpdater $HubConfigurationUpdater
+     * 
+     * @return ConfigurationController
+     */
     private function makeConfigurationController(
         HubConfiguration $HubConfiguration,
         HubConfigurationUpdater $HubConfigurationUpdater
@@ -19,9 +26,21 @@ class ConfigurationControllerTest extends BaseTestCase
         return new ConfigurationController($HubConfiguration, $HubConfigurationUpdater);
     }
 
+    /**
+     * Creates a new instance of HubConfiguration for test purpose.
+     * @return HubConfiguration
+     */
+    private function makeHubConfiguration(): HubConfiguration
+    {
+        return new HubConfiguration(
+            OptionManager::get(Options::componentsURL()),
+            new NullConfigurationStorage(OptionManager::get(Options::componentsURL()), HubConfiguration::class)
+        );
+    }
+
     public function testReloadConfigurationWithInvalidHubConfigurationUpdater(): void
     {
-        $HubConfiguration = HubConfigurationProvider::getInstance();
+        $HubConfiguration = $this->makeHubConfiguration();
         $HubConfigurationUpdater = $this->createMock(HubConfigurationUpdater::class);
         $HubConfigurationUpdater->method('update')->willReturn(false);
         $Controller = $this->makeConfigurationController($HubConfiguration, $HubConfigurationUpdater);
@@ -33,7 +52,7 @@ class ConfigurationControllerTest extends BaseTestCase
 
     public function testReloadConfiguration(): void
     {
-        $HubConfiguration = HubConfigurationProvider::getInstance();
+        $HubConfiguration = $this->makeHubConfiguration();
         $Controller = $this->makeConfigurationController(
             $HubConfiguration,
             new HubConfigurationUpdater(
@@ -69,7 +88,7 @@ class ConfigurationControllerTest extends BaseTestCase
 
     public function testLoadConfiguration(): void
     {
-        $HubConfiguration = HubConfigurationProvider::getInstance();
+        $HubConfiguration = $this->makeHubConfiguration();
         $Controller = $this->makeConfigurationController(
             $HubConfiguration,
             new HubConfigurationUpdater(

@@ -8,16 +8,9 @@ use Rezfusion\Repository\AbstractHubRepository;
 use Rezfusion\Repository\LodgingProductRepository;
 use Rezfusion\Tests\BaseTestCase;
 use Rezfusion\Tests\TestHelper\PropertiesHelper;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 class LodgingProductRepositoryTest extends BaseTestCase
 {
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     private function makeLodgingProductRepository(): LodgingProductRepository
     {
         return new LodgingProductRepository(

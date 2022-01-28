@@ -8,16 +8,9 @@ use Rezfusion\Options;
 use Rezfusion\Registerer\TemplateRedirectRegisterer;
 use Rezfusion\Tests\BaseTestCase;
 use Rezfusion\Tests\TestHelper\PropertiesHelper;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 class TemplateRedirectRegistererTest extends BaseTestCase
 {
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled

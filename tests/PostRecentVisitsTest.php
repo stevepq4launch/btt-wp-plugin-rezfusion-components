@@ -13,7 +13,6 @@ use Rezfusion\Options;
 use Rezfusion\PostRecentVisits;
 use Rezfusion\SessionHandler\SessionHandlerInterface;
 use Rezfusion\Tests\TestHelper\PostHelper;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 class PostRecentVisitsTest extends BaseTestCase
 {
@@ -31,12 +30,6 @@ class PostRecentVisitsTest extends BaseTestCase
      * @var int
      */
     private $postId;
-
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
 
     public function setUp(): void
     {

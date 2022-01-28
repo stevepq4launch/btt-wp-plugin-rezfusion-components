@@ -7,7 +7,6 @@ use ReflectionClass;
 use Rezfusion\Actions;
 use Rezfusion\Configuration\ConfigurationStorage\NullConfigurationStorage;
 use Rezfusion\Configuration\HubConfiguration;
-use Rezfusion\Options;
 use Rezfusion\Plugin;
 use Rezfusion\Provider\CustomHubConfigurationProvider;
 use Rezfusion\Provider\OptionsHandlerProvider;
@@ -60,6 +59,8 @@ class ComponentsBundleRegistererTest extends BaseTestCase
      */
     public function testRegisterWithInvalidHubConfiguration(): void
     {
+        $this->refreshDatabaseDataAfterTest();
+        DeleteDataService::unlock();
         (new DeleteDataService)->run();
         $this->setOutputCallback(function () {
         });

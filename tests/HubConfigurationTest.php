@@ -23,12 +23,6 @@ class HubConfigurationTest extends BaseTestCase
      */
     private $HubConfiguration;
 
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     public function setUp(): void
     {
         parent::setUp();
@@ -149,9 +143,9 @@ class HubConfigurationTest extends BaseTestCase
         $categoriesOptionName = 'hub_configuration.settings.components.SearchProvider.filters.categoryFilter.categories';
         $CustomConfiguration = $CustomHubConfigurationFactory->make();
 
-        $categories = $CustomConfiguration->getValue($categoriesOptionName);
-        $this->assertEmpty($categories);
-        $this->assertNull($categories);
+        $categoriesFilters = $CustomConfiguration->getValue($categoriesOptionName);
+        $this->assertEmpty($categoriesFilters);
+        $this->assertNull($categoriesFilters);
 
         $terms = get_terms(['taxonomy' => Taxonomies::amenities(), 'hide_empty' => 0]);
         $termId = @$terms[0]->term_id;
@@ -172,7 +166,13 @@ class HubConfigurationTest extends BaseTestCase
         $categoryOperatorKey = 'operator';
 
         $ConfigurationProcessor->process($CustomConfiguration);
-        $categories = $CustomConfiguration->getValue($categoriesOptionName);
+        $categoriesFilters = $CustomConfiguration->getValue($categoriesOptionName);
+
+        $this->assertNotEmpty($categoriesFilters);
+        $this->assertIsArray($categoriesFilters);
+        $this->assertCount(1, $categoriesFilters);
+        $this->assertArrayHasKey(0, $categoriesFilters);
+        $categories = $categoriesFilters[0];
 
         $this->assertNotEmpty($categories);
         $this->assertIsArray($categories);

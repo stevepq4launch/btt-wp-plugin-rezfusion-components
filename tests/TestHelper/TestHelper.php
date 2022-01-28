@@ -4,11 +4,16 @@ namespace Rezfusion\Tests\TestHelper;
 
 use DOMDocument;
 use DOMXPath;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Rezfusion\Actions;
+use Rezfusion\Repository\ItemRepository;
 use Rezfusion\Service\DataRefreshService;
 use Rezfusion\Service\DeleteDataService;
+use Rezfusion\Service\PropertiesPermalinksMapRebuildService;
 use Rezfusion\Tests\Client\API_TestClient;
+use RuntimeException;
+use Twig\Error\RuntimeError;
 
 class TestHelper
 {
@@ -34,7 +39,10 @@ class TestHelper
 
     public static function refreshData(): void
     {
-        (new DeleteDataService)->run();
+        $DeleteDataServiceClassName = DeleteDataService::class;
+        $DeleteDataServiceClassName::unlock();
+        (new $DeleteDataServiceClassName)->run();
+        $DeleteDataServiceClassName::lock();
         (new DataRefreshService(static::makeAPI_TestClient()))->run();
     }
 
@@ -103,5 +111,13 @@ class TestHelper
     public static function makeDOMXPath($html = ''): DOMXPath
     {
         return new DOMXPath(static::makeDOMDocument($html));
+    }
+
+    public static function rebuildPermalinks(): void
+    {
+        $properties = static::makeAPI_TestClient()->getItems(null);
+        $ItemRepository = new ItemRepository(TestHelper::makeAPI_TestClient());
+        $Service = new PropertiesPermalinksMapRebuildService($properties, $ItemRepository);
+        $Service->run();
     }
 }
