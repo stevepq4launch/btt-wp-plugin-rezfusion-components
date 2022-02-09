@@ -18,13 +18,13 @@ class ConfigurationProcessor
             $meta = get_term_meta(get_queried_object()->term_id);
             $HubConfiguration->setValue(
                 'hub_configuration.settings.components.SearchProvider.filters.categoryFilter.categories',
-                [
+                [[
                     'cat_id' => intval($meta[Metas::categoryId()][0]),
                     'values' => array_map(function ($value) {
                         return intval($value);
                     }, $meta[Metas::categoryValueId()]),
                     'operator' => 'AND'
-                ]
+                ]]
             );
         }
 
