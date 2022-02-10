@@ -11,14 +11,10 @@ class ExceptionHelper
 
     public static function getMessagesFromWordpressError($wordpressError): array
     {
-        $messages = [];
-        $key = 'errors';
-        if (is_object($wordpressError) && property_exists($wordpressError, $key)) {
-            foreach ($wordpressError->$key as $errorName => $errorDescription) {
-                $messages[] = (is_array($errorDescription) && isset($errorDescription[0])) ? $errorDescription[0] : $errorName;
-            }
+        if (static::isWordpressError($wordpressError)) {
+            return $wordpressError->get_error_messages(null);
         }
-        return $messages;
+        return [];
     }
 
     public static function makeMessageFromWordpressError($wordpressError): string

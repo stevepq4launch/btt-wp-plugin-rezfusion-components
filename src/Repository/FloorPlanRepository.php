@@ -43,9 +43,11 @@ class FloorPlanRepository extends AbstractHubRepository
         }
         $sql .= " ORDER BY propertyName";
         $result = $wpdb->get_results($wpdb->prepare($sql, $queryParams), ARRAY_A);
+        // @codeCoverageIgnoreStart
         if (is_wp_error($result)) {
             throw new RuntimeException(sprintf('Error occurred in %s method.', __METHOD__));
         }
+        // @codeCoverageIgnoreEnd
         return $result;
     }
 

@@ -724,4 +724,12 @@ class Options
             Options::componentsCSS_URL()
         ];
     }
+
+    /**
+     * @return string
+     */
+    public static function cron(): string
+    {
+        return 'cron';
+    }
 }

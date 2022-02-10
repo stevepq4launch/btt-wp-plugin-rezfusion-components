@@ -74,6 +74,9 @@ class TestHelper
     {
         require_once(REZFUSION_PLUGIN_PATH . '/../../../wp-admin/includes/template.php');
         require_once(REZFUSION_PLUGIN_PATH . '/../../../wp-admin/includes/plugin.php');
+        require_once(REZFUSION_PLUGIN_PATH . '/../../../wp-admin/includes/class-wp-screen.php');
+        require_once(REZFUSION_PLUGIN_PATH . '/../../../wp-admin/includes/post.php');
+        require_once(REZFUSION_PLUGIN_PATH . '/../../../wp-admin/includes/screen.php');
         do_action(Actions::init());
         do_action(Actions::adminInit());
     }

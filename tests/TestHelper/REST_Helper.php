@@ -48,4 +48,28 @@ class REST_Helper
         $Test->assertInstanceOf(WP_REST_Response::class, $Response);
         return $Response;
     }
+
+    /**
+     * Test response object.
+     * @param \WP_REST_Response $Response
+     * @param int $statusCode
+     * @param string $exceptExceptionMessage
+     * 
+     * @return void
+     */
+    public static function assertResponse(TestCase $Test, \WP_REST_Response $Response, $statusCode = 0, $exceptExceptionMessage = ''): void
+    {
+        $Test->assertIsObject($Response);
+        $Test->assertInstanceOf(\WP_REST_Response::class, $Response);
+        $Test->assertObjectHasAttribute('status', $Response);
+        $Test->assertIsInt($Response->status);
+        $Test->assertSame($statusCode, $Response->status);
+        $Test->assertObjectHasAttribute('data', $Response);
+        $Test->assertIsArray($Response->data);
+        if (!empty($exceptExceptionMessage)) {
+            $Test->assertArrayHasKey('error', $Response->data);
+            $Test->assertIsString($Response->data['error']);
+            $Test->assertSame($exceptExceptionMessage, $Response->data['error']);
+        }
+    }
 }

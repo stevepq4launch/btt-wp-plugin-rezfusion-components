@@ -4,6 +4,7 @@ namespace Rezfusion\Tests;
 
 use Rezfusion\Actions;
 use Rezfusion\Plugin;
+use Rezfusion\Tests\TestHelper\TestHelper;
 
 class AdminPageTest extends BaseTestCase
 {
@@ -13,6 +14,7 @@ class AdminPageTest extends BaseTestCase
      */
     public function testActions()
     {
+        TestHelper::includeTemplateFunctions();
         $this->setOutputCallback(function () {
         });
         Plugin::getInstance();

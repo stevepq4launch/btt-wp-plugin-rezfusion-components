@@ -3,9 +3,7 @@
 namespace Rezfusion\Tests\Shortcodes;
 
 use Rezfusion\Options;
-use Rezfusion\Plugin;
 use Rezfusion\Provider\OptionsHandlerProvider;
-use Rezfusion\Service\DeleteDataService;
 use Rezfusion\Shortcodes\FeaturedProperties;
 use Rezfusion\Shortcodes\Shortcode;
 use Rezfusion\Template;
@@ -68,5 +66,31 @@ class FeaturedPropertiesTest extends BaseTestCase
             '/\<article class="featured-properties__card flex-row flex-xs-12 flex-sm-6 flex-md-4 flex-xs-center"\>/i',
             '/\<a href="http:\/\/.*?vr_listing=.*" class="featured-properties__link flex-row flex-xs-center"\>/i'
         ]);
+    }
+
+    public function testMakePropertyDataFromLodgingProduct(): void
+    {
+        $expectedImageUrl = 'http://localhost/test-image.jpg';
+        $imageKey = 'image_url';
+        $property = json_decode(json_encode([
+            'item' => [
+                'id' => 1000,
+                'images' =>  [
+                    [
+                        'derivatives' => [
+                            [
+                                'dimensions' => [300, 300],
+                                'url' => $expectedImageUrl
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]));
+        $data = TestHelper::callClassMethod(new FeaturedProperties(new Template('')), 'makePropertyDataFromLodgingProduct', [$property]);
+        $this->assertIsArray($data);
+        $this->assertArrayHasKey($imageKey, $data);
+        $this->assertNotEmpty($data[$imageKey]);
+        $this->assertSame($expectedImageUrl, $data[$imageKey]);
     }
 }

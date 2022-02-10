@@ -65,7 +65,7 @@ class FloorPlanHelper
 
     public static function matterportURL(): string
     {
-        return static::MATTERPORT_PROVIDER;
+        return static::MATTERPORT_URL;
     }
 
     public static function truplaceLinkWidgetURL(): string
@@ -119,7 +119,7 @@ class FloorPlanHelper
             throw new InvalidArgumentException('Provider is invalid.');
         }
         if ($provider === static::truplaceProvider()) {
-            return parse_url($url)['path'];
+            return parse_url($url, PHP_URL_PATH);
         }
         return $url;
     }

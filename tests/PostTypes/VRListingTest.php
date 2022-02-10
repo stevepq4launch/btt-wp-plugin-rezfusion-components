@@ -2,15 +2,22 @@
 
 namespace Rezfusion\Tests\PostTypes;
 
+use Rezfusion\Actions;
+use Rezfusion\Metas;
 use Rezfusion\PostTypes;
 use Rezfusion\PostTypes\VRListing;
+use Rezfusion\Repository\FloorPlanRepository;
 use Rezfusion\Repository\ItemRepository;
 use Rezfusion\Tests\BaseTestCase;
 use Rezfusion\Tests\TestHelper\PostHelper;
 use Rezfusion\Tests\TestHelper\TestHelper;
+use stdClass;
 
 class VRListingTest extends BaseTestCase
 {
+    /**
+     * @var int
+     */
     const ICON_TERM_ID = 1001;
 
     /**
@@ -18,6 +25,9 @@ class VRListingTest extends BaseTestCase
      */
     private $VR_Listing;
 
+    /**
+     * @return int
+     */
     private function iconTermID(): int
     {
         return static::ICON_TERM_ID;
@@ -42,6 +52,27 @@ class VRListingTest extends BaseTestCase
     private function deleteIconMeta($termID): void
     {
         delete_term_meta($termID, 'icon');
+    }
+
+    /**
+     * @return VRListing
+     */
+    private function makeVRListing(): VRListing
+    {
+        return new VRListing(PostTypes::listing());
+    }
+
+    /**
+     * @param string $html
+     * 
+     * @return void
+     */
+    private function assertHTML_HasFloorPlanURL_MetaBox(string $html = ''): void
+    {
+        $this->assertStringContainsString(
+            '<p><input type="text" name="floor-plan-url" id="floor-plan-url-input" class="form-field floor-plan-url-input" value=""></p>',
+            $html
+        );
     }
 
     public function setUp(): void
@@ -177,5 +208,82 @@ class VRListingTest extends BaseTestCase
     public function testFloorPlanColumnName(): void
     {
         $this->assertSame('floor_plan_url', VRListing::floorPlanColumnName());
+    }
+
+    public function testFloorPlanURL_MetaBoxHTML(): void
+    {
+        $this->assertHTML_HasFloorPlanURL_MetaBox(
+            TestHelper::callClassMethod(
+                new VRListing(PostTypes::listing()),
+                'floorPlanURL_MetaBoxHTML',
+                [PostHelper::getRecentPost()]
+            )
+        );
+    }
+
+    public function testGetColumnContents(): void
+    {
+        $this->setOutputCallback(function ($html) {
+            $this->assertSame('', $html);
+        });
+        $VRListing = $this->makeVRListing();
+        $postID = PostHelper::getRecentPostId();
+        TestHelper::callClassMethod($VRListing, 'getColumnContents', ['floor_plan_url', $postID]);
+    }
+
+    public function testGetColumnContentsWithURL(): void
+    {
+        $this->setOutputCallback(function ($html) {
+            $this->assertSame('&#10004;', $html);
+        });
+        $VRListing = $this->makeVRListing();
+        $postID = PostHelper::getRecentPostId();
+        (new FloorPlanRepository(TestHelper::makeAPI_TestClient(), ''))->save($postID, 'https://www.floor-plan.com/');
+        TestHelper::callClassMethod($VRListing, 'getColumnContents', ['floor_plan_url', $postID]);
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testEnqueuedScript(): void
+    {
+        TestHelper::includeTemplateFunctions();
+        global $wp_styles;
+        global $pagenow;
+        $pagenow = 'edit.php';
+        $_GET['post_type'] = PostTypes::listing();
+        do_action(Actions::adminEnqueueScripts());
+        $this->assertIsObject($wp_styles);
+        $this->assertObjectHasAttribute('registered', $wp_styles);
+        $this->assertIsArray($wp_styles->registered);
+        $this->assertArrayHasKey('rezfusion-style', $wp_styles->registered);
+        $this->assertIsObject($wp_styles->registered['rezfusion-style']);
+        $this->assertObjectHasAttribute('src', $wp_styles->registered['rezfusion-style']);
+        $src = $wp_styles->registered['rezfusion-style']->src;
+        $this->assertNotEmpty($src);
+        $this->assertNotFalse(strpos($src, 'assets/css/rezfusion.css'));
+    }
+
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testAddFloorPlanURL_MetaBox(): void
+    {
+        TestHelper::includeTemplateFunctions();
+        $VRListing = $this->makeVRListing();
+        $VRListing->register();
+        do_action(Actions::addMetaBoxes());
+        do_meta_boxes($VRListing->getPostTypeName(), 'normal', new stdClass());
+        $this->setOutputCallback(function ($html) {
+            $this->assertHTML_HasFloorPlanURL_MetaBox($html);
+        });
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        delete_post_meta(PostHelper::getRecentPostId(), Metas::postFloorPlanURL());
     }
 }
