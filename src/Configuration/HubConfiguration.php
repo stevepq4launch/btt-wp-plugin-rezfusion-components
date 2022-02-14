@@ -70,7 +70,9 @@ class HubConfiguration
      */
     public function __construct($configurationURL = '', ConfigurationStorageInterface $ConfigurationStorage)
     {
-        $this->configurationURL = $configurationURL;
+        if (!empty($configurationURL)) {
+            $this->configurationURL = $configurationURL;
+        }
         $this->ConfigurationStorage = $ConfigurationStorage;
     }
 

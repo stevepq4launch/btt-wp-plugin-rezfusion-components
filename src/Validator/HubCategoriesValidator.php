@@ -8,6 +8,9 @@ class HubCategoriesValidator implements ValidatorInterface
 
     private function processItems($categories, $callback): void
     {
+        if (empty($categories)) {
+            return;
+        }
         foreach ($categories as $category) {
             $callback($category);
             foreach ($category->values as $categoryValue) {
