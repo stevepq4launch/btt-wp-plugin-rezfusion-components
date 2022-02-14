@@ -18,9 +18,7 @@ use Rezfusion\Repository\ItemRepository;
 use Rezfusion\Plugin;
 use Rezfusion\PostTypes;
 use Rezfusion\Service\DataRefreshService;
-use Rezfusion\Service\DeleteDataService;
 use Rezfusion\Tests\MockAPI_Client;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 /**
  * Test that we can still retrieve the various pieces of API data needed for the
@@ -33,7 +31,7 @@ class SyncTest extends BaseTestCase
    *
    * @throws \Exception
    */
-  public function testSyncsPropertyData()
+  public function testSyncsPropertyData(): void
   {
     $client = Plugin::apiClient();
     $response = $client->getItems(get_rezfusion_option(Options::hubChannelURL()));
@@ -45,9 +43,8 @@ class SyncTest extends BaseTestCase
    *
    * @throws \Exception
    */
-  public function testCreatesItemPosts()
+  public function testCreatesItemPosts(): void
   {
-    TestHelper::refreshData();
     $client = Plugin::apiClient();
     $channel = get_rezfusion_option(Options::hubChannelURL());
     $data = $client->getItems($channel);
@@ -100,7 +97,7 @@ class SyncTest extends BaseTestCase
     }
   }
 
-  public function testCategoriesCount()
+  public function testCategoriesCount(): void
   {
     $API_Client = Plugin::getInstance()->apiClient();
     $CategoryRepository = new CategoryRepository($API_Client);
@@ -111,9 +108,8 @@ class SyncTest extends BaseTestCase
     $this->assertSame($CategoriesItemsCounter->count($sourceCategories), count($localCategories));
   }
 
-  public function testCategoryNameChangedInSource()
+  public function testCategoryNameChangedInSource(): void
   {
-    (new DeleteDataService)->run();
     $MockAPI_Client = new MockAPI_Client(
       REZFUSION_PLUGIN_QUERIES_PATH,
       Plugin::getInstance()->getOption(Options::blueprintURL()),
@@ -204,10 +200,5 @@ class SyncTest extends BaseTestCase
     $MockAPI_Client->setCategories(json_decode(json_encode($mockCategories)));
     $this->expectException(HubCategoriesValidationException::class);
     $DataRefreshService->run();
-  }
-
-  public static function tearDownAfterClass(): void
-  {
-    (new DeleteDataService)->run();
   }
 }

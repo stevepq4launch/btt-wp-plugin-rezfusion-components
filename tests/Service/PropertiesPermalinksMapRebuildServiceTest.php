@@ -13,12 +13,6 @@ use RuntimeException;
 
 class PropertiesPermalinksMapRebuildServiceTest extends BaseTestCase
 {
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     private function makeService($properties, $ItemRepository = null): PropertiesPermalinksMapRebuildService
     {
         if (empty($ItemRepository)) {
@@ -30,6 +24,12 @@ class PropertiesPermalinksMapRebuildServiceTest extends BaseTestCase
     private function makeProperties(array $data = [])
     {
         return json_decode(json_encode($data));
+    }
+
+    public static function doAfter(): void
+    {
+        parent::doAfter();
+        TestHelper::rebuildPermalinks();
     }
 
     public function testRunWithMissingPropertyID(): void

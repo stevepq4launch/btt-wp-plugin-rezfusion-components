@@ -17,6 +17,10 @@ class API_TestClientFactory implements MakeableInterface
      */
     public function make(): ClientInterface
     {
-        return new API_TestClient(REZFUSION_PLUGIN_QUERIES_PATH, Plugin::getInstance()->getOption(Options::blueprintURL()), new FileCache(REZFUSION_PLUGIN_PATH . '/test-api-cache.json'));
+        $file = REZFUSION_PLUGIN_PATH . '/test-api-cache.json';
+        if (!file_exists($file)) {
+            touch($file);
+        }
+        return new API_TestClient(REZFUSION_PLUGIN_QUERIES_PATH, Plugin::getInstance()->getOption(Options::blueprintURL()), new FileCache($file));
     }
 }

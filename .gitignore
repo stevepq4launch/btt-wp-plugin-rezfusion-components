@@ -12,3 +12,6 @@ release-*.zip
 test-api-cache.json
 json-storage-test.json
 file-cache-test.json
+rzftest-wp-config.php
+rzftest-hub-config.json
+test.log

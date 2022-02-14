@@ -1,12 +1,11 @@
 <?php
 
-namespace Rezfusion\Tests\Cache;
+namespace Rezfusion\Tests\Client;
 
 use Rezfusion\Client\Client;
 use Rezfusion\Client\CurlClient;
 use Rezfusion\Client\MemoryCache;
 use Rezfusion\Tests\BaseTestCase;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 class ClientTest extends BaseTestCase
 {

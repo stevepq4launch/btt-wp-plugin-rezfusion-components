@@ -3,6 +3,7 @@
 namespace Rezfusion\Tests\Shortcodes;
 
 use Rezfusion\Repository\ReviewRepository;
+use Rezfusion\Service\DeleteDataService;
 use Rezfusion\Shortcodes\Reviews;
 use Rezfusion\Template;
 use Rezfusion\Templates;
@@ -13,12 +14,6 @@ use Rezfusion\Tests\TestHelper\TestHelper;
 
 class ReviewsTest extends BaseTestCase
 {
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     private function renderShortcode(array $attributes = []): string
     {
         $Shortcode = new Reviews(new Template(Templates::reviewsTemplate()));
@@ -31,6 +26,8 @@ class ReviewsTest extends BaseTestCase
      */
     public function testRender(): void
     {
+        $this->refreshDatabaseDataAfterTest();
+        (new DeleteDataService)->deleteReviews();
         $ReviewRepository = new ReviewRepository();
         $postID = PostHelper::getRecentPostId();
         $reviewsCount = 10;

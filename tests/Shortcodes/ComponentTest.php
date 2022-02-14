@@ -3,36 +3,18 @@
 namespace Rezfusion\Tests\Shortcodes;
 
 use Rezfusion\Exception\ComponentsBundleURL_RequiredException;
-use Rezfusion\Helper\OptionManager;
-use Rezfusion\Options;
 use Rezfusion\Plugin;
 use Rezfusion\PostTypes;
 use Rezfusion\Shortcodes\Component;
-use Rezfusion\Shortcodes\Favorites;
 use Rezfusion\Taxonomies;
 use Rezfusion\Template;
 use Rezfusion\Templates;
 use Rezfusion\Tests\BaseTestCase;
 use Rezfusion\Tests\TestHelper\PostHelper;
 use Rezfusion\Tests\TestHelper\PropertiesHelper;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 class ComponentTest extends BaseTestCase
 {
-    // private $originalChannelURL = '';
-
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
-    // public function setUp(): void
-    // {
-    //     parent::setUp();
-    //     $this->originalChannelURL = get_rezfusion_option(Options::hubChannelURL());
-    // }
-
     public function renderShortcode(array $attributes = []): string
     {
         $Component = new Component(new Template(Templates::componentTemplate()));

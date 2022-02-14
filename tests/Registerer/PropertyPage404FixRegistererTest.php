@@ -19,7 +19,6 @@ class PropertyPage404FixRegistererTest extends BaseTestCase
     public static function doBefore(): void
     {
         parent::doBefore();
-        TestHelper::refreshData();
         delete_transient(Options::URL_Map());
     }
 
@@ -40,20 +39,6 @@ class PropertyPage404FixRegistererTest extends BaseTestCase
     {
         $this->prepareRegisterer();
         do_action(Actions::templateRedirect());
-    }
-
-    private function getRedirectUrl($url)
-    {
-        stream_context_set_default(array(
-            'http' => array(
-                'method' => 'HEAD'
-            )
-        ));
-        $headers = get_headers($url, 1);
-        if ($headers !== false && isset($headers['Location'])) {
-            return $headers['Location'];
-        }
-        return false;
     }
 
     private function assertFinalURL($expectedURL = '', &$finalURL = ''): void
@@ -133,6 +118,7 @@ class PropertyPage404FixRegistererTest extends BaseTestCase
      */
     public function testWithValidProperty(): void
     {
+        $this->refreshDatabaseDataAfterTest();
         delete_transient(Options::URL_Map());
         $propertyID = PropertiesHelper::getRandomPropertyId();
         $this->prepare404();
@@ -158,6 +144,7 @@ class PropertyPage404FixRegistererTest extends BaseTestCase
      */
     public function testWithURL_Parameters(): void
     {
+        $this->refreshDatabaseDataAfterTest();
         delete_transient(Options::URL_Map());
         $propertyID = PropertiesHelper::getRandomPropertyId();
         $parameters = '&test1=value1&test2=value2';

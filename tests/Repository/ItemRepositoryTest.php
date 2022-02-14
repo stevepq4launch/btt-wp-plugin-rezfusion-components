@@ -11,14 +11,25 @@ use Rezfusion\Tests\TestHelper\ClientHelper;
 use Rezfusion\Tests\TestHelper\Factory;
 use Rezfusion\Tests\TestHelper\PostHelper;
 use Rezfusion\Tests\TestHelper\PropertiesHelper;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 class ItemRepositoryTest extends BaseTestCase
 {
     public function testRedundantItemsRemoval(): void
     {
-        TestHelper::refreshData();
-        $API_Client = ClientHelper::getInstance()->makeClientReturningZeroItemMock();
+        $this->refreshDatabaseDataAfterTest();
+        $API_Client = ClientHelper::getInstance()->makeClientReturningItems([
+            'data' => [
+                'lodgingProducts' => [
+                    'results' => [
+                        [
+                            'item' => [
+                                'id' => 1000
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
         $currentPostsCount = PostHelper::publishedPropertiesPostsCount();
         $this->assertGreaterThan(PropertiesHelper::minPropertiesCountInHub(), $currentPostsCount);
         $ItemRepository = new ItemRepository($API_Client);
@@ -31,7 +42,6 @@ class ItemRepositoryTest extends BaseTestCase
 
     public function testGetItemById(): void
     {
-        TestHelper::refreshData();
         $itemId = PropertiesHelper::getRandomPropertyId();
         $this->assertNotEmpty($itemId);
         $API_Client = Factory::makeAPI_ClientMock();
@@ -44,7 +54,6 @@ class ItemRepositoryTest extends BaseTestCase
 
     public function testGetPropertyKeyByPostId(): void
     {
-        TestHelper::refreshData();
         $postId = PostHelper::getRecentPostId();
         $this->assertNotEmpty($postId);
         $ItemRepository = new ItemRepository(Factory::makeAPI_ClientMock());

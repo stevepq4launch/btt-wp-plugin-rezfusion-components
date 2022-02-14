@@ -21,23 +21,17 @@ class ClientHelper extends BaseTestCase
         return static::$Instance;
     }
 
-    public function makeClientReturningZeroItemMock(): ClientInterface
+    /**
+     * Creates a new instance of client that returns specified items.
+     * @param array $items
+     * 
+     * @return ClientInterface
+     */
+    public function makeClientReturningItems(array $items = []): ClientInterface
     {
         /** @var ClientInterface */
         $API_Client = $this->createMock(CurlClient::class);
-        $items = json_decode(json_encode([
-            'data' => [
-                'lodgingProducts' => [
-                    'results' => [
-                        [
-                            'item' => [
-                                'id' => 1000
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]), false);
+        $items = json_decode(json_encode($items), false);
         $API_Client->method('getItems')->willReturn($items);
         return $API_Client;
     }

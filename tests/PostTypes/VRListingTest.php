@@ -83,7 +83,6 @@ class VRListingTest extends BaseTestCase
      */
     public function testVRListingGetColumnContents()
     {
-        TestHelper::refreshData();
         $VR_Listing = new VRListing(PostTypes::listing());
         $ItemRepository = new ItemRepository(TestHelper::makeAPI_TestClient());
         $postId = PostHelper::getRecentPostId();

@@ -5,10 +5,7 @@ namespace Rezfusion\Controller;
 use Rezfusion\UserRoles;
 
 use Exception;
-use Rezfusion\Configuration\ConfigurationStorage\ConfigurationStorageInterface;
-use Rezfusion\Configuration\ConfigurationStorage\RemoteConfigurationStorage;
 use Rezfusion\Configuration\HubConfiguration;
-use Rezfusion\Configuration\HubConfigurationProvider;
 use Rezfusion\Configuration\HubConfigurationUpdater;
 use \WP_REST_Response;
 use \WP_REST_Request;
@@ -58,11 +55,6 @@ class ConfigurationController extends AbstractController
         $returnData = [];
         $statusCode = 400;
         try {
-            // $Configuration = HubConfigurationProvider::getInstance();
-            // $ConfigurationUpdater = new HubConfigurationUpdater(
-            //     $Configuration,
-            //     new RemoteConfigurationStorage($Configuration->getComponentsURL(), get_class($Configuration))
-            // );
             if ($this->HubConfigurationUpdater->update() === false) {
                 throw new Exception("Update failed.");
             }

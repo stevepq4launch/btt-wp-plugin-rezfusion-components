@@ -36,7 +36,6 @@ class LodgingItemDetailsTest extends BaseTestCase
      */
     public function testLodgingItem()
     {
-        TestHelper::refreshData();
         $posts = get_posts(['post_type' => PostTypes::listing()]);
         $meta = get_post_meta($posts[0]->ID);
         $out = do_shortcode("[rezfusion-lodging-item itemid=\"{$meta[Metas::itemId()][0]}\"]");
