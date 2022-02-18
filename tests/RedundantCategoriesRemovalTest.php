@@ -39,7 +39,7 @@ class RedundantCategoriesRemovalTest extends BaseTestCase
 
     public function testRedundantDataRemoval()
     {
-        TestHelper::refreshData();
+        $this->refreshDatabaseDataAfterTest();
         $API_Client = TestHelper::makeAPI_TestClient();
         $CategoriesRepository = new CategoryRepository($API_Client);
         $categoriesFromSource = $API_Client->getCategories(Plugin::getInstance()->getOption(Options::hubChannelURL()));

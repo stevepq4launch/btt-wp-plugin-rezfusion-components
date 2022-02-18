@@ -2,9 +2,11 @@
 
 namespace Rezfusion\Tests\Service;
 
+use Rezfusion\Client\Client;
 use Rezfusion\Helper\OptionManager;
 use Rezfusion\Options;
 use Rezfusion\Repository\ItemRepository;
+use Rezfusion\Service\DataRefreshService;
 use Rezfusion\Service\PropertiesPermalinksMapRebuildService;
 use Rezfusion\Tests\BaseTestCase;
 use Rezfusion\Tests\TestHelper\PropertiesHelper;
@@ -13,12 +15,6 @@ use RuntimeException;
 
 class PropertiesPermalinksMapRebuildServiceTest extends BaseTestCase
 {
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     private function makeService($properties, $ItemRepository = null): PropertiesPermalinksMapRebuildService
     {
         if (empty($ItemRepository)) {
@@ -30,6 +26,12 @@ class PropertiesPermalinksMapRebuildServiceTest extends BaseTestCase
     private function makeProperties(array $data = [])
     {
         return json_decode(json_encode($data));
+    }
+
+    public static function doAfter(): void
+    {
+        parent::doAfter();
+        TestHelper::rebuildPermalinks();
     }
 
     public function testRunWithMissingPropertyID(): void
@@ -111,6 +113,53 @@ class PropertiesPermalinksMapRebuildServiceTest extends BaseTestCase
         $this->assertCount(1, $URL_Map);
         $this->assertArrayHasKey($propertyID, $URL_Map);
         $this->assertSame('http://localhost:8080/?vr_listing=102-a-shore-thing', $URL_Map[$propertyID]);
+        delete_transient($URL_MapOptionName);
+    }
+
+    /**
+     * Tests for valid URL when property gets deleted from hub and then re-appears.
+     * @return void
+     */
+    public function testRunWithReappearingProperty(): void
+    {
+        $URL_MapOptionName = Options::URL_Map();
+        $expectedURL = 'http://localhost:8080/?vr_listing=102-a-shore-thing';
+        $propertyID = PropertiesHelper::getRandomPropertyId();
+
+        // First run.
+        TestHelper::refreshData();
+        $URL_Map = get_transient($URL_MapOptionName);
+        $this->assertSame($expectedURL, $URL_Map[$propertyID]);
+
+        // Clear items.
+        $NoItemsClient = $this->createMock(Client::class);
+        $NoItemsClient->method('getItems')->willReturn(
+            json_decode(json_encode(
+                ['data' => ['lodgingProducts' => ['results' => [
+                    [
+                        'item' => [
+                            'id' => -1
+                        ]
+                    ]
+                ]]]]
+            ))
+        );
+        $NoItemsClient->method('getCategories')->willReturn(
+            json_decode(json_encode(
+                [
+                    'data' => ['categoryInfo' => ['categories' => []]]
+                ]
+            ))
+        );
+        $DataRefreshService = new DataRefreshService($NoItemsClient, false);
+        $DataRefreshService->run();
+
+        // Second run, property reappears.
+        $DataRefreshService = new DataRefreshService(TestHelper::makeAPI_TestClient(), false);
+        $DataRefreshService->run();
+        $URL_Map = get_transient($URL_MapOptionName);
+        $this->assertSame($expectedURL . '-2', $URL_Map[$propertyID]);
+
         delete_transient($URL_MapOptionName);
     }
 }

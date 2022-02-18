@@ -1,12 +1,8 @@
 <?php
 
-use Rezfusion\Service\DeleteDataService;
-
 define('REZFUSION_TEST', true);
 require_once(__DIR__ . "/../vendor/autoload.php");
-// require_once(__DIR__ . "/../../../../wp-load.php");
-// require_once(__DIR__ . "/../../../../wp-settings.php");
-// DeleteDataService::unlock();
+require_once(__DIR__ . "/../rzftest-wp-config.php");
 
 /*
  * To avoid 'Call to undefined function get_current_screen()' in

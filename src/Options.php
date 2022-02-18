@@ -701,4 +701,27 @@ class Options
     {
         return static::prefix() . static::HUB_DATA_SYNCHRONIZATION_LOG;
     }
+
+    /**
+     * Array of options names retrieved from hub configuration.
+     * @return array
+     */
+    public static function hubConfigurationOptions(): array
+    {
+        return [
+            Options::componentsURL(),
+            Options::hubChannelURL(),
+            Options::bookingConfirmationURL(),
+            Options::SPS_Domain(),
+            Options::enableFavorites(),
+            Options::mapAPI_Key(),
+            Options::themeURL(),
+            Options::blueprintURL(),
+            Options::fontsURL(),
+            Options::maxReviewRating(),
+            Options::configuration(),
+            Options::componentsBundleURL(),
+            Options::componentsCSS_URL()
+        ];
+    }
 }

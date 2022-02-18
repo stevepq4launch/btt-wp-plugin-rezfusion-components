@@ -20,6 +20,14 @@ class ItemRepository {
   protected $client;
 
   /**
+   * @return string
+   */
+  public static function publishStatus(): string
+  {
+    return 'publish';
+  }
+
+  /**
    * Provide a way to inject an API client as it is needed.
    *
    * @param \Rezfusion\Client\ClientInterface $client
@@ -168,7 +176,7 @@ class ItemRepository {
    */
   public function getItemById($id) {
     global $wpdb;
-    return $wpdb->get_results("SELECT * FROM $wpdb->postmeta WHERE meta_key = '" . Metas::itemId() . "' AND  meta_value = '$id' LIMIT 1", ARRAY_A);
+    return $wpdb->get_results("SELECT * FROM $wpdb->postmeta pm LEFT JOIN $wpdb->posts p ON p.id = pm.post_id WHERE p.post_status = '" . static::publishStatus() . "' AND pm.meta_key = '" . Metas::itemId() . "' AND pm.meta_value = '$id' LIMIT 1", ARRAY_A);
   }
 
   /**
@@ -179,7 +187,7 @@ class ItemRepository {
   public function getAllItems(){
     global $wpdb;
     return is_array(
-      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE pm.meta_key = '" . Metas::itemId() . "' AND pm.meta_value IS NOT NULL ORDER BY p.post_title ASC LIMIT 100", ARRAY_A)
+      $items = $wpdb->get_results("SELECT pm.*, p.post_title FROM $wpdb->postmeta AS pm LEFT JOIN $wpdb->posts AS p ON p.id = pm.post_id WHERE p.post_status = '" . static::publishStatus() . "' AND pm.meta_key = '" . Metas::itemId() . "' AND pm.meta_value IS NOT NULL ORDER BY p.post_title ASC LIMIT 100", ARRAY_A)
     ) ? $items : [];
   }
 
@@ -191,7 +199,7 @@ class ItemRepository {
   public function getAllItemsIds(){
     global $wpdb;
     return is_array(
-      $items = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = '" . Metas::itemId() . "' AND meta_value IS NOT NULL LIMIT 100", ARRAY_A)
+      $items = $wpdb->get_results("SELECT pm.meta_value FROM $wpdb->postmeta pm LEFT JOIN $wpdb->posts p ON p.id = pm.post_id WHERE pm.meta_key = '" . Metas::itemId() . "' AND pm.meta_value IS NOT NULL AND p.post_status = '" . static::publishStatus() . "' LIMIT 100", ARRAY_A)
     ) ? array_column($items, 'meta_value') : [];
   }
 
@@ -234,7 +242,6 @@ class ItemRepository {
    */
   public function getPropertyKeyByPostId($postId): string {
     global $wpdb;
-    return $wpdb->get_var($wpdb->prepare("SELECT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value IS NOT NULL AND post_id = %d LIMIT 1", [Metas::itemId(), $postId]));
+    return $wpdb->get_var($wpdb->prepare("SELECT pm.meta_value FROM $wpdb->postmeta pm LEFT JOIN $wpdb->posts p ON p.id = pm.post_id WHERE pm.meta_key = %s AND pm.meta_value IS NOT NULL AND pm.post_id = %d AND p.post_status = '" . static::publishStatus() . "' LIMIT 1", [Metas::itemId(), $postId]));
   }
-
 }

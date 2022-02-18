@@ -39,17 +39,17 @@ class PluginTest extends BaseTestCase
         $this->assertInstanceOf(Plugin::class, $Plugin);
     }
 
-    public function testInstance()
+    public function testInstance(): void
     {
         $this->assertInstanceOf(Plugin::class, $this->Plugin);
     }
 
-    public function testPluginName()
+    public function testPluginName(): void
     {
         $this->assertSame($this->Plugin->getPluginName(), 'Rezfusion');
     }
 
-    public function testBundleScriptHandleName()
+    public function testBundleScriptHandleName(): void
     {
         $componentsBundleURL = get_rezfusion_option(Options::componentsBundleURL());
         $this->assertNotEmpty($componentsBundleURL);
@@ -57,8 +57,9 @@ class PluginTest extends BaseTestCase
         $this->assertSame('assets-rezfusion-com-base-v1-bundle-js', $handle);
     }
 
-    public function testRefreshData()
+    public function testRefreshData(): void
     {
+        DeleteDataService::unlock();
         (new DeleteDataService)->run();
         $ItemRepository = (new ItemRepository((new API_ClientFactory())->make()));
         $this->assertCount(0, $ItemRepository->getAllItemsIds());
@@ -66,7 +67,7 @@ class PluginTest extends BaseTestCase
         $this->assertGreaterThan(1, count($ItemRepository->getAllItemsIds()));
     }
 
-    public function testGetAssetsRegisterer()
+    public function testGetAssetsRegisterer(): void
     {
         $this->assertInstanceOf(AssetsRegistererInterface::class, $this->Plugin->getAssetsRegisterer());
         $this->assertInstanceOf(AssetsRegisterer::class, $this->Plugin->getAssetsRegisterer());

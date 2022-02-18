@@ -11,12 +11,6 @@ use Rezfusion\Tests\TestHelper\TestHelper;
 
 class LodgingItemReviewsTest extends BaseTestCase
 {
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled

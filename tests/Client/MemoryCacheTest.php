@@ -1,6 +1,6 @@
 <?php
 
-namespace Rezfusion\Tests\Cache;
+namespace Rezfusion\Tests\Client;
 
 use Rezfusion\Client\Cache;
 use Rezfusion\Client\MemoryCache;

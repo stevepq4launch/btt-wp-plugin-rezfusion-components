@@ -11,16 +11,9 @@ use Rezfusion\Tests\BaseTestCase;
 use Rezfusion\Tests\TestHelper\PostHelper;
 use Rezfusion\Tests\TestHelper\REST_Helper;
 use Rezfusion\Tests\TestHelper\ReviewHelper;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 class ReviewControllerTest extends BaseTestCase
 {
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     private function makeController(ReviewRepository $ReviewRepository): ReviewController
     {
         return new ReviewController($ReviewRepository);

@@ -21,12 +21,6 @@ class FeaturedPropertiesTest extends BaseTestCase
         return new FeaturedProperties(new Template(Templates::featuredPropertiesTemplate()));
     }
 
-    private function prepareRenderTest(): void
-    {
-        (new DeleteDataService)->run();
-        Plugin::getInstance()->refreshData();
-    }
-
     public function testMaxPropertiesCount(): void
     {
         $this->assertSame(6, TestHelper::callClassMethod($this->makeShortcode(), 'maxPropertiesCount'));
@@ -38,7 +32,6 @@ class FeaturedPropertiesTest extends BaseTestCase
      */
     public function testRender(): void
     {
-        $this->prepareRenderTest();
         $Shortcode = $this->makeShortcode();
         OptionsHandlerProvider::getInstance()->updateOption(
             Options::featuredPropertiesIds(),
@@ -61,7 +54,6 @@ class FeaturedPropertiesTest extends BaseTestCase
      */
     public function testRenderWithoutPropertiesDefined(): void
     {
-        $this->prepareRenderTest();
         $Shortcode = $this->makeShortcode();
         OptionsHandlerProvider::getInstance()->updateOption(
             Options::featuredPropertiesIds(),

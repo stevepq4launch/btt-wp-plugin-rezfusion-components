@@ -12,16 +12,9 @@ use Rezfusion\Service\DeleteDataService;
 use Rezfusion\Tests\BaseTestCase;
 use Rezfusion\Tests\TestHelper\PostHelper;
 use Rezfusion\Tests\TestHelper\ReviewHelper;
-use Rezfusion\Tests\TestHelper\TestHelper;
 
 class ReviewRepositoryTest extends BaseTestCase
 {
-    public static function doBefore(): void
-    {
-        parent::doBefore();
-        TestHelper::refreshData();
-    }
-
     public function setUp(): void
     {
         parent::setUp();
