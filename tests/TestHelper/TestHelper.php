@@ -37,12 +37,17 @@ class TestHelper
         return Factory::makeAPI_TestClient();
     }
 
-    public static function refreshData(): void
+    public static function deleteData(): void
     {
         $DeleteDataServiceClassName = DeleteDataService::class;
         $DeleteDataServiceClassName::unlock();
         (new $DeleteDataServiceClassName)->run();
         $DeleteDataServiceClassName::lock();
+    }
+
+    public static function refreshData(): void
+    {
+        static::deleteData();
         (new DataRefreshService(static::makeAPI_TestClient()))->run();
     }
 

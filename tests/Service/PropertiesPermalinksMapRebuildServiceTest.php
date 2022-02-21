@@ -158,7 +158,7 @@ class PropertiesPermalinksMapRebuildServiceTest extends BaseTestCase
         $DataRefreshService = new DataRefreshService(TestHelper::makeAPI_TestClient(), false);
         $DataRefreshService->run();
         $URL_Map = get_transient($URL_MapOptionName);
-        $this->assertSame($expectedURL . '-2', $URL_Map[$propertyID]);
+        $this->assertSame($expectedURL, $URL_Map[$propertyID]);
 
         delete_transient($URL_MapOptionName);
     }
